@@ -115,7 +115,8 @@ public class LivingHabitAdapter extends BaseAdapter {
                         } else {
                             disease.IsChosen = 1;
                         }
-                        notifyDataSetChanged();
+                        notifyDataSetInvalidated();
+                        //notifyDataSetChanged();
                     }
                 });
             } else if (position == DiseaseList.size() + 1) {
@@ -141,7 +142,8 @@ public class LivingHabitAdapter extends BaseAdapter {
                         } else {
                             Habit.IsChosen = 1;
                         }
-                        notifyDataSetChanged();
+                        notifyDataSetInvalidated();
+                        //notifyDataSetChanged();
                     }
                 });
 

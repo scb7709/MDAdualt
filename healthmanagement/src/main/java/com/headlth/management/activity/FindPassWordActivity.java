@@ -14,11 +14,13 @@ import android.widget.Toast;
 import com.headlth.management.R;
 import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.utils.Constant;
+import com.headlth.management.utils.Encryption;
 import com.headlth.management.utils.HttpUtils;
 import com.headlth.management.utils.ShareUitls;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -96,41 +98,17 @@ public static Activity activity;
         else return mobiles.matches(telRegex);
     }
     private void getSMS(final String phone) {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("Mobile", phone);
-        HttpUtils.getInstance(FindPassWordActivity.this).sendRequest("正在获取手机验证码,请稍后...", Constant.BASE_URL + "/MdMobileService.ashx?do=GetSendMessageRequest", map, 0, new HttpUtils.ResponseListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e("getSMSjson", response);
-                        String Status = "";
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            String  IsSuccess = jsonObject.getString("IsSuccess");
-                            if(IsSuccess.equals("true")){
-                                Status = jsonObject.getString("Status");
-                                Intent intent = new Intent(FindPassWordActivity.this, SetPassWordActivity.class);
-                                intent.putExtra("verify_code", Status);
-                                intent.putExtra("flag", "UpdatePassword");
-                                intent.putExtra("phone", phone);
-                                ShareUitls.putString(FindPassWordActivity.this, "SMSTIME", new Date().getTime() + "");
-                                startActivity(intent);
+       Login. getSMS(this,phone, "1",new Login.SMSInterface() {
+            @Override
+            public void onResponse(String verify_code) {
+                Intent intent = new Intent(FindPassWordActivity.this, SetPassWordActivity.class);
+                intent.putExtra("verify_code", verify_code);
+                intent.putExtra("flag", "UpdatePassword");
+                intent.putExtra("phone", phone);
+                ShareUitls.putString(FindPassWordActivity.this, "SMSTIME", new Date().getTime() + "");
+                startActivity(intent);
+            }
+        });
 
-                            }else {
-                                Toast.makeText(FindPassWordActivity.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "获取验证码失败", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onErrorResponse(Throwable ex) {
-                        Toast.makeText(getApplicationContext(), "网路异常", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-
-        );
     }
 }

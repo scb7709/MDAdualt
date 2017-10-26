@@ -458,7 +458,6 @@ public class HttpUtils {
                             userInformation.setGender(userLogin.Gender);
                             userInformation.setWeight(userLogin.Weight);
                             userInformation.setHeight(userLogin.Height);
-                            userInformation.setMAC(userLogin.MACAddress);
                             userInformation.setBirthday(userLogin.Birthday);
                             user.setUserInformation(userInformation);
                             ShareUitls.putUser(context, user);

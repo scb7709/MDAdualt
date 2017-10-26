@@ -162,7 +162,6 @@ public class CalendarView extends View {
                 float disY = event.getY() - mDownY;
                 if (Math.abs(disX) < touchSlop && Math.abs(disY) < touchSlop) {
                     int col = (int) (mDownX / mCellSpace);
-
                     int row = (int) (mDownY / mCellSpace);
                     Log.e("zuobiao", col + "----具体到那一个------" + row);
                     measureClickCell(col, row);
@@ -185,16 +184,16 @@ public class CalendarView extends View {
 
     // 组
     class Row {
-        public int j;
+        public int j;//第几行
 
         Row(int j) {
             this.j = j;
         }
 
-        public Cell[] cells = new Cell[TOTAL_COL];
+        public Cell[] cells = new Cell[TOTAL_COL];//每行有七列
 
         public void drawCells(Canvas canvas) {
-            for (int i = 0; i < cells.length; i++) {
+            for (int i = 0; i < 7; i++) {
                 if (cells[i] != null)
                     cells[i].drawSelf(canvas);
             }
@@ -580,23 +579,17 @@ public class CalendarView extends View {
                     if (SSSportDay.get(day - 1) == 1) {
                         date.week = i;
                         rows[j].cells[i] = new Cell(date, State.SPORT_DAY, i, j);
-
                         continue;
                     } else if (SSSportDay.get(day - 1) == 2) {
-
                         date.week = i;
                         rows[j].cells[i] = new Cell(date, State.STRENGTH_DAY, i, j);
                         continue;
                     } else if (SSSportDay.get(day - 1) == 3) {
-
                         date.week = i;
                         rows[j].cells[i] = new Cell(date, State.BOTH_DAY, i, j);
-
                         continue;
                     }
-
                     rows[j].cells[i] = new Cell(date, State.CURRENT_MONTH_DAY, i, j);
-
                 } else if (postion < firstDayWeek) {
                     rows[j].cells[i] = new Cell(new CustomDate(mShowDate.year, mShowDate.month - 1, lastMonthDays - (firstDayWeek - postion - 1)), State.PAST_MONTH_DAY, i, j);
                 } else if (postion >= firstDayWeek + currentMonthDays) {

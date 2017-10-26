@@ -19,6 +19,15 @@ public class VersionClass {
         public String Description;//版本描述
         public String DownloadUrl;//app下载地址
 
+        @Override
+        public String toString() {
+            return "Version{" +
+                    "VersionName='" + VersionName + '\'' +
+                    ", VersionCode=" + VersionCode +
+                    ", Description='" + Description + '\'' +
+                    ", DownloadUrl='" + DownloadUrl + '\'' +
+                    '}';
+        }
     }
 
     ;

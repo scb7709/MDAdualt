@@ -2,6 +2,8 @@ package com.headlth.management.myview;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,16 +14,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-
 import com.headlth.management.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class BottomMenuDialog extends Dialog {
+public class BottomMenuUpdateAPPDialog extends Dialog {
 
-    public BottomMenuDialog(Context context, int themeResId) {
+    public BottomMenuUpdateAPPDialog(Context context, int themeResId) {
         super(context, themeResId);
     }
 
@@ -34,7 +35,7 @@ public class BottomMenuDialog extends Dialog {
     }
 
     public static class Builder {
-        private boolean canCancel = true;
+        private boolean canCancel = false;
         private boolean shadow = true;
         private final Params p;
 
@@ -83,8 +84,8 @@ public class BottomMenuDialog extends Dialog {
             return this;
         }
 
-        public BottomMenuDialog create() {
-            final BottomMenuDialog dialog = new BottomMenuDialog(p.context, shadow?R.style.Theme_Light_NoTitle_Dialog : R.style.Theme_Light_NoTitle_NoShadow_Dialog);
+        public BottomMenuUpdateAPPDialog create() {
+            final BottomMenuUpdateAPPDialog dialog = new BottomMenuUpdateAPPDialog(p.context, shadow ? R.style.Theme_Light_NoTitle_Dialog : R.style.Theme_Light_NoTitle_NoShadow_Dialog);
 
             Window window = dialog.getWindow();
             window.setWindowAnimations(R.style.Animation_Bottom_Rising);
@@ -98,6 +99,12 @@ public class BottomMenuDialog extends Dialog {
             View view = LayoutInflater.from(p.context).inflate(R.layout.dialog_bottom_menu, null);
 
             TextView btnCancel = (TextView) view.findViewById(R.id.btn_cancel);
+            btnCancel.setText("暂不更新");
+            btnCancel.setTextColor(0xFF007AFF);
+            btnCancel.setTextSize(18);//textStyle
+            TextPaint tp = btnCancel.getPaint();
+            tp.setFakeBoldText(false);
+
             ViewGroup layContainer = (ViewGroup) view.findViewById(R.id.lay_container);
 
             LayoutParams lpItem = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -124,6 +131,7 @@ public class BottomMenuDialog extends Dialog {
             }
 
             for (int i = 0; i < p.menuList.size(); i++) {
+
                 BottomMenu bottomMenu = p.menuList.get(i);
                 TextView bbm = new TextView(p.context);
                 bbm.setLayoutParams(lpItem);
@@ -142,11 +150,22 @@ public class BottomMenuDialog extends Dialog {
                     backgroundResId = R.drawable.common_dialog_selection_selector_singleton;
                 }
                 bbm.setBackgroundResource(backgroundResId);
-                bbm.setPadding(0, spacing, 0, spacing);
-                bbm.setGravity(Gravity.CENTER);
+
+                if (i == 0) {
+                    bbm.setPadding(20, spacing, 20, spacing);
+                    bbm.setGravity(Gravity.LEFT);
+                    bbm.setTextColor(0xFF007AFF);
+                    bbm.setTextSize(19);
+                } else {
+                    bbm.setPadding(0, spacing, 0, spacing);
+                    bbm.setGravity(Gravity.CENTER);
+                    bbm.setTextColor(Color.parseColor("#007AFF"));
+                    bbm.setTextSize(22);
+                    TextPaint textPaint = bbm.getPaint();
+                    textPaint.setFakeBoldText(true);
+                }
                 bbm.setText(bottomMenu.funName);
-                bbm.setTextColor(0xFF007AFF);
-                bbm.setTextSize(19);
+
                 bbm.setOnClickListener(bottomMenu.listener);
                 layContainer.addView(bbm);
 
@@ -161,7 +180,6 @@ public class BottomMenuDialog extends Dialog {
             if (!TextUtils.isEmpty(p.cancelText)) {
                 btnCancel.setText(p.cancelText);
             }
-
             if (p.cancelListener != null) {
                 btnCancel.setOnClickListener(p.cancelListener);
             } else {
@@ -172,8 +190,6 @@ public class BottomMenuDialog extends Dialog {
                     }
                 });
             }
-
-
             dialog.setContentView(view);
             dialog.setCanceledOnTouchOutside(canCancel);
             dialog.setCancelable(canCancel);

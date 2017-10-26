@@ -10,314 +10,232 @@
         android:layout_height="match_parent">
 
         <TextView
-        android:id="@+id/textView34"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="29dp"
-        android:text="总有效时长"
+            android:id="@+id/textView34"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="29dp"
+            android:text="总有效时长"
             android:textColor="#3C3C3C"
             android:textSize="13dp"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/MaxTotalTime" />
 
         <TextView
-        android:id="@+id/TotalDays"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="达标天数：0天"
-        android:textColor="#666666"
-        android:textSize="13dp"
+            android:id="@+id/TotalDays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="达标天数：0天"
+            android:textColor="#666666"
+            android:textSize="13dp"
             android:layout_above="@+id/MaxTotalTime"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="21dp" />
 
-    <TextView
-        android:id="@+id/textView40"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="过去7天"
-        android:textColor="#c7c7c7"
-        android:textSize="13dp"
-        android:layout_alignTop="@+id/TotalDays"
-        android:layout_toEndOf="@+id/t6" />
-
-    <TextView
-        android:id="@+id/textView41"
-        android:layout_width="342dp"
-        android:layout_height="0.5dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:background="#c7c7c7" />
-
-    <TextView
-        android:id="@+id/MaxTotalTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView41"
-        android:layout_alignStart="@+id/textView41"
-        android:text="0min"
-        android:textColor="#c7c7c7"
-        android:textSize="13dp" />
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/zhu"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/textView41"
-       >
-
-
-
         <TextView
-            android:id="@+id/midleTime"
+            android:id="@+id/textView40"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0min"
-
-
+            android:text="过去7天"
             android:textColor="#c7c7c7"
             android:textSize="13dp"
-            android:layout_above="@+id/textView43"
-            android:layout_alignStart="@+id/textView43" />
+            android:layout_alignTop="@+id/TotalDays"
+            android:layout_toEndOf="@+id/t6" />
 
         <TextView
-            android:id="@+id/textView43"
+            android:id="@+id/textView41"
             android:layout_width="342dp"
             android:layout_height="0.5dp"
-
-            android:background="#c7c7c7"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_alignStart="@+id/textView45" />
+            android:background="#c7c7c7" />
 
         <TextView
-            android:id="@+id/textView45"
-            android:layout_width="342dp"
-            android:layout_height="1.5dp"
-            android:background="#c7c7c7"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            android:id="@+id/MaxTotalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textView41"
+            android:layout_alignStart="@+id/textView41"
+            android:text="0min"
+            android:textColor="#c7c7c7"
+            android:textSize="13dp" />
 
-        <FrameLayout
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:id="@+id/button6"
 
-            android:layout_above="@+id/textView45"
-            android:layout_toEndOf="@+id/midleTime">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/zhu"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/textView41"
+            >
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/zhouyiall"
+
+
+            <TextView
+                android:id="@+id/midleTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0min"
+
+
+                android:textColor="#c7c7c7"
+                android:textSize="13dp"
+                android:layout_above="@+id/textView43"
+                android:layout_alignStart="@+id/textView43" />
+
+            <TextView
+                android:id="@+id/textView43"
+                android:layout_width="342dp"
+                android:layout_height="0.5dp"
+
                 android:background="#c7c7c7"
-                android:layout_gravity="center_horizontal|bottom" />
+                android:layout_centerVertical="true"
+                android:layout_alignStart="@+id/textView45" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/zhouyi"
-                android:background="#ffad00"
-                android:layout_gravity="right|bottom" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:id="@+id/show1"
-                android:layout_gravity="center_horizontal|bottom" />
-
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:id="@+id/frameLayout"
-            android:layout_above="@+id/textView45"
-            android:layout_toEndOf="@+id/button6"
-            android:layout_marginLeft="20dp">
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="00dp"
-                android:id="@+id/zhouerall"
+            <TextView
+                android:id="@+id/textView45"
+                android:layout_width="342dp"
+                android:layout_height="1.5dp"
                 android:background="#c7c7c7"
-                android:layout_gravity="center_horizontal|bottom" />
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/zhouer"
-                android:background="#ffad00"
-                android:layout_gravity="right|bottom" />
-            <Button
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:layout_width="24dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
+                android:id="@+id/button6"
 
-                android:id="@+id/show2"
-                android:layout_gravity="left|top" />
+                android:layout_above="@+id/textView45"
+                android:layout_toEndOf="@+id/midleTime">
 
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:id="@+id/linlay3"
-            android:orientation="vertical"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="21dp"
-            android:layout_alignBottom="@+id/frameLayout3"
-            android:layout_toEndOf="@+id/frameLayout">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/zhouyiall"
+                    android:background="#ffad00"
+                    android:layout_gravity="center_horizontal|bottom" />
 
 
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="#c7c7c7"
-                android:layout_gravity="center_horizontal|bottom"
-                android:id="@+id/zhousanall" />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/zhousan"
-                android:background="#ffad00"
-                android:layout_gravity="bottom|center_horizontal" />
 
-            <Button
-                android:layout_width="match_parent"
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="24dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
+                android:id="@+id/frameLayout"
+                android:layout_above="@+id/textView45"
+                android:layout_toEndOf="@+id/button6"
+                android:layout_marginLeft="20dp">
 
-                android:id="@+id/show3"
-                android:layout_gravity="left|top" />
-        </FrameLayout>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="00dp"
+                    android:id="@+id/zhouerall"
+                    android:background="#ffad00"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-        <FrameLayout
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:id="@+id/frameLayout3"
-            android:layout_above="@+id/textView45"
-            android:layout_toEndOf="@+id/linlay3"
-            android:layout_marginLeft="20dp">
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/zhousiall"
-                android:background="#c7c7c7"
-                android:layout_gravity="center_horizontal|bottom" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/zhousi"
-                android:background="#ffad00"
-                android:layout_gravity="center_horizontal|bottom" />
-            <Button
-                android:layout_width="match_parent"
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="24dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
+                android:id="@+id/linlay3"
+                android:orientation="vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="21dp"
+                android:layout_alignBottom="@+id/frameLayout3"
+                android:layout_toEndOf="@+id/frameLayout">
 
-                android:id="@+id/show4"
-                android:layout_gravity="left|top" />
 
-        </FrameLayout>
 
-        <FrameLayout
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:id="@+id/frameLayout4"
-            android:layout_above="@+id/textView45"
-            android:layout_toEndOf="@+id/frameLayout3"
-            android:layout_marginLeft="20dp">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="00dp"
-                android:id="@+id/zhouwuall"
-                android:background="#c7c7c7"
-                android:layout_gravity="right|bottom" />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/zhouwu"
-                android:background="#ffad00"
-                android:layout_gravity="center_horizontal|bottom" />
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="#ffad00"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:id="@+id/zhousanall" />
 
-            <Button
-                android:layout_width="match_parent"
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="24dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
+                android:id="@+id/frameLayout3"
+                android:layout_above="@+id/textView45"
+                android:layout_toEndOf="@+id/linlay3"
+                android:layout_marginLeft="20dp">
 
-                android:id="@+id/show5"
-                android:layout_gravity="left|top" />
-        </FrameLayout>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/zhousiall"
+                    android:background="#ffad00"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-        <FrameLayout
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:id="@+id/frameLayout5"
-            android:layout_above="@+id/textView45"
-            android:layout_toEndOf="@+id/frameLayout4"
-            android:layout_marginLeft="20dp">
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/zhouliuall"
-                android:background="#c7c7c7"
-                android:layout_gravity="left|bottom" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/zhouliu"
-                android:background="#ffad00"
-                android:layout_gravity="center_horizontal|bottom" />
-            <Button
-                android:layout_width="match_parent"
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="24dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
+                android:id="@+id/frameLayout4"
+                android:layout_above="@+id/textView45"
+                android:layout_toEndOf="@+id/frameLayout3"
+                android:layout_marginLeft="20dp">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="00dp"
+                    android:id="@+id/zhouwuall"
+                    android:background="#ffad00"
+                    android:layout_gravity="right|bottom" />
 
-                android:id="@+id/show6"
-                android:layout_gravity="left|top" />
-        </FrameLayout>
+            </FrameLayout>
 
-        <FrameLayout
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:id="@+id/frameLayout6"
-            android:layout_above="@+id/textView45"
-            android:layout_toEndOf="@+id/frameLayout5"
-            android:layout_marginLeft="20dp">
-
-
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/zhouriall"
-                android:background="#c7c7c7"
-                android:layout_gravity="center_horizontal|bottom" />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/zhouri"
-                android:background="#ffad00"
-                android:layout_gravity="left|bottom" />
-            <Button
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:layout_width="24dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:id="@+id/show7"
-                android:layout_gravity="left|top" />
-        </FrameLayout>
+                android:id="@+id/frameLayout5"
+                android:layout_above="@+id/textView45"
+                android:layout_toEndOf="@+id/frameLayout4"
+                android:layout_marginLeft="20dp">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/zhouliuall"
+                    android:background="#ffad00"
+                    android:layout_gravity="left|bottom" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="24dp"
+                android:layout_height="match_parent"
+                android:id="@+id/frameLayout6"
+                android:layout_above="@+id/textView45"
+                android:layout_toEndOf="@+id/frameLayout5"
+                android:layout_marginLeft="20dp">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:background="#c7c7c7"
+                    />
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/zhouriall"
+                    android:background="#ffad00"
+                    android:layout_gravity="center_horizontal|bottom" />
+
+            </FrameLayout>
 
 
-    </RelativeLayout>
+        </RelativeLayout>
 
         <TextView
             android:layout_width="24dp"

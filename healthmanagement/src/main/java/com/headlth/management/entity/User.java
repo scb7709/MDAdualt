@@ -134,57 +134,12 @@ public class User  implements Serializable {
         private String Gender;
         private String Birthday;
         private String File;//头像
-        private String MAC;
 
-        private String HRrest;
-        private String WatchDuration;
-        private String UBound;
-        private String LBound;
 
 
        // private String [] Illness;//坏习惯
        // private String [] Badhabit;//疾病
 
-
-        public String getUBound() {
-            return UBound;
-        }
-
-        public void setUBound(String UBound) {
-            this.UBound = UBound;
-        }
-
-        public String getLBound() {
-            return LBound;
-        }
-
-        public void setLBound(String LBound) {
-            this.LBound = LBound;
-        }
-
-        public String getWatchDuration() {
-            return WatchDuration;
-        }
-
-        public void setWatchDuration(String watchDuration) {
-            WatchDuration = watchDuration;
-        }
-
-        public String getHRrest() {
-            return HRrest;
-        }
-
-        public void setHRrest(String HRrest) {
-            this.HRrest = HRrest;
-        }
-
-        public String getMAC() {
-            return MAC;
-        }
-
-        public void setMAC(String MAC) {
-            this.MAC = MAC;
-        }
 
         public UserInformation(){}
         public UserInformation(String nickName, String weight, String height, String gender, String birthday, String file) {

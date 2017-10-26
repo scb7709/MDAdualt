@@ -164,9 +164,7 @@ public class ShareUitls {
             if (user.getUserInformation().getBirthday() != null) {
                 e.putString("Birthday", user.getUserInformation().getBirthday());
             }
-            if (user.getUserInformation().getMAC() != null) {
-                e.putString("MAC", user.getUserInformation().getMAC());
-            }
+
             if (user.getUserInformation().getFile() != null) {
                 e.putString("File", user.getUserInformation().getFile());
             }
@@ -251,11 +249,6 @@ public class ShareUitls {
             userInformation.setGender(sp.getString("Gender", ""));
             userInformation.setBirthday(sp.getString("Birthday", ""));
             userInformation.setFile(sp.getString("File", ""));
-            userInformation.setMAC(sp.getString("MAC", ""));
-            userInformation.setHRrest(sp.getString("HRrest", "75"));
-            userInformation.setWatchDuration(sp.getString("WatchDuration", ""+(19 * 60)));
-            userInformation.setUBound(sp.getString("UBound", "100"));
-            userInformation.setLBound(sp.getString("LBound", "120"));
             user.setUID(sp.getString("UID", ""));
             user.setPhone(sp.getString("phone", ""));
             user.setPwd(sp.getString("PWD", ""));

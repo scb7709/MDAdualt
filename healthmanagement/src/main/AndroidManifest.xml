@@ -119,13 +119,6 @@
         <activity
             android:name="com.headlth.management.activity.SearchBlueActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.headlth.management.activity.ConnectBlueActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".MyBlue.WatchBlueTestActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:screenOrientation="portrait" />
 
 
         <activity
@@ -141,11 +134,6 @@
 
         <activity
             android:name=".activity.AerobicSportActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name=".activity.WatchSportSummaryActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
@@ -329,10 +317,6 @@
             android:screenOrientation="portrait">
 
         </activity>
-        <activity
-            android:name=".activity.MyDevicesActivity"
-
-            android:screenOrientation="portrait" />
 
         <activity
             android:name="photopicker.PhotoPreviewActivity"

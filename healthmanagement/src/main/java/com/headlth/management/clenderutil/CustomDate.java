@@ -50,12 +50,12 @@ public class CustomDate implements Serializable {
         this.month = calendar.get(Calendar.MONTH) + 1;
         this.day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        String s=getdate(calendar);
+      //  String s=getdate(calendar);
         /*this.year = Integer.parseInt(s.substring(0,4));
         this.month = Integer.parseInt(s.substring(5,7));
         this.day = Integer.parseInt(s.substring(8,10));*/
 
-        MyToash.Log(s+"  "+year + "||" + month + "||" + day + "");
+      //  MyToash.Log(s+"  "+year + "||" + month + "||" + day + "");
 
     }
 

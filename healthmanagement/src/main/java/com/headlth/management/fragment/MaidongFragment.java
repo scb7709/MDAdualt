@@ -4,20 +4,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,10 +21,8 @@ import com.google.gson.Gson;
 import com.headlth.management.R;
 import com.headlth.management.activity.AdvancedPrescriptionActivity;
 import com.headlth.management.activity.ChuFangDtail;
-import com.headlth.management.activity.ConnectBlueActivity;
 import com.headlth.management.activity.ExercisePlanActivity;
 import com.headlth.management.activity.ExerciseRecordActivity;
-import com.headlth.management.activity.MainActivity;
 import com.headlth.management.activity.NewChuFang;
 import com.headlth.management.activity.PrescriptionDetailsActivity;
 import com.headlth.management.activity.SearchBlueActivity;
@@ -36,21 +30,15 @@ import com.headlth.management.activity.StrengthSportActivity;
 import com.headlth.management.clenderutil.WaitDialog;
 import com.headlth.management.entity.AdvancedPrescription;
 import com.headlth.management.entity.MaidongDataJson;
-import com.headlth.management.entity.PostParameterRequest;
 import com.headlth.management.entity.PrescriptionJson;
-import com.headlth.management.entity.TemperatureeAndWeathere;
 import com.headlth.management.entity.chufangCallBack;
 import com.headlth.management.entity.newChuFangCallback;
 import com.headlth.management.myview.BottomMenuDialog;
-import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.PubLicDialog;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
-import com.headlth.management.utils.ImageUtil;
-import com.headlth.management.utils.ScreenShot;
 import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.watchdatasqlite.MySQLiteDataDao;
-import com.headlth.management.watchdatasqlite.UpLoadingWatchData;
 
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
@@ -62,8 +50,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import zxing.activity.CaptureActivity;
 
 /**
  * Created by abc on 2016/9/21.
@@ -103,7 +89,7 @@ public class MaidongFragment extends BaseFragment {
     private Button fragment_maidong_strength_go;
     @ViewInject(R.id.fragment_maidong_yougang_go)
     public Button fragment_maidong_yougang_goo;
-    public static Button fragment_maidong_yougang_go;
+
     @ViewInject(R.id.fragment_maidong_todayachievement)
     private LinearLayout fragment_maidong_todayachievement;
     @ViewInject(R.id.fragment_maidong_averageheart)
@@ -142,17 +128,8 @@ public class MaidongFragment extends BaseFragment {
     private boolean newChufang = true;//查看处方   是否刷新 （首页有数据有更新就刷新）
     private BottomMenuDialog bottomMenuDialog;
 
-    private static PopupWindow chooseDevice;//选择心率带还是腕表的pOP
-    private static PopupWindow bangdingWatch;//是否绑定腕表的提示
-    private boolean isfirst;
-    private static MySQLiteDataDao mySQLiteDataDao;
-    private static WaitDialog waitDialog;
 
-    ///MdMobileService.ashx?do=GetPlanClassRequest  UserID  主页接口
-    @SuppressLint("ValidFragment")
-    public MaidongFragment(boolean isfirst) {
-        this.isfirst = isfirst;
-    }
+
 
     public MaidongFragment() {
     }
@@ -176,16 +153,7 @@ public class MaidongFragment extends BaseFragment {
     }
 
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        fragment_maidong_yougang_go = fragment_maidong_yougang_goo;
-        String WATCHSPORT = ShareUitls.getString(getActivity(), "WATCHSPORT", "");
-        if (WATCHSPORT.equals("START") && isfirst) {
-            fragment_maidong_yougang_go.setText("检查腕表数据,请稍后");
-            fragment_maidong_yougang_go.setClickable(false);
-        }
-    }
+
 
     @Override
     public void onStart() {
@@ -454,11 +422,10 @@ public class MaidongFragment extends BaseFragment {
             maidongDataJson = g.fromJson(todaydata.toString(), MaidongDataJson.class);
         } catch (Exception e) {
         }
-
         if (maidongDataJson == null || maidong.equals("1")) {
             newChufang = true;
             Log.i("XXXXXXXXXX", "我的处方刷新");
-            RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetIndexInfoRequest&version=v2.9.6");
+            RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetIndexInfoRequest");
             params.addBodyParameter("UID", UID);
             params.addBodyParameter("ResultJWT", ResultJWT);
             HttpUtils.getInstance(getActivity()).sendRequestRequestParams("", params, false, new HttpUtils.ResponseListener() {
@@ -519,7 +486,7 @@ public class MaidongFragment extends BaseFragment {
             if (SPID.length() != 0) {
                 startSport = false;
                 // String version = VersonUtils.getVersionName(activity);//&version=" + version
-                RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetAdvancedPrescriptionRequest&version=v2.9.6");
+                RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetAdvancedPrescriptionRequest");
                 params.addBodyParameter("UID", ShareUitls.getString(activity, "UID", "0"));
                 params.addBodyParameter("ResultJWT", ShareUitls.getString(activity, "ResultJWT", "0"));
                 params.addBodyParameter("SPID", SPID);
@@ -528,7 +495,7 @@ public class MaidongFragment extends BaseFragment {
                             public void onResponse(String response) {
                                 startSport = true;
                                 AdvancedPrescription advancedPrescription = new Gson().fromJson(response, AdvancedPrescription.class);//advancedPrescription.WatchDuration
-                                Log.i("//第三阶段", "  " + response.toString());
+                                Log.i("myblue", "  " + response.toString());
                                 //   Intent intent = new Intent(activity, TEXT.class);
                                 //  intent.putExtra("jsonObject1", response.toString());
                                    /*   advancedPrescription.Status
@@ -544,11 +511,13 @@ public class MaidongFragment extends BaseFragment {
                                    * */
                                 switch (advancedPrescription.Status) {
                                     case "100":
-                                        getAdadultFragmentStartSportDalog(activity);
-                                        // activity.startActivity(new Intent(activity, SearchBlueActivity.class).putExtra("flag", ""));
+                                       // getAdadultFragmentStartSportDalog(activity);
+                                       activity.startActivity(new Intent(activity, SearchBlueActivity.class).putExtra("flag", ""));
                                         break;
                                     default:
-                                        activity.startActivity(new Intent(activity, AdvancedPrescriptionActivity.class).putExtra("advancedPrescription", advancedPrescription));
+                                        if(advancedPrescription!=null){
+                                            activity.startActivity(new Intent(activity, AdvancedPrescriptionActivity.class).putExtra("advancedPrescription", advancedPrescription));
+                                        }
                                         break;
                                 }
 
@@ -704,211 +673,6 @@ public class MaidongFragment extends BaseFragment {
                 public void setPositiveButton() {
                 }
             });
-        }
-    }
-
-    //点击开始运动的对话框
-    private static void getAdadultFragmentStartSportDalog(final Activity activity) {
-        View view = null;
-        int hei = ScreenShot.getheightPixels(activity);
-        int width = ScreenShot.getwidthPixels(activity);
-        // flag=true;
-        hei *= 0.3;
-        width *= 0.6;
-        view = LayoutInflater.from(activity).inflate(R.layout.dialog_adadultfragmentstartsport, null);
-        Button polar = (Button) view.findViewById(R.id.AdadultFragmentStartSportDalog_youyang);
-        Button watch = (Button) view.findViewById(R.id.AdadultFragmentStartSportDalog_liliang);
-        polar.setText("Polar心率带");
-        watch.setText("迈动腕表");
-
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                chooseDevice.dismiss();
-                return false;
-            }
-        });
-
-        polar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.startActivity(new Intent(activity, SearchBlueActivity.class));
-                chooseDevice.dismiss();
-            }
-        });
-
-
-        watch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //  getTemperatureeAndWeathere(activity);//加载天气信息 最后跳转到同步参数界面界面
-                String WATCHSPORT = ShareUitls.getString(activity, "WATCHSPORT", "");
-                if (WATCHSPORT.length() != 0) {
-                    showNotDialog(activity, false, null);
-                } else {
-                    if (mySQLiteDataDao == null) {
-                        mySQLiteDataDao = MySQLiteDataDao.getInstance(activity);
-                    }
-                    if (mySQLiteDataDao.querySingleNOOriginal().size() != 0) {
-                        MainActivity.RemindSyncDataDailog(activity);//弹出提示同步的提示框
-                        chooseDevice.dismiss();
-                        return;
-                    }
-                    getTemperatureeAndWeathere(activity);//加载天气信息 最后跳转到同步参数界面界面
-                }
-                chooseDevice.dismiss();
-            }
-        });
-/*
-*
-*   if(starttime.length()!=0){
-            cursor = db.rawQuery("select * from watchdata where FLAG='Original_data'", null);
-            if (cursor.getCount()!= 0){
-                while (cursor.moveToNext()) {
-                    uid = cursor.getString(1);
-                    String Data= cursor.getString(3);
-                    if (uid.equals(UID)&&Data.startsWith(starttime)) {
-                        haveOriginal_data= true;
-                        break;
-                    }
-                }
-            }
-
-
-        }
-*
-* */
-
-        chooseDevice = new PopupWindow(view, width, hei, true);
-        chooseDevice.setFocusable(true);
-        chooseDevice.setOutsideTouchable(true);
-        chooseDevice.showAtLocation(view, Gravity.CENTER, 0, 0);
-
-
-    }
-
-    /**
-     * 弹出是否绑定腕表的提示框
-     */
-    public static void showNotDialog(final Activity activity, final boolean flag, final TemperatureeAndWeathere temperatureeAndWeathere) {//flag=true是提示绑定腕表 否则是 提示监控数据已经同步
-        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_bangdingwatch, null);
-        bangdingWatch = new PopupWindow(view, ImageUtil.dp2px(activity, 300), ImageUtil.dp2px(activity, 300), true);
-
-        ImageView dialog_bangdingwatch_icon = (ImageView) view.findViewById(R.id.dialog_bangdingwatch_icon);
-        TextView dialog_bangdingwatch_text = (TextView) view.findViewById(R.id.dialog_bangdingwatch_text);
-        if (!flag) {
-            dialog_bangdingwatch_icon.setImageResource(R.mipmap.watch_data);
-            dialog_bangdingwatch_text.setText("监控数据已经同步,打开腕表运动起来");
-        }
-        RelativeLayout go = (RelativeLayout) view.findViewById(R.id.dialog_bangdingwatch);
-        go.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (flag) {
-                   activity.startActivity(new Intent(activity, CaptureActivity.class).putExtra("flag", "firstsport").putExtra("temperatureeAndWeathere", temperatureeAndWeathere));
-                    //  activity.startActivity(new Intent(activity, WatchBlueTestActivity.class));
-
-
-                }
-                bangdingWatch.dismiss();
-            }
-        });
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bangdingWatch.dismiss();
-            }
-        });
-        bangdingWatch.setBackgroundDrawable(new ColorDrawable());
-        bangdingWatch.setFocusable(true);
-        bangdingWatch.setOutsideTouchable(true);
-        bangdingWatch.showAtLocation(view, Gravity.CENTER, 0, 0);
-
-    }
-
-    private static void initDialog(final Activity activity) {
-        if (waitDialog == null) {
-            waitDialog = new com.headlth.management.clenderutil.WaitDialog(activity);
-            waitDialog.setCancleable(true);
-        }
-    }
-
-    private static void getTemperatureeAndWeathere(final Activity activity) {
-        initDialog(activity);
-        waitDialog.setMessage("");
-        waitDialog.showDailog();
-
-        UpLoadingWatchData.getTemperatureeAndWeathereOrParameterHttp(activity, "PostWeatherInfoRequest", new UpLoadingWatchData.GetTemperatureeAndWeathereOrParameterHttp() {
-            @Override
-            public void success(String response) {
-                if (response != null) {
-                    MyToash.Log(response);
-                    final TemperatureeAndWeathere temperatureeAndWeathere = new Gson().fromJson(response, TemperatureeAndWeathere.class);
-                    if (temperatureeAndWeathere != null && temperatureeAndWeathere.Data != null && temperatureeAndWeathere.Data.size() > 0) {
-                        UpLoadingWatchData.getTemperatureeAndWeathereOrParameterHttp(activity, "PostParameterRequest", new UpLoadingWatchData.GetTemperatureeAndWeathereOrParameterHttp() {
-                            @Override
-                            public void success(String response) {
-                                MyToash.Log("      " + response);
-                                if (response != null) {
-                                    final PostParameterRequest postParameterRequest = new Gson().fromJson(response, PostParameterRequest.class);
-                                    if (postParameterRequest != null) {
-                                        final String MAC = ShareUitls.getUserInformationMac(activity);//CF:09:6B:27:02:BB
-                                        if (MAC.equals("")) {
-                                            showNotDialog(activity, true, temperatureeAndWeathere);
-                                            if (waitDialog != null) {
-                                                waitDialog.dismissDialog();
-                                            }
-                                        } else {
-                                            //  activity.startActivity(new Intent(activity, WatchBlueTestActivity.class).putExtra("flag", "firstsport").putExtra("MAC", "F6:DD:A3:98:75:B1"));
-                                                IntentConnectBlueActivity(temperatureeAndWeathere, postParameterRequest, MAC, activity);
-                                        }
-
-
-                                    } else {
-                                        MyToash.ToashNoNet(activity);
-                                        if (waitDialog != null) {
-                                            waitDialog.dismissDialog();
-                                        }
-                                    }
-
-                                } else {
-                                    MyToash.ToashNoNet(activity);
-                                    if (waitDialog != null) {
-                                        waitDialog.dismissDialog();
-                                    }
-                                }
-
-                            }
-
-                        });
-                    } else {
-                        MyToash.ToashNoNet(activity);
-                        if (waitDialog != null) {
-                            waitDialog.dismissDialog();
-                        }
-                    }
-
-                } else {
-                    MyToash.ToashNoNet(activity);
-                    if (waitDialog != null) {
-                        waitDialog.dismissDialog();
-                    }
-                }
-
-            }
-        });
-
-
-    }
-
-    //ConnectBlueActivity  WatchBlueTestActivity
-    private static void IntentConnectBlueActivity(TemperatureeAndWeathere temperatureeAndWeathere, PostParameterRequest postParameterRequest, String MAC, Activity activity) {
-        activity.startActivity(new Intent(activity, ConnectBlueActivity.class)
-                .putExtra("MAC", MAC)
-                .putExtra("flag", "nofirstsport")
-                .putExtra("temperatureeAndWeathere", temperatureeAndWeathere)
-                .putExtra("postParameterRequest", postParameterRequest));
-        if (waitDialog != null) {
-            waitDialog.dismissDialog();
         }
     }
 

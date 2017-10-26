@@ -536,15 +536,9 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
                                                              con_state = 1;
                                                              bt_controller.setText("暂停");
                                                              statechange.setText("运动中");
-                                                             // mHandler.post(mRunnable);
-                                                             intent.putExtra("con_state", 1);
-                                                             // sendBroadcast(intent);
                                                          } else {
                                                              con_state = 0;
-                                                             intent.putExtra("con_state", 0);
-                                                             //sendBroadcast(intent);
                                                              bt_controller.setText("继续");
-                                                             // mHandler.removeCallbacks(mRunnable);
                                                              statechange.setText("休息中");
                                                          }
                                                          con_isstate = !con_isstate;
