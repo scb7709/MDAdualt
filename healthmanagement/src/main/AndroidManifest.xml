@@ -179,7 +179,11 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
-
+        <activity
+            android:name=".activity.AlbbStrengthSportActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LookBigImageActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
@@ -334,18 +338,7 @@
             android:screenOrientation="portrait">
 
         </activity>
-        <!--二维码-->
-        <activity
-            android:name="zxing.activity.CaptureActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" />
-        <activity
-            android:name="zxing.activity.ResultActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" />
 
-
-        <activity android:name="com.umeng.fb.ConversationActivity" />
 
 
         <!-- jj?-->

@@ -77,12 +77,12 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     private TextView botomLin;
     View view;
     String tatal;
-    ;
     List<Button> btalls = null;
 
     List<TextView> ts = null;
     int target;
     private int screenWidth;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,13 +91,16 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
         relativeLayout = (RelativeLayout) view.findViewById(R.id.view);
         zhu = (RelativeLayout) view.findViewById(R.id.zhu);
         botomLin = (TextView) view.findViewById(R.id.t1);
+        TotalDays = (TextView) view.findViewById(R.id.TotalDays);
+        MaxTotalTime = (TextView) view.findViewById(R.id.MaxTotalTime);
+        midleTime = (TextView) view.findViewById(R.id.midleTime);
         ButterKnife.inject(this, view);
         if (!ShareUitls.getString(getActivity(), "Target", "null").equals("null")) {
             Log.e("tttt", ShareUitls.getString(getActivity(), "Target", "null"));
             target = Integer.parseInt(ShareUitls.getString(getActivity(), "Target", "null"));
         }
 
-        tatal = StringForTime.stringForTime2(target);
+        tatal = StringForTime.stringForTime3(target);
         WindowManager wm = getActivity().getWindowManager();
         screenWidth = wm.getDefaultDisplay().getWidth();
 
@@ -148,15 +151,7 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                     }
                 }
             }
-            if (msg.what == 50) {
-                if (d != null) {
-                    relativeLayout.removeView(d);
-                    d = null;
-                }
-                d = new draw(getContext(), msg.obj, msg.arg1, (msg.arg2 - daohangHigh));
-                relativeLayout.addView(d);
 
-            }
 
         }
     };
@@ -164,15 +159,37 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     draw d;
     RelativeLayout relativeLayout;
 
+    private void showdraw(int EffectTime,int x,int y) {
+        if (d != null) {
+            relativeLayout.removeView(d);
+            d = null;
+        }
+        d = new draw(getContext(), EffectTime, x, (y - daohangHigh));
+        relativeLayout.addView(d);
+
+    }
+
+
+    private void setOnClickListener(final int ShowPossition){
+        final Button show = btalls.get(ShowPossition);
+        show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int[] location55 = new int[2];
+                show.getLocationOnScreen(location55);
+                showdraw(Integer.parseInt(anlyse.getData().getDetail().get(ShowPossition).getEffectTime()),location55[0],location55[1]);
+            }
+        });
+    }
     public class draw extends View {
         int x = 0;
         int y = 0;
         int EffectTime = 0;
 
-        public draw(Context context, Object data, int x, int y) {
+        public draw(Context context, int data, int x, int y) {
             super(context);
             setWillNotDraw(false);
-            this.EffectTime = (Integer) data;
+            this.EffectTime =data;
             this.x = x;
             this.y = y;
         }
@@ -192,9 +209,9 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                 paint.setTextSize(32);
             }
 
-            String effect = StringForTime.stringForTime2(EffectTime);
-            int effectwidth = x+(zhouyiall.getWidth()- AnalizeClFragment.getTextWidth(effect,paint))/2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
-            int tatalwidth = x+(zhouyiall.getWidth()- AnalizeClFragment.getTextWidth(tatal,paint))/2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
+            String effect = StringForTime.stringForTime3(EffectTime);
+            int effectwidth = x + (zhouyiall.getWidth() - AnalizeClFragment.getTextWidth(effect, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
+            int tatalwidth = x + (zhouyiall.getWidth() - AnalizeClFragment.getTextWidth(tatal, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
             canvas.drawText(effect, effectwidth, y - 90, paint);
             canvas.drawLine(x, y - 85, x + zhouyiall.getWidth(), y - 85, paint);
             canvas.drawText(tatal, tatalwidth, y - 60, paint);
@@ -252,215 +269,13 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
         ts.add(t7);
         if (anlyse != null) {
             if (anlyse.getStatus() != 0) {
-                zhouyiall.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                       // String effect = StringForTime.stringForTime2(Integer.parseInt(anlyse.getData().getDetail().get(0).getEffectTime()));
-
-                        int[] location55 = new int[2];
-                        zhouyiall.getLocationOnScreen(location55);
-                        int[] location555 = new int[2];
-                        zhouyiall.getLocationOnScreen(location555);
-                        Message mssg = h.obtainMessage();
-                        mssg.what = 50;
-                        mssg.obj = Integer.parseInt(anlyse.getData().getDetail().get(0).getEffectTime());
-                        if (location55[0] > location555[0]) {
-                            mssg.arg1 = location55[0];
-                        } else {
-                            mssg.arg1 = location555[0];
-                        }
-                        if (location55[1] > location555[1]) {
-                            mssg.arg2 = location555[1];
-                        } else {
-                            mssg.arg2 = location55[1];
-                        }
-                        h.sendMessage(mssg);
-                    }
-                });
-                zhouerall.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        //String effect = StringForTime.stringForTime2(Integer.parseInt(anlyse.getData().getDetail().get(1).getEffectTime()));
-
-                        int[] location55 = new int[2];
-                        zhouerall.getLocationOnScreen(location55);
-                        int[] location555 = new int[2];
-                        zhouerall.getLocationOnScreen(location555);
-
-                        Message mssg = h.obtainMessage();
-                        mssg.what = 50;
-                        mssg.obj = Integer.parseInt(anlyse.getData().getDetail().get(1).getEffectTime());
-
-                        if (location55[0] > location555[0]) {
-                            mssg.arg1 = location55[0];
-                        } else {
-                            mssg.arg1 = location555[0];
-                        }
-
-
-                        if (location55[1] > location555[1]) {
-                            mssg.arg2 = location555[1];
-                        } else {
-                            mssg.arg2 = location55[1];
-                        }
-                        h.sendMessage(mssg);
-                    }
-                });
-                zhousanall.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                      //  String effect = StringForTime.stringForTime2(Integer.parseInt(anlyse.getData().getDetail().get(2).getEffectTime()));
-                        int[] location55 = new int[2];
-                        zhousanall.getLocationOnScreen(location55);
-                        int[] location555 = new int[2];
-
-                        zhousanall.getLocationOnScreen(location555);
-                        Message mssg = h.obtainMessage();
-                        mssg.what = 50;
-                        mssg.obj = Integer.parseInt(anlyse.getData().getDetail().get(2).getEffectTime());
-
-                        if (location55[0] > location555[0]) {
-                            mssg.arg1 = location55[0];
-                        } else {
-                            mssg.arg1 = location555[0];
-                        }
-
-
-                        if (location55[1] > location555[1]) {
-                            mssg.arg2 = location555[1];
-                        } else {
-                            mssg.arg2 = location55[1];
-                        }
-
-                        h.sendMessage(mssg);
-                    }
-                });
-                zhousiall.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                       // String effect = StringForTime.stringForTime2(Integer.parseInt(anlyse.getData().getDetail().get(3).getEffectTime()));
-                        int[] location55 = new int[2];
-                        zhousiall.getLocationOnScreen(location55);
-                        int[] location555 = new int[2];
-                        zhousiall.getLocationOnScreen(location555);
-
-                        Message mssg = h.obtainMessage();
-                        mssg.what = 50;
-                        mssg.obj = Integer.parseInt(anlyse.getData().getDetail().get(3).getEffectTime());
-
-                        if (location55[0] > location555[0]) {
-                            mssg.arg1 = location55[0];
-                        } else {
-                            mssg.arg1 = location555[0];
-                        }
-
-                        if (location55[1] > location555[1]) {
-                            mssg.arg2 = location555[1];
-                        } else {
-                            mssg.arg2 = location55[1];
-                        }
-
-
-                        h.sendMessage(mssg);
-                    }
-                });
-                zhouwuall.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                     //   String effect = StringForTime.stringForTime2(Integer.parseInt(anlyse.getData().getDetail().get(5).getEffectTime()));
-                        int[] location55 = new int[2];
-                        zhouwuall.getLocationOnScreen(location55);
-                        int[] location555 = new int[2];
-                        zhouwuall.getLocationOnScreen(location555);
-
-                        Message mssg = h.obtainMessage();
-                        mssg.what = 50;
-                        mssg.obj = Integer.parseInt(anlyse.getData().getDetail().get(4).getEffectTime());
-
-                        if (location55[0] > location555[0]) {
-                            mssg.arg1 = location55[0];
-                        } else {
-                            mssg.arg1 = location555[0];
-                        }
-
-                        if (location55[1] > location555[1]) {
-                            mssg.arg2 = location555[1];
-                        } else {
-                            mssg.arg2 = location55[1];
-                        }
-                        h.sendMessage(mssg);
-                    }
-                });
-                zhouliuall.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                      //  String effect = StringForTime.stringForTime2(Integer.parseInt(anlyse.getData().getDetail().get(5).getEffectTime()));
-                        int[] location55 = new int[2];
-                        zhouliuall.getLocationOnScreen(location55);
-
-                        int[] location555 = new int[2];
-                        zhouliuall.getLocationOnScreen(location555);
-
-                        Message mssg = h.obtainMessage();
-                        mssg.what = 50;
-                        mssg.obj = Integer.parseInt(anlyse.getData().getDetail().get(5).getEffectTime());
-
-                        if (location55[0] > location555[0]) {
-                            mssg.arg1 = location55[0];
-                        } else {
-                            mssg.arg1 = location555[0];
-                        }
-
-                        if (location55[1] > location555[1]) {
-                            mssg.arg2 = location555[1];
-                        } else {
-                            mssg.arg2 = location55[1];
-                        }
-                        h.sendMessage(mssg);
-                    }
-                });
-                zhouriall.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                       // String effect = StringForTime.stringForTime2(Integer.parseInt(anlyse.getData().getDetail().get(6).getEffectTime()));
-                        int[] location55 = new int[2];
-                        zhouriall.getLocationOnScreen(location55);
-                        int[] location555 = new int[2];
-                        zhouriall.getLocationOnScreen(location555);
-                        Message mssg = h.obtainMessage();
-                        mssg.what = 50;
-                        mssg.obj = Integer.parseInt(anlyse.getData().getDetail().get(6).getEffectTime());
-                        if (location55[0] > location555[0]) {
-                            mssg.arg1 = location55[0];
-                        } else {
-                            mssg.arg1 = location555[0];
-                        }
-
-                        if (location55[1] > location555[1]) {
-                            mssg.arg2 = location555[1];
-                        } else {
-                            mssg.arg2 = location55[1];
-                        }
-                        h.sendMessage(mssg);
-                    }
-                });
-                TotalDays = (TextView) view.findViewById(R.id.TotalDays);
-                MaxTotalTime = (TextView) view.findViewById(R.id.MaxTotalTime);
-                midleTime = (TextView) view.findViewById(R.id.midleTime);
+                for (int ShowPossition=0; ShowPossition < 7; ShowPossition++) {
+                    setOnClickListener(ShowPossition);
+                }
                 TotalDays.setText("达标天数：" + anlyse.getData().getSummary().get(0).getTotalDays() + "天");
-
-               /* avgEffec = "" + (Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgEffectTime()) / 60);
-                avgEffec = (avgEffec + "") + "'" + second((Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgEffectTime())) % 60) + "''";*/
-
-                AvgEffectTime.setText(StringForTime.stringForTime2(Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgEffectTime())));
+                AvgEffectTime.setText(StringForTime.stringForTime3(Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgEffectTime())));
                 MaxTime = Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxTotalTime());
-               /* avgEffec = "" + ( / 60);
-                avgEffec = (avgEffec + "") + "'" + second((Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgTotalTime())) % 60) + "''";
-                */
                 AvgTotalTime.setText(StringForTime.stringForTime3(Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgTotalTime())));
-
                 Percentage.setText(anlyse.getData().getSummary().get(0).getPercentage() + "");
                 MaxTotalTime.setText(Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxTotalTime()) / 60 + "min");
                 midleTime.setText("" + (Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxTotalTime()) / 60) / 2 + "min");

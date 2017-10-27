@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.headlth.management.R;
 import com.headlth.management.activity.AdvancedPrescriptionActivity;
+import com.headlth.management.activity.AlbbStrengthSportActivity;
 import com.headlth.management.activity.ChuFangDtail;
 import com.headlth.management.activity.ExercisePlanActivity;
 import com.headlth.management.activity.ExerciseRecordActivity;
@@ -295,8 +296,8 @@ public class MaidongFragment extends BaseFragment {
                 }
                 break;
             case R.id.fragment_maidong_strength_go:
-                // if(InternetUtils.internet(getActivity())) {
-                startActivity(new Intent(getActivity(), StrengthSportActivity.class));
+                // if(InternetUtils.internet(getActivity())) {//AlbbStrengthSportActivity  StrengthSportActivity
+                startActivity(new Intent(getActivity(), AlbbStrengthSportActivity.class));
                 // }
                 break;
             case R.id.fragment_maidong_exercise_plan_youyang_detials_layout:
