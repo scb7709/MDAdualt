@@ -137,7 +137,7 @@ public class StrengthVideoPlayActivity extends Activity {
         video = (Video) intent.getSerializableExtra("Video");
         Stage = video.getStage();
         intentService = new Intent(StrengthVideoPlayActivity.this, NetworkService.class);
-        //   intentRecever=  new Intent("ActivityToServiceReceiver");
+
         startService(intentService);//开启服务用于全程检测
 
         SDPATH= Environment.getExternalStorageDirectory().getAbsolutePath()+ "/maidong/maidongvideo/maidongvideo" + Stage;
@@ -160,7 +160,7 @@ public class StrengthVideoPlayActivity extends Activity {
         initDialog();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
         time = format.format(new Date());
-        // point=video.getActionList().size()-1;//测试用
+        point=video.getActionList().size()-1;//测试用
         //ShareUitls.putString(getApplicationContext(), "CurrentPosition", "2000000000");
         setListener();
         // showDialog(true);

@@ -123,7 +123,7 @@ public class StrengthSportSummarizeActivity extends BaseActivity /*implements IW
 
     private void sendData() {
         // Log.i("SSSSSSSS", intent.getStringExtra("VID") + "  " + intent.getStringExtra("UID") + "   " + intent.getStringExtra("SportCal") + "'" + intent.getStringExtra("SportDuration") + "'" + intent.getStringExtra("SportDate"));
-        Log.i("updateeeeeeeeee", "  UID=  " + intent.getStringExtra("UID") + "    VID= " + intent.getStringExtra("VID") + "  SportCal=  " + intent.getStringExtra("SportCal") + "    SportDuration= " + intent.getStringExtra("SportDuration") + "   SportDate= " + intent.getStringExtra("SportDate") + "  ");
+      //  Log.i("updateeeeeeeeee", "  UID=  " + intent.getStringExtra("UID") + "    VID= " + intent.getStringExtra("VID") + "  SportCal=  " + intent.getStringExtra("SportCal") + "    SportDuration= " + intent.getStringExtra("SportDuration") + "   SportDate= " + intent.getStringExtra("SportDate") + "  ");
         if (!SEND) {
             ShareUitls.putString(getApplicationContext(), "PowerTrainDuration", intent.getStringExtra("SportDuration"));
             if (InternetUtils.internett(this)) {
@@ -162,7 +162,7 @@ public class StrengthSportSummarizeActivity extends BaseActivity /*implements IW
                                 public void onErrorResponse(Throwable ex) {
 
                                     saveNativeData();
-                                    Log.e("rrrrrrrrrrrrr", "shiabi ghaibsia ");
+                                    //Log.e("rrrrrrrrrrrrr", "shiabi ghaibsia ");
                                     Toast.makeText(getApplicationContext(), "上传失败,请确认网络连接", Toast.LENGTH_SHORT).show();
                                     waitDialog.dismissDialog();
 

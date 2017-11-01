@@ -194,6 +194,8 @@ public class StrengthSportActivity extends BaseActivity {
 
                         return;
                     } else {
+
+
                         if (list.size() != 0) {//去掉本地多余的视频
                             for (int i = 0; i < list.size(); i++) {
                                 if (!videoIdlist.contains(list.get(i))) {

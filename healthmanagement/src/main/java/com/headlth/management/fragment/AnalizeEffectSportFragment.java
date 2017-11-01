@@ -112,11 +112,9 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     int y;
     int bootom;
     int MaxHight;
-
     int top;
     int daohangHigh;
     int MaxTime = 0;
-
     public Handler h = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -124,7 +122,7 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                 if (backd.getWidth() != 0 && backd.getHeight() != 0 && relativeLayout.getWidth() != 0 && relativeLayout.getHeight() != 0 && zhu.getWidth() != 0 && zhu.getHeight() != 0 && botomLin.getWidth() != 0 && botomLin.getHeight() != 0) {
                     FrameLayout.LayoutParams youxiaolinearParams = (FrameLayout.LayoutParams) youxiao.getLayoutParams();
                     // 取控件aaa当前的布局参数
-                    youxiaolinearParams.width = getPercent(anlyse) * backd.getWidth() / 100;// 当控件的高强制设成365象素
+                    youxiaolinearParams.width = getPercent(anlyse) * backd.getWidth() / 100;//
                     youxiao.setLayoutParams(youxiaolinearParams);
 
                     int[] location666 = new int[2];

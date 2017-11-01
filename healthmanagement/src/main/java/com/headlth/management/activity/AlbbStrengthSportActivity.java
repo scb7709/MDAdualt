@@ -461,6 +461,7 @@ public class AlbbStrengthSportActivity extends Activity {
         String oldtodayvideotime = ShareUitls.getString(AlbbStrengthSportActivity.this, "todayvideotime", "");
         String newtodayvideotime = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String todayvideo = ShareUitls.getString(AlbbStrengthSportActivity.this, "todayvideo", "");
+
         boolean flag = oldtodayvideotime.equals(newtodayvideotime) && todayvideo.length() != 0;
         if (flag) {
             setData(todayvideo);
@@ -500,7 +501,7 @@ public class AlbbStrengthSportActivity extends Activity {
             RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostOSSInfoRequest");
             params.addBodyParameter("UID", ShareUitls.getString(AlbbStrengthSportActivity.this, "UID", "") + "");
             params.addBodyParameter("ResultJWT", ShareUitls.getString(AlbbStrengthSportActivity.this, "ResultJWT", "0"));
-            HttpUtils.getInstance(AlbbStrengthSportActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
+            HttpUtils.getInstance(AlbbStrengthSportActivity.this).sendRequestRequestParams("", params, false, new HttpUtils.ResponseListener() {
 
                         public void onResponse(String response) {
                             waitDialog.dismissDialog();
