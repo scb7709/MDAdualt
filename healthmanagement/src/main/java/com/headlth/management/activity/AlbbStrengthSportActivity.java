@@ -41,9 +41,11 @@ import com.headlth.management.acs.MuchHeigthImangView;
 
 import com.headlth.management.albbvideo.AlbbVideoConstant;
 import com.headlth.management.albbvideo.ProgressInputStream;
+import com.headlth.management.clenderutil.WaitDialog;
 import com.headlth.management.entity.OSSinfo;
 import com.headlth.management.entity.Video;
 import com.headlth.management.myview.BottomMenuDialog;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.NumberProgressBar;
 import com.headlth.management.service.NetworkService;
 import com.headlth.management.utils.Constant;
@@ -87,8 +89,6 @@ public class AlbbStrengthSportActivity extends Activity {
     private TextView view_publictitle_title;
     @ViewInject(R.id.view_publictitle_back)
     private RelativeLayout view_publictitle_back;
-
-
     @ViewInject(R.id.strengthsport_time)
     TextView strengthsport_time;
     @ViewInject(R.id.strengthsport_action)
@@ -133,16 +133,8 @@ public class AlbbStrengthSportActivity extends Activity {
     private String Stage;//当前是第几阶段
     private List<String> videoIdlist = new ArrayList<>();//网络端的ID本地地址
     private List<String> localvideolist = new ArrayList<>();//本地所有视频的地址
-
-
-    // private List<Video.SubVideo> netvideolist = new ArrayList<>();//没有被下载视频
-
-    // private List<String> helpervideoIdlist = new ArrayList();//数据库里寸的所有视频的ID
     Intent i;
     private int possition;//当前下载视频的位置
-    private HttpManager httpManager;
-
-    // private Callback.Cancelable cancelable;
     private OSSAsyncTask ossAsyncTask;
     private long Total;
     private long Current;//当前已经下载的视频大小
@@ -168,9 +160,9 @@ public class AlbbStrengthSportActivity extends Activity {
     private BottomMenuDialog bottomMenuDialog;
     private BottomMenuDialog bottomMenuDialogMobileNetworks;
     private String SDPATH;//SD卡根目录
-
+    File videopath;//当前正在下载的视频的file
     //  Intent intentRecever;//停止服务的
-
+    private WaitDialog waitDialog;
 
     private OSSCredentialProvider credentialProvider;
     private OSS oss;
@@ -184,9 +176,8 @@ public class AlbbStrengthSportActivity extends Activity {
         x.view().inject(this);
         view_publictitle_title.setText("力量训练");
         PushAgent.getInstance(this).onAppStart();
+        MyToash.Log("ssssssssssssssssssssssssss");
         activity = this;
-        //  intentRecever=  new Intent("ActivityToServiceReceiver");
-        httpManager = x.http();
         getVideoData();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         i = new Intent(AlbbStrengthSportActivity.this, StrengthVideoPlayActivity.class);
@@ -202,7 +193,7 @@ public class AlbbStrengthSportActivity extends Activity {
             List<String> list = FileViewer.getListFiles(SDPATH, "maid", true);
             String errprvideo = ShareUitls.getString(AlbbStrengthSportActivity.this, "errprvideo", "");//看是否有未完成下载的视频
             if (videoIdlist.size() != 0) {
-                Log.e("fffffffffffAA", videoIdlist.size() + "   " + video.getActionList().size() + "   " + list.toString() + " ssss  " + videoIdlist.toString());
+                MyToash.Log(videoIdlist.size() + "   " + video.getActionList().size() + "   " + list.toString() + " ssss  " + videoIdlist.toString());
 
 
                 if (list.containsAll(videoIdlist) && errprvideo.length() == 0) {//本地视频下载好的 没有出现异常视屏
@@ -217,6 +208,7 @@ public class AlbbStrengthSportActivity extends Activity {
 
                         return;
                     } else {
+                        initDialog();
                         conf = new ClientConfiguration();
                         conf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒
                         conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
@@ -250,18 +242,18 @@ public class AlbbStrengthSportActivity extends Activity {
                     //  ++count;
                     if (localid.equals(SDPATH + "/" + subVideo.getID() + ".maid")) {
                         Surplus += subVideo.getSize();
-                        Log.i("ffffffffffffXXX11", "" + Surplus);
+                        //Log.i("ffffffffffffXXX11", "" + Surplus);
                     }
 
                 }
 
             }
-            Log.i("ffffffffffffXXX22", "" + Surplus);
+           // Log.i("ffffffffffffXXX22", "" + Surplus);
             Surplus = video.getVideoSize() - Surplus;
         } else {
             Surplus = video.getVideoSize();
         }
-        Log.i("ffffffffffffXXX33", "" + Surplus);
+       // Log.i("ffffffffffffXXX33", "" + Surplus);
 
         String str = "";
         final int nettype = InternetUtils.getNetworkState(AlbbStrengthSportActivity.this);
@@ -282,12 +274,11 @@ public class AlbbStrengthSportActivity extends Activity {
                         @Override
                         public void onClick(View v) {
 
-
                             long sdsize[] = FileViewer.getSDSpace(AlbbStrengthSportActivity.this);
-                            Log.e("aaaaaaaaaccc内存", sdsize[0] + "   " + sdsize[1] + "'    " + Surplus);
+                          //  Log.e("aaaaaaaaaccc内存", sdsize[0] + "   " + sdsize[1] + "'    " + Surplus);
                             if (sdsize[1] <= Surplus) {//手机内存不够
 
-                                Log.e("aaaaaaaaaccc内存", sdsize[0] + "" + sdsize[1] + "'  " + Surplus);
+                               // Log.e("aaaaaaaaaccc内存", sdsize[0] + "" + sdsize[1] + "'  " + Surplus);
 
                                 Toast.makeText(AlbbStrengthSportActivity.this, "手机内存不足!", Toast.LENGTH_SHORT).show();
                                 return;
@@ -302,23 +293,25 @@ public class AlbbStrengthSportActivity extends Activity {
                             bottomMenuDialog.dismiss();
                         }
                     }).create();
+            bottomMenuDialog.setCancelable(false);
             bottomMenuDialog.show();
 
         } else {
             Toast.makeText(AlbbStrengthSportActivity.this, "当前无网络连接", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void startLoading() {
         isload = true;
         Total = video.getVideoSize();
-        Log.e("aaaaaaaaaaaacccaa", Total + "    ss");
+        MyToash.Log(Total + "    ss");
         strengthsport_process_numberProgressbar.setMax((int) (Total));
         String errprvideo = ShareUitls.getString(AlbbStrengthSportActivity.this, "errprvideo", "");//看是否有未完成下载的视频
         if (errprvideo.length() != 0) {
             File file = new File(errprvideo);
             if (file.exists()) {
-                Log.e("aaaaaaaaaccc", "删除");
+                MyToash.Log("删除");
                 file.delete();
                 ShareUitls.putString(AlbbStrengthSportActivity.this, "errprvideo", "");//
             }
@@ -335,7 +328,7 @@ public class AlbbStrengthSportActivity extends Activity {
         String path = new File(SDPATH + "/").getPath();
         File file = new File(path);
         if (!file.exists()) {
-            Log.e("aaaaaaaaaccc", "路径不存在");
+           // MyToash.Log("路径不存在");
             file.mkdirs();
         }
         downloadFile();
@@ -368,6 +361,7 @@ public class AlbbStrengthSportActivity extends Activity {
             case R.id.strengthsport_process_layout:
                 if (!downloadstop) {//当前不处于手动暂停状态 点击暂停
                     acyivity_strength_parse.setVisibility(View.VISIBLE);
+
                     if (downloading) {//正在下载 点击暂停
                         if (ossAsyncTask != null && !ossAsyncTask.isCanceled()) {
                             ossAsyncTask.cancel();
@@ -392,13 +386,13 @@ public class AlbbStrengthSportActivity extends Activity {
                                             //  ++count;
                                             if (localid.equals(SDPATH + "/" + subVideo.getID() + ".maid")) {
                                                 Surplus += subVideo.getSize();
-                                                Log.i("ffffffffffffXXX11", "" + Surplus);
+                                                MyToash.Log("" + Surplus);
                                             }
 
                                         }
 
                                     }
-                                    Log.i("ffffffffffffXXX22", "" + Surplus);
+                                    MyToash.Log("" + Surplus);
                                     Surplus = video.getVideoSize() - Surplus;
                                 } else {
                                     Surplus = video.getVideoSize();
@@ -423,6 +417,7 @@ public class AlbbStrengthSportActivity extends Activity {
                                                 bottomMenuDialogMobileNetworks.dismiss();
                                             }
                                         }).create();
+                                bottomMenuDialogMobileNetworks.setCancelable(false);
                                 bottomMenuDialogMobileNetworks.show();
                             } else if (internet == 1 || agreenowifiload) {//wifi 或者移动网络同意过
                                 downloadFile();
@@ -478,7 +473,7 @@ public class AlbbStrengthSportActivity extends Activity {
             HttpUtils.getInstance(AlbbStrengthSportActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
 
                         public void onResponse(String response) {
-                            Log.i("rrrrrrAASCC", response);
+                            MyToash.Log(response);
 
                             ShareUitls.putString(AlbbStrengthSportActivity.this, "todayvideo", response);//
                             String todayvideotimee = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -499,6 +494,7 @@ public class AlbbStrengthSportActivity extends Activity {
         }
     }
 
+    //获取下载视频所需要的 key 等信息
     private void getAlbbData(final boolean isfirst) {
         if (InternetUtils.internet(this)) {
             RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostOSSInfoRequest");
@@ -507,7 +503,8 @@ public class AlbbStrengthSportActivity extends Activity {
             HttpUtils.getInstance(AlbbStrengthSportActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
 
                         public void onResponse(String response) {
-                            Log.i("getAlbbData", response);
+                            waitDialog.dismissDialog();
+                            MyToash.Log(response);
                             try {
                                 ossInfo = g.fromJson(String.valueOf(new JSONObject(new JSONObject(response).getJSONObject("OSSInfo").toString())), OSSinfo.class);
                                 if (ossInfo != null && ossInfo.getAccessKeyId() != null) {
@@ -520,7 +517,6 @@ public class AlbbStrengthSportActivity extends Activity {
                                     if (isfirst) {//第一次启动下载
                                         startDownPreparatoryWork();
                                     } else {//视频下载时限过期了
-
                                         downloadFile();
                                     }
 
@@ -533,7 +529,7 @@ public class AlbbStrengthSportActivity extends Activity {
 
                         @Override
                         public void onErrorResponse(Throwable ex) {
-
+                            waitDialog.dismissDialog();
                             Toast.makeText(getApplicationContext(), "请求失败", Toast.LENGTH_SHORT).show();
                             return;
 
@@ -546,7 +542,7 @@ public class AlbbStrengthSportActivity extends Activity {
 
     private void setData(String response) {
         strengthsport_btstart.setVisibility(View.VISIBLE);
-        Log.e("rrrrrrrrrrrrr", ShareUitls.getString(AlbbStrengthSportActivity.this, "vlist", "") + "22222222" + response.toString());
+      //  MyToash.Log(ShareUitls.getString(AlbbStrengthSportActivity.this, "vlist", "") + "22222222" + response.toString());
 
         try {
             WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
@@ -563,17 +559,17 @@ public class AlbbStrengthSportActivity extends Activity {
             strengthsport_sport_time.setText("      -" + video.getTrainTime());
             strengthsport_sport_principle.setText("      -" + video.getTrainRule());
 
-            Log.i("RRRRRRRRR", stringForTime(Integer.parseInt(video.getDuration())));
+            MyToash.Log(stringForTime(Integer.parseInt(video.getDuration())));
             strengthsport_time.setText(stringForTime(Integer.parseInt(video.getDuration())));
 
             strengthsport_action.setText(video.getActionCount());
 
             strengthsport_consume.setText((int) Double.parseDouble(video.getTotalCal()) + "");
-            Log.e("rrrrrVIDER", "" + video.getTotalCal());
+            MyToash.Log("" + video.getTotalCal());
             setIcon(strengthsport_pic1, Constant.BASE_URL + "/" + video.getImgUrl());
-            Log.e("rrrrrVIDER", video.toString());
+            MyToash.Log(video.toString());
             int size = video.getActionList().size();
-            Log.e("rrrrrSize", size + "");
+            MyToash.Log(size + "");
             for (int i = 0; i < size; i++) {
                 String url = Constant.BASE_URL + "/" + video.getActionList().get(i).getImgUrl();
 
@@ -594,14 +590,14 @@ public class AlbbStrengthSportActivity extends Activity {
         } catch (JSONException e) {
             ShareUitls.putString(AlbbStrengthSportActivity.this, "todayvideo", "");//
             e.printStackTrace();
-            Log.e("rrrrrVIDER", "异常走一波");
+            MyToash.Log("异常走一波");
         }
     }
 
 
     //加载图片
     private void setIcon(ImageView iv, String url) {
-        Log.e("aaaaurl", url);
+        MyToash.Log(url);
         String path = "";
         char[] c = url.toCharArray();
         for (int i = 0; i < url.length(); i++) {
@@ -622,12 +618,13 @@ public class AlbbStrengthSportActivity extends Activity {
 
 
     private void downloadFile() {
+        videopath = null;
         nonet = true;//没网提示恢复
         downloading = true;
-        nonetworkFailure=false;
+        nonetworkFailure = false;
         String errprvideo = ShareUitls.getString(AlbbStrengthSportActivity.this, "errprvideo", "");//看是否有未完成下载的视频
 
-        Log.i("ACVBBFFF", errprvideo + "        ggggggggg");
+        // Log.i("ACVBBFFF", errprvideo + "        ggggggggg");
         if (errprvideo.length() != 0) {
             File file = new File(errprvideo);
             if (file.exists()) {
@@ -638,7 +635,7 @@ public class AlbbStrengthSportActivity extends Activity {
                 file.delete();
             }
 
-            Log.i("ACVBBFFF", errprvideo);
+            // Log.i("ACVBBFFF", errprvideo);
             ShareUitls.putString(AlbbStrengthSportActivity.this, "errprvideo", "");//
         }//上次有未完成下载的视频 直接删除重新下载
         localvideolist.clear();
@@ -675,31 +672,35 @@ public class AlbbStrengthSportActivity extends Activity {
                     Log.e("aaaaaaaaaccc", "路径不存在");
                     file.mkdirs();
                 }
-                File videopath = new File(file.getPath(), subVideo.getID() + ".maid");
+                videopath = new File(file.getPath(), subVideo.getID() + ".maid");
                 // subVideo.setLocalAddress(file.getPath() + "/" + subVideo.getID() + ".mp4");
-
                 Log.i("ACVBBFFF", "开始");
                 // xutilsDown(subVideo, url, videopath);
-                asyncGetObjectSample(subVideo, videopath);
+                asyncGetObjectSample(subVideo);
             }
 
 
         } else {
+            MyToash.Log("下载完成");
             downloading = false;
             //重置指针在校验一遍
             List temp = FileViewer.getListFiles(SDPATH, "maid", true);//获取本地已经下载好的所有视频文件名字
             if (temp.size() < video.getActionList().size()) {
+                MyToash.Log("有未下载的");
                 possition = 0;
                 downloadFile();
             } else {
-
+                MyToash.Log("全部完成" + proscenium + "   " + count);
                 isload = false;
-                Log.i("counttttt", "" + count);
-
                 strengthsport_process_layout.setVisibility(View.GONE);
+                strengthsport_btstart.setVisibility(View.VISIBLE);
                 canPlay = true;
                 // sendBroadcast(intentRecever);
-                stopService(new Intent(AlbbStrengthSportActivity.this, NetworkService.class));
+
+                try {
+                    stopService(new Intent(AlbbStrengthSportActivity.this, NetworkService.class));
+                } catch (Exception e) {
+                }
                 try {//如果没有下载的话 也就没有注册广播  此刻解除注册会异常
                     unregisterReceiver(ServiceToActivityReceiver);
                 } catch (Exception e) {
@@ -708,7 +709,7 @@ public class AlbbStrengthSportActivity extends Activity {
                     startActivity(new Intent(AlbbStrengthSportActivity.this, StrengthVideoPlayActivity.class).putExtra("Video", video));
                     // finish();
                 }
-                strengthsport_btstart.setVisibility(View.VISIBLE);
+
                 ShareUitls.putString(AlbbStrengthSportActivity.this, "errprvideo", "");//
             }
         }
@@ -716,7 +717,8 @@ public class AlbbStrengthSportActivity extends Activity {
 
     int countt;
 
-    public void asyncGetObjectSample(final Video.SubVideo subVideo, final File videopath) {
+    //核心下载视频的方法
+    public void asyncGetObjectSample(final Video.SubVideo subVideo) {
         Log.i("counttcountt", ++countt + "");
 
       /*  new Thread(new Runnable() {
@@ -730,71 +732,24 @@ public class AlbbStrengthSportActivity extends Activity {
 
             @Override
             public void onSuccess(GetObjectRequest request, GetObjectResult result) {
-                Log.i("GetObjectReqrequest", result.toString());
-                // 请求成功
-                InputStream inputStream = result.getObjectContent();
-                OutputStream os;
-                downloading = true;
-                //重载InputStream来获取读取进度信息
-                ProgressInputStream progressStream = new ProgressInputStream(inputStream, new OSSProgressCallback<GetObjectRequest>() {
-                    @Override
-                    public void onProgress(GetObjectRequest o, long currentSize, long totalSize) {
-                        Log.i("GetObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
-                        //  int progress = (int) (100 * currentSize / totalSize);
-                        // UIDisplayer.updateProgress(progress);
-                        //  UIDisplayer.displayInfo("下载进度: " + String.valueOf(progress) + "%");
-                        Log.i("ACVBBFFF", "开始3");
-                        Message message = Message.obtain();
-                        message.arg1 = (int) currentSize;
-
-                        handlerProcress.sendMessage(message);
-
-
-                    }
-                }, result.getContentLength());
-
-
-                byte[] buffer = new byte[2048];
-                int len;
-
-                try {
-                    os = new FileOutputStream(videopath);
-                    while ((len = progressStream.read(buffer)) != -1) {
-                        // 处理下载的数据
-                        Log.i("asyncGetObjectSample", "read length: " + len);
-                        os.write(buffer, 0, len);
-                    }
-                    Log.d("asyncGetObjectSample", "download success.");
-                    redownload = 0;//下载失败重新下载次数标记 设置为 0
-                    //  Current += subVideo.getSize();
-                    ShareUitls.putString(AlbbStrengthSportActivity.this, "errprvideo", "");//记录是下载那个视频失败的 设置为空
-                    loadingvideo = "";
-                    ++possition;
-                    downloadFile();
-                } catch (IOException e) {
-                    ShareUitls.putString(AlbbStrengthSportActivity.this, "errprvideo", loadingvideo);//记录是下载那个视频失败的
-                    downloadFile();
-                    e.printStackTrace();
-                }
-
-                Log.i("ACVBBFFF", "开始4");
-                //  if(canaleLoad) {//没有被取消下载 也就是暂停
-
+                DownLoadSuccess(result, videopath);
             }
 
             @Override
             public void onFailure(GetObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+
                 Log.i("asyncGetObjectSample", "onFailure");
                 downloading = false;
                 ShareUitls.putString(AlbbStrengthSportActivity.this, "errprvideo", loadingvideo);//记录是下载那个视频失败的
                 // 请求异常
                 if (clientExcepion != null) {
+                    Log.i("asyncGetObjectSample", "onFailure11");
                     // 本地异常如网络异常等
                     clientExcepion.printStackTrace();
                     int internet = InternetUtils.getNetworkState(AlbbStrengthSportActivity.this);
                     switch (internet) {
                         case 0://没有网
-                            nonetworkFailure=true;
+                            nonetworkFailure = true;
                             Toast.makeText(AlbbStrengthSportActivity.this, "下载失败,请检查网络连接", Toast.LENGTH_SHORT).show();
                             break;
                        /* case 1://wifi
@@ -817,6 +772,7 @@ public class AlbbStrengthSportActivity extends Activity {
 
                     }
                 } else if (serviceException != null) {
+                    Log.i("asyncGetObjectSample", "onFailure22");
                     Toast.makeText(AlbbStrengthSportActivity.this, "服务器异常", Toast.LENGTH_SHORT).show();
                     // 服务异常
                     Log.e("ErrorCode", serviceException.getErrorCode());
@@ -832,6 +788,66 @@ public class AlbbStrengthSportActivity extends Activity {
             }
         });
         //}}).start();
+    }
+
+    private void DownLoadSuccess(GetObjectResult result, File videopath) {
+        Log.i("GetObjectReqrequest", result.toString());
+        // 请求成功
+        InputStream inputStream = result.getObjectContent();
+        OutputStream os;
+        downloading = true;
+        //重载InputStream来获取读取进度信息
+        ProgressInputStream progressStream = new ProgressInputStream(inputStream, new OSSProgressCallback<GetObjectRequest>() {
+            @Override
+            public void onProgress(GetObjectRequest o, long currentSize, long totalSize) {
+                // Log.i("GetObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
+                //  int progress = (int) (100 * currentSize / totalSize);
+                // UIDisplayer.updateProgress(progress);
+                //  UIDisplayer.displayInfo("下载进度: " + String.valueOf(progress) + "%");
+                // Log.i("ACVBBFFF", "开始3");
+                Message messageProcress = Message.obtain();
+                messageProcress.arg1 = (int) currentSize;
+                messageProcress.what = 1;
+                handlerProcress.sendMessage(messageProcress);
+
+            }
+        }, result.getContentLength());
+
+
+        byte[] buffer = new byte[2048];
+        int len;
+
+        try {
+            os = new FileOutputStream(videopath);
+            while ((len = progressStream.read(buffer)) != -1) {
+                // 处理下载的数据
+                // Log.i("asyncGetObjectSample", "read length: " + len);
+                os.write(buffer, 0, len);
+            }
+            Log.d("asyncGetObjectSample", "download success.");
+            redownload = 0;//下载失败重新下载次数标记 设置为 0
+            //  Current += subVideo.getSize();
+            ShareUitls.putString(AlbbStrengthSportActivity.this, "errprvideo", "");//记录是下载那个视频失败的 设置为空
+            loadingvideo = "";
+            ++possition;
+
+
+           /* Message message = Message.obtain();
+            message.what = 0;
+            message.obj = result;*/
+            handlerProcress.sendEmptyMessage(0);
+
+        } catch (IOException e) {
+            Log.d("asyncGetObjectSample", "download IOException.");
+            ShareUitls.putString(AlbbStrengthSportActivity.this, "errprvideo", loadingvideo);//记录是下载那个视频失败的
+            if (!downloadstop) {//没有点击暂停
+                handlerProcress.sendEmptyMessage(0);
+            }
+            e.printStackTrace();
+        }
+
+        Log.i("ACVBBFFF", "开始4");
+        //  if(canaleLoad) {//没有被取消下载 也就是暂停
     }
 
 
@@ -851,9 +867,10 @@ public class AlbbStrengthSportActivity extends Activity {
     private BroadcastReceiver ServiceToActivityReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!downloadstop&&nonetworkFailure) {//不处于手动暂停状态而且触发过没网导致下载失败
+            if (!downloadstop && nonetworkFailure) {//不处于手动暂停状态而且触发过没网导致下载失败
 
                 int internet = InternetUtils.getNetworkState(AlbbStrengthSportActivity.this);
+                MyToash.Log(internet + "  " + downloading);
                 if (internet != 1) {//非wifi状态
                     if (internet == 0) {//没有网络暂停下载 保存数据
                         if (downloading) {//正在下载
@@ -886,13 +903,13 @@ public class AlbbStrengthSportActivity extends Activity {
                                     //  ++count;
                                     if (localid.equals(SDPATH + "/" + subVideo.getID() + ".maid")) {
                                         Surplus += subVideo.getSize();
-                                        Log.i("ffffffffffffXXX11", "" + Surplus);
+                                        //   Log.i("ffffffffffffXXX11", "" + Surplus);
                                     }
 
                                 }
 
                             }
-                            Log.i("ffffffffffffXXX22", "" + Surplus);
+                            // Log.i("ffffffffffffXXX22", "" + Surplus);
                             Surplus = video.getVideoSize() - Surplus;
                         } else {
                             Surplus = video.getVideoSize();
@@ -917,6 +934,7 @@ public class AlbbStrengthSportActivity extends Activity {
                                         bottomMenuDialogMobileNetworks.dismiss();
                                     }
                                 }).create();
+                        bottomMenuDialogMobileNetworks.setCancelable(false);
                         bottomMenuDialogMobileNetworks.show();
 
 
@@ -979,16 +997,19 @@ public class AlbbStrengthSportActivity extends Activity {
         proscenium = false;//处于后台
     }
 
-//进度条
+    //进度条
     Handler handlerProcress = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            // final Video.SubVideo subVideo = video.getActionList().get(possition);
-            strengthsport_process_text.setText((CurrentCount + 1) + "/" + videoIdlist.size());// 更新下载进度
-            strengthsport_process_numberProgressbar.setMax((int) (Total / 1000));
-
-            strengthsport_process_numberProgressbar.setProgress((int) (((Current + msg.arg1) / 1000)));
+            if (msg.what == 0) {
+                downloadFile();
+            } else {
+                // final Video.SubVideo subVideo = video.getActionList().get(possition);
+                strengthsport_process_text.setText((CurrentCount + 1) + "/" + videoIdlist.size());// 更新下载进度
+                strengthsport_process_numberProgressbar.setMax((int) (Total / 1000));
+                strengthsport_process_numberProgressbar.setProgress((int) (((Current + msg.arg1) / 1000)));
+            }
           /*  if(temp!=0){
 
                 temp=temp<(Current+msg.arg1)?temp:(Current+msg.arg1);
@@ -1000,6 +1021,13 @@ public class AlbbStrengthSportActivity extends Activity {
         }
     };
 
-
+    private void initDialog() {
+        if (waitDialog == null) {
+            waitDialog = new com.headlth.management.clenderutil.WaitDialog(AlbbStrengthSportActivity.this);
+            waitDialog.setCancleable(false);
+            waitDialog.setMessage("");
+            waitDialog.show();
+        }
+    }
     ///  long  temp;
 }

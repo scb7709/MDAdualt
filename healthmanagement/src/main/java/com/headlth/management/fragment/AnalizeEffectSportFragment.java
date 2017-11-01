@@ -141,13 +141,15 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                     MaxHight = (botomLin.getTop() - zhu.getTop());
                     for (int i = 0; i < anlyse.getData().getDetail().size(); i++) {
                         FrameLayout.LayoutParams linearParamsall = (FrameLayout.LayoutParams) btalls.get(i).getLayoutParams();
-                        linearParamsall.height = MaxHight * (target) / (MaxTime); //
-                        btalls.get(i).setLayoutParams(linearParamsall);
-                        FrameLayout.LayoutParams linearParams = (FrameLayout.LayoutParams) btalls.get(i).getLayoutParams();
-                        // 取控件aaa当前的布局参数
-                        linearParams.height = MaxHight * (Integer.parseInt(anlyse.getData().getDetail().get(i).getEffectTime())) / (MaxTime); //
-                        btalls.get(i).setLayoutParams(linearParams);
-                        ts.get(i).setText(anlyse.getData().getDetail().get(i).getDay());
+                        if(MaxTime!=0){
+                            linearParamsall.height = MaxHight * (target) / (MaxTime); //
+                            btalls.get(i).setLayoutParams(linearParamsall);
+                            FrameLayout.LayoutParams linearParams = (FrameLayout.LayoutParams) btalls.get(i).getLayoutParams();
+                            // 取控件aaa当前的布局参数
+                            linearParams.height = MaxHight * (Integer.parseInt(anlyse.getData().getDetail().get(i).getEffectTime())) / (MaxTime); //
+                            btalls.get(i).setLayoutParams(linearParams);
+                            ts.get(i).setText(anlyse.getData().getDetail().get(i).getDay());
+                        }
                     }
                 }
             }

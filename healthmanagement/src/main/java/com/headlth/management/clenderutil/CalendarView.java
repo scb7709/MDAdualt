@@ -138,7 +138,7 @@ public class CalendarView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         mViewWidth = w;
         mViewHight = h;
-        mCellSpace = Math.min(mViewHight / TOTAL_ROW, mViewWidth / TOTAL_COL);
+        mCellSpace = Math.min(mViewHight / TOTAL_ROW, mViewWidth / TOTAL_COL);//每一个小正方形的长宽
         mTextPaint.setTextSize(mCellSpace / 3);
     }
 

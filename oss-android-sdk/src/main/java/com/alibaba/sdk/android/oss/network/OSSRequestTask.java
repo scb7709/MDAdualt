@@ -39,7 +39,7 @@ import okio.Okio;
 import okio.Source;
 
 /**
- * Created by zhouzhuo on 11/22/15.
+ * Created by scb on 11/22/15.
  */
 public class OSSRequestTask<T extends OSSResult> implements Callable<T> {
 

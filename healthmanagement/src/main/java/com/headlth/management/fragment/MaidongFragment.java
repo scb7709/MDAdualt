@@ -460,7 +460,7 @@ public class MaidongFragment extends BaseFragment {
                                 fragment_maidong_exercise_plan_youyang_layout.setVisibility(View.GONE);
                                 fragment_maidong_exercise_plan_today_exercise_plan.setVisibility(View.GONE);
                                 fragment_maidong_recommend_exercise_plan_text.setVisibility(View.GONE);
-                                ((TextView) getActivity().findViewById(R.id.statechange)).setText("推荐锻炼计划");
+                                ((TextView) getActivity().findViewById(R.id.activity_main_title_center)).setText("推荐锻炼计划");
 
                             }
                         }

@@ -216,6 +216,10 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
     };
 
     private void startBlue() {
+        if (myBuleConnectManager != null) {
+            myBuleConnectManager.endConnect();
+            myBuleConnectManager = null;
+        }
         myBuleConnectManager = MyBulePolorManager.getInstance(AerobicSportActivity.this, ADRS, new MyBulePolorManager.OnCharacteristicListener() {
             @Override
             public void onCharacteristicChanged(BluetoothGattCharacteristic characteristic) {
@@ -617,14 +621,15 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
 
     private boolean setData_Update() {
         if (LoseConnectcount > 10) {//超过十秒了没收到心率带返回的心率
-            if (!LoseConnectSetValue) {
+            if (LoseConnectcount == 11) {//40秒内没有收到心率重启连接
                 value = 0;
                 mBmp.setText("--");
-                LoseConnectSetValue = true;
             }
-        } else {
-            LoseConnectcount++;
+            if (LoseConnectcount == 30) {//30秒内没有收到心率重启连接
+                startBlue();
+            }
         }
+        LoseConnectcount++;
         if (con_state == 2) {
             return true;
         }
