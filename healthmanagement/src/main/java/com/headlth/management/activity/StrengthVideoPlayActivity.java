@@ -160,7 +160,7 @@ public class StrengthVideoPlayActivity extends Activity {
         initDialog();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
         time = format.format(new Date());
-        point=video.getActionList().size()-1;//测试用
+       // point=video.getActionList().size()-1;//测试用
         //ShareUitls.putString(getApplicationContext(), "CurrentPosition", "2000000000");
         setListener();
         // showDialog(true);

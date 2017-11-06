@@ -119,13 +119,13 @@ public class MaidongFragment extends BaseFragment {
     @ViewInject(R.id.fragment_maidong_strength_place)
     private TextView fragment_maidong_strength_place;
     Gson g = new Gson();
-    private String UID, SPID;
+    private String UID, SPID,ResultJWT;
     private String WebSiteSPStartMsg = "";
     int ValidTime;
     private List<PrescriptionJson.PrescriptionClass> PrescriptionList;
     private newChuFangCallback newChuFang;
     private chufangCallBack chufang;
-    private String ResultJWT;
+  //  private String ResultJWT;
     private boolean newChufang = true;//查看处方   是否刷新 （首页有数据有更新就刷新）
     private BottomMenuDialog bottomMenuDialog;
 
