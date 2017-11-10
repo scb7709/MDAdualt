@@ -339,7 +339,14 @@
                             android:layout_marginBottom="6dp"
                             android:src="@mipmap/move"
                             android:visibility="gone" />
-
+                        <ImageView
+                            android:id="@+id/movemax"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|bottom"
+                            android:layout_marginBottom="6dp"
+                            android:src="@mipmap/move"
+                            android:visibility="gone" />
                         <TextView
                             android:id="@+id/zhubutishentip"
                             android:layout_width="wrap_content"

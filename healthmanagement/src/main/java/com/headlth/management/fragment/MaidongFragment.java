@@ -297,7 +297,7 @@ public class MaidongFragment extends BaseFragment {
                 break;
             case R.id.fragment_maidong_strength_go:
                 // if(InternetUtils.internet(getActivity())) {//AlbbStrengthSportActivity  StrengthSportActivity
-                startActivity(new Intent(getActivity(), AlbbStrengthSportActivity.class));
+                startActivity(new Intent(getActivity(), StrengthSportActivity.class));
                 // }
                 break;
             case R.id.fragment_maidong_exercise_plan_youyang_detials_layout:
@@ -569,8 +569,9 @@ public class MaidongFragment extends BaseFragment {
                 SPID = UserIndexList.SPID + "";
                 ShareUitls.putString(getActivity(), "PPID", UserIndexList.PPID + "");
                 ShareUitls.putString(getActivity(), "PlanNameID", UserIndexList.PlanNameID + "");
-                ShareUitls.putString(getActivity(), "UBound", UserIndexList.UBound + "");
-                ShareUitls.putString(getActivity(), "LBound", UserIndexList.LBound + "");
+                // UserIndexList.UBound  UserIndexList.LBound
+                ShareUitls.putString(getActivity(), "UBound",  UserIndexList.UBound);
+                ShareUitls.putString(getActivity(), "LBound", UserIndexList.LBound);
                 ShareUitls.putString(getActivity(), "Target", UserIndexList.target + "");
 
                 ShareUitls.putUserInformationWatch(activity, "", ( UserIndexList.target)+"", UserIndexList.UBound, UserIndexList.LBound);//保存安静心率
@@ -583,8 +584,11 @@ public class MaidongFragment extends BaseFragment {
                 fragment_maidong_exercise_plan_today_exercise_plan.setVisibility(View.VISIBLE);
                 fragment_maidong_exercise_plan_youyang_layout.setVisibility(View.VISIBLE);
                 fragment_maidong_youyang_degree.setText("第" + UserIndexList.SportFinishedDays + "次");
+
                 fragment_maidong_yougang_validtime.setText((UserIndexList.ValidTime / 60) + "'" + (UserIndexList.ValidTime % 60));
                 fragment_maidong_yougang_validhreart.setText(UserIndexList.LBound + "--" + UserIndexList.UBound);
+
+
                 fragment_textView_jichuyouyangchufang.setText(UserIndexList.SportPrescriptionTitle);
             } else {
                 fragment_maidong_exercise_plan_today_exercise_plan.setVisibility(View.GONE);

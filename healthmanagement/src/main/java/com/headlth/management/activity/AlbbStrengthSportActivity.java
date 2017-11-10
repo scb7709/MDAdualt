@@ -806,7 +806,7 @@ public class AlbbStrengthSportActivity extends Activity {
                 // Log.i("ACVBBFFF", "开始3");
                 Message messageProcress = Message.obtain();
                 messageProcress.arg1 = (int) currentSize;
-                messageProcress.what = 1;
+                messageProcress.what = 2;
                 handlerProcress.sendMessage(messageProcress);
 
             }

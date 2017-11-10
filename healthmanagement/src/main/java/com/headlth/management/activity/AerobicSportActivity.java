@@ -124,6 +124,9 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
     //移动标尺
     @ViewInject(R.id.move)
     private ImageView move;
+    @ViewInject(R.id.movemax)
+    private ImageView movemax;
+
     //总条
     @ViewInject(R.id.activity_aerobicsportmyblue_width)
     private TextView out;
@@ -219,6 +222,11 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
         if (myBuleConnectManager != null) {
             myBuleConnectManager.endConnect();
             myBuleConnectManager = null;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         myBuleConnectManager = MyBulePolorManager.getInstance(AerobicSportActivity.this, ADRS, new MyBulePolorManager.OnCharacteristicListener() {
             @Override
@@ -272,22 +280,33 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
                 startAnimation(valuetemp, (effectX - moveX) + (value - lBound) * effectlength / (uBound - lBound) - 10);
             }*/
             //游标卡尺  effectlength 有效白条的宽度
-            if (value < startValue) {
-                startAnimation(0, 0);
-            } else if (value >= startValue && value < lBound) {
-                startAnimation(valuetemp, (activity_aerobicsportmyblue_widthX_left - moveX) + (value - startValue) * activity_aerobicsportmyblue_widthX_leftlength / (lBound - startValue));
-            } else if (value >= lBound && value <= uBound) {
-                startAnimation(valuetemp, (effectX - moveX) + (value - lBound) * effectlength / (uBound - lBound));
-            } else if (value > uBound && value <= endtValue) {
-                startAnimation(valuetemp, (activity_aerobicsportmyblue_widthX_rightX - moveX) + (value - uBound) * activity_aerobicsportmyblue_widthX_rightlength / (endtValue - uBound));
 
-            } else {
+            if(value>=endtValue){
+                if(ta1!=null){
+                    ta1.cancel();
+                }
+                move.setVisibility(View.INVISIBLE);
+                movemax.setVisibility(View.VISIBLE);
+            }else {
+                move.setVisibility(View.VISIBLE);
+                movemax.setVisibility(View.GONE);
+                if (value < startValue) {
+                    startAnimation(0, 0);
+                } else if (value >= startValue && value < lBound) {
+                    startAnimation(valuetemp, (activity_aerobicsportmyblue_widthX_left - moveX) + (value - startValue) * activity_aerobicsportmyblue_widthX_leftlength / (lBound - startValue));
+                } else if (value >= lBound && value <= uBound) {
+                    startAnimation(valuetemp, (effectX - moveX) + (value - lBound) * effectlength / (uBound - lBound));
+                } else if (value > uBound && value <= endtValue) {
+                    startAnimation(valuetemp, (activity_aerobicsportmyblue_widthX_rightX - moveX) + (value - uBound) * activity_aerobicsportmyblue_widthX_rightlength / (endtValue - uBound));
+
+                }
+            }/*else {
                 Log.i("myblue", "超出心率 " + outlength);
                 float temp = activity_aerobicsportmyblue_widthX_rightX + activity_aerobicsportmyblue_widthX_rightlength;
 
                 Log.i("myblue", "超出心率 " + temp);
                 startAnimation(valuetemp, temp - moveX);
-            }
+            }*/
         }
 
 
@@ -971,6 +990,7 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
         statechange.setText("运动小结");
         move.clearAnimation();
         move.setVisibility(View.GONE);
+        movemax.setVisibility(View.GONE);
         // activity_aerobicsport_line.setVisibility(View.VISIBLE);
         out.setBackgroundColor(Color.parseColor("#00000000"));
         effect.setBackgroundColor(Color.parseColor("#00000000"));

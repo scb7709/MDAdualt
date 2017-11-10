@@ -258,7 +258,6 @@ public class StrengthSportSummarizeActivity extends BaseActivity /*implements IW
         waitDialog.setMessage("正在上传,请稍候...");
     }
 
-    private logcallback log;
     private Gson g = new Gson();
 
     private void saveNativeData() {
