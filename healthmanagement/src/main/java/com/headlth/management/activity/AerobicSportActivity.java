@@ -639,8 +639,8 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
     int fineMinute = 0;
 
     private boolean setData_Update() {
-        if (LoseConnectcount > 3) {//超过十秒了没收到心率带返回的心率
-            if (LoseConnectcount == 4) {//
+        if (LoseConnectcount >= 3) {//超过十秒了没收到心率带返回的心率
+            if (LoseConnectcount == 3) {//
                 value = 0;
                 mBmp.setText("--");
             }

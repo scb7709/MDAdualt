@@ -373,12 +373,15 @@ public class AlbbStrengthSportActivity extends Activity {
                         ShareUitls.putString(AlbbStrengthSportActivity.this, "errprvideo", loadingvideo);//记录是下载那个视频失败的
                         downloading = false;
                     }
+                    downloadstop = !downloadstop;
                 } else {//当前处于暂停状态 点击继续下载
-                    acyivity_strength_parse.setVisibility(View.GONE);
+
                     if (!downloading) {//没处于下载中再能继续下载
 
                         int internet = InternetUtils.getNetworkState(AlbbStrengthSportActivity.this);
                         if (internet != 0) {//有网络
+                            acyivity_strength_parse.setVisibility(View.GONE);
+
                             if (internet != 1 && isnowifi) {
                                 isnowifi = false;
 
@@ -428,6 +431,7 @@ public class AlbbStrengthSportActivity extends Activity {
                             } else {
 
                             }
+                            downloadstop = !downloadstop;
                         } else {
                             Toast.makeText(AlbbStrengthSportActivity.this, "请检查网络", Toast.LENGTH_SHORT).show();
                         }
@@ -435,7 +439,7 @@ public class AlbbStrengthSportActivity extends Activity {
                     }
 
                 }
-                downloadstop = !downloadstop;
+
                 break;
 
         }

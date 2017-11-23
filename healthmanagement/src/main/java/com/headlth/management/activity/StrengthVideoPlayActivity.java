@@ -63,8 +63,6 @@ import java.util.List;
 import java.util.Locale;
 
 
-
-
 /**
  * Created by abc on 2016/10/10.
  */
@@ -120,6 +118,7 @@ public class StrengthVideoPlayActivity extends Activity {
     // Intent intentRecever;
     public static Activity activity;
     private String SDPATH;
+    MyCountDownTimer myCountDownTimer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,7 +139,7 @@ public class StrengthVideoPlayActivity extends Activity {
 
         startService(intentService);//开启服务用于全程检测
 
-        SDPATH= Environment.getExternalStorageDirectory().getAbsolutePath()+ "/maidong/maidongvideo/maidongvideo" + Stage;
+        SDPATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/maidongvideo/maidongvideo" + Stage;
 
         list = FileViewer.getListFiles(SDPATH, "maid", true);
 
@@ -160,7 +159,7 @@ public class StrengthVideoPlayActivity extends Activity {
         initDialog();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
         time = format.format(new Date());
-       // point=video.getActionList().size()-1;//测试用
+        // point=video.getActionList().size()-1;//测试用
         //ShareUitls.putString(getApplicationContext(), "CurrentPosition", "2000000000");
         setListener();
         // showDialog(true);
@@ -250,8 +249,8 @@ public class StrengthVideoPlayActivity extends Activity {
                 Log.e("ppppppointvvv0", "" + point);
 
                 //视频文件后缀名改为MP4 才能播放
-                FileViewer.renameFile(SDPATH , video.getActionList().get(point).getID() + ".maid", video.getActionList().get(point).getID() + ".mp4");
-                String path = SDPATH+ "/" + video.getActionList().get(point).getID() + ".mp4";
+                FileViewer.renameFile(SDPATH, video.getActionList().get(point).getID() + ".maid", video.getActionList().get(point).getID() + ".mp4");
+                String path = SDPATH + "/" + video.getActionList().get(point).getID() + ".mp4";
                 playvideo = path;
                 videoView.setVideoURI(Uri.parse(path));
                 videoView.start();
@@ -428,7 +427,7 @@ public class StrengthVideoPlayActivity extends Activity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 //视频文件后缀名改为maid 用户手机自带视频播放器检测不到
-                FileViewer.renameFile(SDPATH , video.getActionList().get(point).getID() + ".mp4", video.getActionList().get(point).getID() + ".maid");
+                FileViewer.renameFile(SDPATH, video.getActionList().get(point).getID() + ".mp4", video.getActionList().get(point).getID() + ".maid");
 
                 CurrentPosition = 2000000000;
                 // if (!videotype || (InternetUtils.internett(StrengthVideoPlayActivity.this) && videotype)) {
@@ -459,17 +458,19 @@ public class StrengthVideoPlayActivity extends Activity {
                         isflag3 = true;
                         handler.sendEmptyMessage(6);
                         video_play_rest_lay.setVisibility(View.VISIBLE);
-                        new MyCountDownTimer(restTime * 1000 + 1000, 1000).start();
-                        String path = SDPATH  + "/" + video.getActionList().get(point).getID() + ".maid";
+                        myCountDownTimer=new MyCountDownTimer(restTime * 1000 + 1000, 1000);
+                        myCountDownTimer.start();
+                        start();
+                      /*  String path = SDPATH + "/" + video.getActionList().get(point).getID() + ".maid";
                         File file = new File(path);
                         if (!file.exists()) {
-                            // if(!downloading){
-                            downloadFile();
-                            //  }
+                            if (!downloading) {
+                                downloadFile();
+                            }
 
                         } else {
-                            start();
-                        }
+                         start();
+                        }*/
                     } else if (!downloading) {
                         Log.i("SSSSSSSSSSDDDS", "2222222222");
                         isflag3 = false;
@@ -484,8 +485,15 @@ public class StrengthVideoPlayActivity extends Activity {
         videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
+                String path = SDPATH + "/" + video.getActionList().get(point).getID() + ".mp4";
+                File file = new File(path);
+                if (file != null) {
+                    file.delete();
+                }
                 isplay = false;
-                if (InternetUtils.internett(StrengthVideoPlayActivity.this)) {
+                Toast.makeText(StrengthVideoPlayActivity.this, "播放异常", Toast.LENGTH_LONG).show();
+                finish();
+              /*  if (InternetUtils.internett(StrengthVideoPlayActivity.this)) {
 
                     if (!videoView.isPlaying() && !downloading) {
                         if (videoView.canPause()) {
@@ -496,7 +504,7 @@ public class StrengthVideoPlayActivity extends Activity {
                     }
                 } else {
                     Toast.makeText(StrengthVideoPlayActivity.this, "网络异常", Toast.LENGTH_LONG).show();
-                }
+                }*/
                 return true;
             }
         });
@@ -684,6 +692,9 @@ public class StrengthVideoPlayActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(myCountDownTimer!=null){
+            myCountDownTimer.cancel();
+        }
         ShareUitls.putString(StrengthVideoPlayActivity.this, "StrengthVideoPlayActivityistop", "");//用来记录当前界面是否处于最前端  当处于最前端是  接收到友盟推送的消息 点击不进入 消息详情
 
         isflag = false;
@@ -737,7 +748,6 @@ public class StrengthVideoPlayActivity extends Activity {
             String path = new File(SDPATH + "/").getPath();
             File file = new File(path);
             if (!file.exists()) {
-                Log.e("aaaaaaaaaccc", "路径不存在");
                 file.mkdirs();
             }
             File videopath = new File(file.getPath(), video.getActionList().get(point).getID() + ".maid");
@@ -764,7 +774,7 @@ public class StrengthVideoPlayActivity extends Activity {
                     showDialog(false);
 
                     Log.i("ppppppointvvv3", point + "");
-                    File temp = new File(SDPATH  + "/" + video.getActionList().get(point).getID() + ".maid");
+                    File temp = new File(SDPATH + "/" + video.getActionList().get(point).getID() + ".maid");
                     if (temp.exists()) {
                         start();
                     } else {

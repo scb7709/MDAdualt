@@ -228,6 +228,13 @@ public class StrengthSportActivity extends BaseActivity {
                         Log.i("ffffffffffffXXX33", "" + Surplus);
 
                         String str = "";
+
+                        String  downSize= "";
+                        if(Surplus / (1024 * 1024)==0){
+                            downSize=(Surplus/1024)+"KB)";
+                        }else {
+                            downSize=(Surplus/ (1024 * 1024))+"MB)";
+                        }
                         final int nettype = InternetUtils.getNetworkState(StrengthSportActivity.this);
 
                         if (nettype != 0) {//有网
@@ -242,7 +249,7 @@ public class StrengthSportActivity extends BaseActivity {
                                         public void onClick(View v) {
                                         }
                                     })
-                                    .addMenu("下载本次视频(约" + (Surplus / (1024 * 1024)) + "M)", new View.OnClickListener() {
+                                    .addMenu("下载本次视频(约"+ downSize, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
 

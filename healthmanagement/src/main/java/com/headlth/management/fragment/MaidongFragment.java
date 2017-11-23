@@ -297,7 +297,7 @@ public class MaidongFragment extends BaseFragment {
                 break;
             case R.id.fragment_maidong_strength_go:
                 // if(InternetUtils.internet(getActivity())) {//AlbbStrengthSportActivity  StrengthSportActivity
-                startActivity(new Intent(getActivity(), StrengthSportActivity.class));
+                startActivity(new Intent(getActivity(), AlbbStrengthSportActivity.class));
                 // }
                 break;
             case R.id.fragment_maidong_exercise_plan_youyang_detials_layout:
