@@ -37,6 +37,7 @@ import android.widget.VideoView;
 
 import com.headlth.management.R;
 import com.headlth.management.entity.Video;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.ScreenListener;
 
 import com.headlth.management.service.NetworkService;
@@ -159,7 +160,7 @@ public class StrengthVideoPlayActivity extends Activity {
         initDialog();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
         time = format.format(new Date());
-        // point=video.getActionList().size()-1;//测试用
+      //  point=video.getActionList().size()-3;//测试用
         //ShareUitls.putString(getApplicationContext(), "CurrentPosition", "2000000000");
         setListener();
         // showDialog(true);
@@ -485,6 +486,7 @@ public class StrengthVideoPlayActivity extends Activity {
         videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
+                MyToash.Log(point+  "这个视频有问题");
                 String path = SDPATH + "/" + video.getActionList().get(point).getID() + ".mp4";
                 File file = new File(path);
                 if (file != null) {

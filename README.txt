@@ -66,7 +66,7 @@ The syntax is standard INI format:
 The syntax of the configuration files is a subset of the one used by
 Python's ConfigParser module; see
 
-   http://www.python.org/doc/current/lib/module-ConfigParser.html
+   http://www.python.org/doc/activity/lib/module-ConfigParser.html
 
 Configuration data in the Windows registry
 ==========================================
@@ -81,7 +81,7 @@ The REGISTRY: prefix must be in upper case. The <hive> part must be
 one of:
 
    HKLM for HKEY_LOCAL_MACHINE
-   HKCU for HKEY_CURRENT_USER
+   HKCU for HKEY_activity_USER
 
 The values in config-key represent the options in the [DEFAULT] section.
 The keys below config-key represent other sections, and their values

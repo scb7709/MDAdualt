@@ -137,7 +137,9 @@ public class AlbbStrengthSportActivity extends Activity {
     private int possition;//当前下载视频的位置
     private OSSAsyncTask ossAsyncTask;
     private long Total;
-    private long Current;//当前已经下载的视频大小
+    private long CurrentDownALLSize;//当前已经下载的视频大小
+
+    private long CurrentDownIngSize;//当前正在下载的视频大小
     int CurrentCount;//当前正在下载的是第几的个视频
     private long Surplus;//还剩余的视频大小
 
@@ -644,14 +646,14 @@ public class AlbbStrengthSportActivity extends Activity {
         localvideolist = FileViewer.getListFiles(SDPATH, "maid", true);//获取本地已经下载好的所有视频文件名字
 
 
-        Current = 0;
+        CurrentDownALLSize = 0;
         CurrentCount = 0;
         if (localvideolist.size() != 0) {//算出已经下载的视频总大小
             for (String localid : localvideolist) {
                 for (Video.SubVideo subVideo : video.getActionList()) {
                     //  ++count;
                     if (localid.equals(SDPATH + "/" + subVideo.getID() + ".maid")) {
-                        Current += subVideo.getSize();
+                        CurrentDownALLSize += subVideo.getSize();
                         CurrentCount++;
                     }
 
@@ -691,7 +693,7 @@ public class AlbbStrengthSportActivity extends Activity {
                 MyToash.Log("有未下载的");
                 possition = 0;
                 downloadFile();
-            } else {
+            } else {//54795123
                 MyToash.Log("全部完成" + proscenium + "   " + count);
                 isload = false;
                 strengthsport_process_layout.setVisibility(View.GONE);
@@ -1008,10 +1010,13 @@ public class AlbbStrengthSportActivity extends Activity {
             } else if (msg.what == 1) {
                 getAlbbData(false);
             } else {
-                // final Video.SubVideo subVideo = video.getActionList().get(possition);
-                strengthsport_process_text.setText((CurrentCount + 1) + "/" + videoIdlist.size());// 更新下载进度
-                strengthsport_process_numberProgressbar.setMax((int) (Total / 1000));
-                strengthsport_process_numberProgressbar.setProgress((int) (((Current + msg.arg1) / 1000)));
+                long tempCurrentDownIngSize=CurrentDownALLSize + msg.arg1;
+                if(tempCurrentDownIngSize>CurrentDownIngSize){
+                    strengthsport_process_text.setText((CurrentCount + 1) + "/" + videoIdlist.size());// 更新下载进度
+                    strengthsport_process_numberProgressbar.setMax((int) (Total / 1000));
+                    strengthsport_process_numberProgressbar.setProgress((int) (((tempCurrentDownIngSize) / 1000)));
+                    CurrentDownIngSize=tempCurrentDownIngSize;
+                }
             }
           /*  if(temp!=0){
 
