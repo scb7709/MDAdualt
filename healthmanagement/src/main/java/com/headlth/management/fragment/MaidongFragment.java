@@ -569,9 +569,9 @@ public class MaidongFragment extends BaseFragment {
                 SPID = UserIndexList.SPID + "";
                 ShareUitls.putString(getActivity(), "PPID", UserIndexList.PPID + "");
                 ShareUitls.putString(getActivity(), "PlanNameID", UserIndexList.PlanNameID + "");
-                // UserIndexList.UBound  UserIndexList.LBound
+                // UserIndexList.UBound  UserIndexList.LBound  "50");//
                 ShareUitls.putString(getActivity(), "UBound",  UserIndexList.UBound);
-                ShareUitls.putString(getActivity(), "LBound", "50");//UserIndexList.LBound);
+                ShareUitls.putString(getActivity(), "LBound", UserIndexList.LBound);
                 ShareUitls.putString(getActivity(), "Target", UserIndexList.target + "");
 
                 ShareUitls.putUserInformationWatch(activity, "", ( UserIndexList.target)+"", UserIndexList.UBound, UserIndexList.LBound);//保存安静心率

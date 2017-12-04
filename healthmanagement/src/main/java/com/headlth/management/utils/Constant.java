@@ -9,8 +9,8 @@ import java.util.Random;
  */
 public class Constant {
     //  public static final String BASE_URL = "https://www.mdadult.com:443";//正式
-    //   public static final String BASE_URL = "http://www.mdadult.com:4433";//正式(测试)
-     public static final String BASE_URL = "http://192.168.1.250:8060";//测试
+     public static final String BASE_URL = "http://www.mdadult.com:4433";//正式(测试)
+    //   public static final String BASE_URL = "http://192.168.1.250:8060";//测试
     //   public static final String BASE_URL = "http://192.168.1.250:8082";//测试
     //     public static final String BASE_URL = "http://192.168.1.250:8082";//测试
     // 192.168.1.250:8060
