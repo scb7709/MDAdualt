@@ -52,7 +52,6 @@ public class MyBuleSearchManager {
                     StartScan();
                 } else {
                     openBluetooth(activity);
-
                     //mHandler.sendEmptyMessageDelayed(5,500);
                 }
             } else {

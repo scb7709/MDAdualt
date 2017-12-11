@@ -59,10 +59,10 @@ public class MyBulePolorManager implements Serializable {
         this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         boolean flag = bluetoothAdapter.isEnabled();
         timer = new Timer();
+        activity.registerReceiver(receiver,MyBuleSearchManager. registBroadcast());
         if (flag) {
             first_connect();//开启首次连接
         } else {
-            activity.registerReceiver(receiver,MyBuleSearchManager. registBroadcast());
             MyBuleSearchManager.openBluetooth(activity);
         }
 
@@ -305,6 +305,9 @@ public class MyBulePolorManager implements Serializable {
             timerTask.cancel();
             timerTask = null;
         }
+        try {
+            activity.unregisterReceiver(receiver);
+        }catch (Exception e){}
         try {
             if (mBluetoothGatt != null) {
                 mBluetoothGatt.disconnect();

@@ -40,7 +40,7 @@ public class UpdateService extends Service {
     private RemoteViews views;
     public boolean DownLoading;
     private File file;
-    public static boolean DOWNLOADING;//zhengzai xiaz
+    public static boolean DOWNLOADING;//是否正在下载
 
 
     @Override
