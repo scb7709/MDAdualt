@@ -438,14 +438,11 @@ public class HomeActivity extends Activity {
                         Log.e("ffff广告aaaaa", response.toString());
                         try {
                             jsonObject = new JSONObject(response);
-
-
                             if (jsonObject.getString("Status").equals("1")) {
                                 JSONArray jsonArray = jsonObject.getJSONArray("AdImgList");
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     Log.e("ffff广告-----", Constant.BASE_URL + "/" + jsonArray.getJSONObject(i).getString("ImgUrl"));
                                     LoadingPagesUrl.add(Constant.BASE_URL + "/" + jsonArray.getJSONObject(i).getString("ImgUrl"));
-
                                 }
                                 if (LoadingPagesUrl.size() != 0) {//广告展示
                                     Log.e("ffff广告-----AAA", LoadingPagesUrl.size() + "");
@@ -461,13 +458,11 @@ public class HomeActivity extends Activity {
                                     setTimeTask();//
                                 }
                             } else {
-
                                 setTimeTask();//
                             }
 
-
                         } catch (JSONException e) {
-                            setTimeTask();
+                            setTimeTask();//
                             e.printStackTrace();
                             Log.e("ffff广告-----", "异常");
                         }

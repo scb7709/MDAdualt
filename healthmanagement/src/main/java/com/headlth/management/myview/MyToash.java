@@ -1,6 +1,7 @@
 package com.headlth.management.myview;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -8,7 +9,7 @@ import android.widget.Toast;
  * Created by abc on 2017/8/30.
  */
 public class MyToash {
-    public static  void  Toash(Activity activity,String Message){
+    public static  void  Toash(Context activity, String Message){
         Toast.makeText(activity, Message, Toast.LENGTH_LONG).show();
     }
     public static  void  ToashNoNet(Activity activity){

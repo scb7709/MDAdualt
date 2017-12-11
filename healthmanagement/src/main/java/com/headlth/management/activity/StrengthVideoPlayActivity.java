@@ -446,8 +446,8 @@ public class StrengthVideoPlayActivity extends Activity {
                     i.putExtra("Tip", video.getTip());
                     i.putExtra("Quotes", video.getQuotes());
                     startActivity(i);
-                    if (StrengthSportActivity.activity != null) {
-                        StrengthSportActivity.activity.finish();
+                    if (AlbbStrengthSportActivity.activity != null) {
+                        AlbbStrengthSportActivity.activity.finish();
                     }
                     finish();
                     return;

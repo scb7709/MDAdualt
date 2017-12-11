@@ -75,10 +75,7 @@ public class MyBulePolorManager implements Serializable {
             String action = intent.getAction();
             Log.i("", "蓝牙广播回调 action=" + action);
             if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_OFF) {//关闭系统蓝牙
-                Log.i("", "系统蓝牙断开！！");
-             //   boolean isEnable = enable();
-             //   if (!isEnable)
-                //    openBluetooth(activity);
+                MyBuleSearchManager.openBluetooth(activity);
             } else if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_ON) {//系统蓝牙打开
                 first_connect();//开启首次连接
             }
@@ -200,6 +197,15 @@ public class MyBulePolorManager implements Serializable {
                 case 3://设备可用
 
                     break;
+
+                case 5://
+                    if(!bluetoothAdapter.enable()) {
+                        // MyBuleSearchManager.openBluetooth(activity);
+                    }else {
+                        first_connect();//开启首次连接
+                    }
+                    break;
+
             }
         }
     };
@@ -267,7 +273,7 @@ public class MyBulePolorManager implements Serializable {
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-        //    Log.i("myblue", "数据通知11");
+            //    Log.i("myblue", "数据通知11");
             if (CharacteristicListener != null) {
                 CharacteristicListener.onCharacteristicChanged(characteristic);
             }

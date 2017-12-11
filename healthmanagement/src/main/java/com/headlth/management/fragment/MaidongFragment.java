@@ -27,20 +27,18 @@ import com.headlth.management.activity.ExerciseRecordActivity;
 import com.headlth.management.activity.NewChuFang;
 import com.headlth.management.activity.PrescriptionDetailsActivity;
 import com.headlth.management.activity.SearchBlueActivity;
-import com.headlth.management.activity.StrengthSportActivity;
-import com.headlth.management.clenderutil.WaitDialog;
+
 import com.headlth.management.entity.AdvancedPrescription;
 import com.headlth.management.entity.MaidongDataJson;
 import com.headlth.management.entity.PrescriptionJson;
 import com.headlth.management.entity.chufangCallBack;
 import com.headlth.management.entity.newChuFangCallback;
 import com.headlth.management.myview.BottomMenuDialog;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.PubLicDialog;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
 import com.headlth.management.utils.ShareUitls;
-import com.headlth.management.watchdatasqlite.MySQLiteDataDao;
-
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -119,17 +117,15 @@ public class MaidongFragment extends BaseFragment {
     @ViewInject(R.id.fragment_maidong_strength_place)
     private TextView fragment_maidong_strength_place;
     Gson g = new Gson();
-    private String UID, SPID,ResultJWT;
+    private String UID, SPID, ResultJWT;
     private String WebSiteSPStartMsg = "";
     int ValidTime;
     private List<PrescriptionJson.PrescriptionClass> PrescriptionList;
     private newChuFangCallback newChuFang;
     private chufangCallBack chufang;
-  //  private String ResultJWT;
+    //  private String ResultJWT;
     private boolean newChufang = true;//查看处方   是否刷新 （首页有数据有更新就刷新）
     private BottomMenuDialog bottomMenuDialog;
-
-
 
 
     public MaidongFragment() {
@@ -152,8 +148,6 @@ public class MaidongFragment extends BaseFragment {
         Log.i("strstrstrstr", "MaidongFragmentonCreateView");
         return x.view().inject(this, inflater, container);
     }
-
-
 
 
     @Override
@@ -510,16 +504,20 @@ public class MaidongFragment extends BaseFragment {
                                             ThreeStage=600,//第三阶段结束
                                    *
                                    * */
-                                switch (advancedPrescription.Status) {
-                                    case "100":
-                                       // getAdadultFragmentStartSportDalog(activity);
-                                       activity.startActivity(new Intent(activity, SearchBlueActivity.class).putExtra("flag", ""));
-                                        break;
-                                    default:
-                                        if(advancedPrescription!=null){
-                                            activity.startActivity(new Intent(activity, AdvancedPrescriptionActivity.class).putExtra("advancedPrescription", advancedPrescription));
-                                        }
-                                        break;
+                                if (advancedPrescription.IsSuccess.equals("true")) {
+                                    switch (advancedPrescription.Status) {
+                                        case "100":
+                                            // getAdadultFragmentStartSportDalog(activity);
+                                            activity.startActivity(new Intent(activity, SearchBlueActivity.class).putExtra("flag", ""));
+                                            break;
+                                        default:
+                                            if (advancedPrescription != null) {
+                                                activity.startActivity(new Intent(activity, AdvancedPrescriptionActivity.class).putExtra("advancedPrescription", advancedPrescription));
+                                            }
+                                            break;
+                                    }
+                                }else {
+                                    MyToash.Toash(activity,"网络异常");
                                 }
 
 
@@ -570,13 +568,13 @@ public class MaidongFragment extends BaseFragment {
                 ShareUitls.putString(getActivity(), "PPID", UserIndexList.PPID + "");
                 ShareUitls.putString(getActivity(), "PlanNameID", UserIndexList.PlanNameID + "");
                 // UserIndexList.UBound  UserIndexList.LBound  "50");//
-                ShareUitls.putString(getActivity(), "UBound",  UserIndexList.UBound);
+                ShareUitls.putString(getActivity(), "UBound", UserIndexList.UBound);
                 ShareUitls.putString(getActivity(), "LBound", UserIndexList.LBound);
                 ShareUitls.putString(getActivity(), "Target", UserIndexList.target + "");
 
-                ShareUitls.putUserInformationWatch(activity, "", ( UserIndexList.target)+"", UserIndexList.UBound, UserIndexList.LBound);//保存安静心率
+                ShareUitls.putUserInformationWatch(activity, "", (UserIndexList.target) + "", UserIndexList.UBound, UserIndexList.LBound);//保存安静心率
 
-               // MyToash.Log("  Target"+ UserIndexList.target);
+                // MyToash.Log("  Target"+ UserIndexList.target);
                 ShareUitls.putString(getActivity(), "IsPlay", UserIndexList.IsPlay + "");
             }
 

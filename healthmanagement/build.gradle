@@ -10,8 +10,8 @@ android {
     defaultConfig {
         applicationId "com.headlth.management"
         minSdkVersion 18
-        versionCode 24
-        versionName "2.9.7"
+        versionCode 25
+        versionName "2.9.8"
         multiDexEnabled true
 
         ndk {

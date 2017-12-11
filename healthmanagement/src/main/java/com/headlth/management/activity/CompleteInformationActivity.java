@@ -583,7 +583,7 @@ public class CompleteInformationActivity extends BaseActivity {
         waitDialog.setMessage("正在上传,请稍后...");
         waitDialog.setCancleable(true);
         waitDialog.showDailog();
-        RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserInfoUpdateRequest");
+       final RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserInfoUpdateRequest");
         params.addBodyParameter("UID", ShareUitls.getString(CompleteInformationActivity.this, "UID", "") + "");
         params.addBodyParameter("ResultJWT", ShareUitls.getString(CompleteInformationActivity.this, "ResultJWT", "0"));
         params.addBodyParameter("NickName", userInformation.getNickName());
@@ -595,11 +595,12 @@ public class CompleteInformationActivity extends BaseActivity {
         Log.i("userInformationSSS", "" + path.length());
         if (path.length() != 0) {//从我的界面过来 而且头像没更改//        二次压缩
             String pictime = System.currentTimeMillis() + "";
-            ScreenShot.saveMyBitmap(Bimp.getSmallBitmap(path), pictime, false, CompleteInformationActivity.this);
-            final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/image/" + pictime + ".png";
-
-            Log.i("userInformationSSSAA", "" + path.length());
-            params.addBodyParameter("File", new File(path), "image/png");
+            Bimp.saveBitmap(path, pictime, new Bimp.OnSaveSuccessListener() {
+                @Override
+                public void onSuccess(String filepath) {
+                    params.addBodyParameter("File", new File(filepath), "image/png");
+                }
+            });
         }
         params.setMultipart(true);
         Callback.Cancelable cancelable = x.http().post(params,

@@ -1,5 +1,6 @@
 package com.headlth.management.clenderutil;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.text.TextUtils;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 
 
 public class WaitDialog extends Dialog implements Serializable {
-
+   // AlertDialog.Builder ;
     private Dialog waitDialog = null;
     private TextView tv;
 /*

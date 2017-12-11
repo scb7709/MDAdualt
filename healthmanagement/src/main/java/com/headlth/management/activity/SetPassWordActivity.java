@@ -88,7 +88,7 @@ public class SetPassWordActivity extends BaseActivity {
         Intent intent = getIntent();
         flag = intent.getStringExtra("flag");
         verify_code = intent.getStringExtra("verify_code");
-        //verify_code="1234";
+      // verify_code="1234";
         phone = intent.getStringExtra("phone");
         setDate();
     }

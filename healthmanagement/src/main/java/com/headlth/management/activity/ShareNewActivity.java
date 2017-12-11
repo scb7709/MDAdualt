@@ -12,6 +12,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -28,9 +31,11 @@ import com.headlth.management.ShareImageUtils.ImageWork;
 import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.CircleList;
 import com.headlth.management.myview.MGridView;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.utils.Bimp;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.ImageUtil;
+import com.headlth.management.utils.ScreenShot;
 import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.utils.VersonUtils;
 
@@ -48,6 +53,7 @@ import org.xutils.x;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import photopicker.PhotoPickerActivity;
 import photopicker.PhotoPreviewActivity;
@@ -86,6 +92,7 @@ public class ShareNewActivity extends BaseActivity {
     private String pictime = "";
     private Drawable add;
     private Resources resources;
+    RequestParams params;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +105,7 @@ public class ShareNewActivity extends BaseActivity {
         imagePaths = new ArrayList<>();
         activity = this;
         intent = getIntent();
-        pictime = getIntent().getStringExtra("pictime");
+        pictime = getIntent().getStringExtra("pictime");//运动完后传过来的截图
         add = ContextCompat.getDrawable(this, R.mipmap.pic_add);
         resources = getResources();
         if (!pictime.equals("")) {
@@ -153,120 +160,174 @@ public class ShareNewActivity extends BaseActivity {
                 break;
 
             case R.id.share_send:
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        share();
+                    }
+                });
 
-                share();
                 break;
         }
     }
 
     private void share() {
-        if (share_shareText.getText().toString().length() == 0 && imagePaths.size() == 0) {
+        MyToash.Log("waitDialog1=="+imagePaths.size() );
+        if (share_shareText.getText().toString().length() == 0 && imagePaths.size() == 1) {
             Toast.makeText(ShareNewActivity.this, "还未添加任何内容", Toast.LENGTH_LONG).show();
         } else {
             waitDialog.setMessage("正在分享,请稍后...");
             waitDialog.showDailog();
-            RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostShareContentRequest");
-            if (share_shareText.getText().toString().length() == 0) {
-                params.addBodyParameter("ShareContent", " ");
-            } else {
-                params.addBodyParameter("ShareContent", share_shareText.getText().toString());
-            }
-            params.addBodyParameter("UID", ShareUitls.getString(ShareNewActivity.this, "UID", "null"));
-            params.addBodyParameter("ResultJWT", ShareUitls.getString(this, "ResultJWT", "0"));
-            params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
-            // List<String> imagePath = new ArrayList<>();
+
+
+            MyToash.Log("waitDialog1");
+            // if (waitDialog.isShowing()) {
+            MyToash.Log("waitDialog22");
+            params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostShareContentRequest");
             if (imagePaths.size() != 0) {
-               /* for (String file : imagePaths) {
-                    String pictime = System.currentTimeMillis() + "";
-
-                    ScreenShot.saveMyBitmap(Bimp.getSmallBitmap(file), pictime, false, ShareNewActivity.this);
-                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/image/" + pictime + ".png";
-                    imagePath.add(path);
-
-                }*/
-                int i = 0;
-                for (String file : imagePaths) {
-                    Log.i("QQQQQQQQQ", "" + file);
-                    if(!file.equals("000000")){
-                        params.addBodyParameter("file" + (i++), new File(file), "image/png");
-                    }
-                }
+                params.setMultipart(true);
+                CompressImage();
+            } else {
+                send();
             }
-            //设置断点续传
-            params.setMultipart(true);
-            Callback.Cancelable cancelable = x.http().post(params,
-                    new Callback.CommonCallback<String>() {
-                        @Override
-                        public void onSuccess(String result) {
-
-
-                            Log.i("QQQQQQQQQonSuccess", "" + result.toString());
-                            try {
-                                JSONObject jsonObject = new JSONObject(result.toString());
-
-
-                                if (jsonObject.getString("ErrCode").equals("601") || jsonObject.getString("ErrCode").equals("600") || jsonObject.getString("ErrCode").equals("602")) {
-                                    if (jsonObject.getString("ErrCode").equals("601")) {
-                                        Toast.makeText(ShareNewActivity.this, "您的账号已在其他设备登录", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(ShareNewActivity.this, "您的登录信息已过期", Toast.LENGTH_LONG).show();
-                                    }
-                                    Intent i = new Intent(ShareNewActivity.this, Login.class);
-                                    ShareNewActivity.this.startActivity(i);
-                                    ShareUitls.cleanSharedPreference(ShareNewActivity.this);
-                                    CircleList.getInstance().circlelist.clear();
-                                    CircleList.getInstance().commentlist.clear();
-                                    CircleList.getInstance().replylist.clear();
-                                    finish();
-                                    return;
-                                } else {
-
-                                    if (jsonObject.getString("IsSuccess").equals("true")) {
-                                        setResult(258);
-                                        finish();
-                                        Toast.makeText(ShareNewActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
-
-
-                                    } else {
-                                        Toast.makeText(ShareNewActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            waitDialog.dismissDialog();
-                        }
-
-                        @Override
-                        public void onError(Throwable ex, boolean isOnCallback) {
-                            //Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                            if (ex instanceof HttpException) { // 网络错误
-                                Toast.makeText(ShareNewActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
-
-                            } else { // 其他错误
-                                Toast.makeText(ShareNewActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
-                            }
-                            waitDialog.dismissDialog();
-                        }
-
-                        @Override
-                        public void onCancelled(CancelledException cex) {
-                            Log.i("QQQQQQQQQoonCancelled", "");
-                            waitDialog.dismissDialog();
-                        }
-
-                        @Override
-                        public void onFinished() {
-                            Log.i("QQQQQQQQonFinished", "");
-                            waitDialog.dismissDialog();
-                        }
-                    });
+            //  }
         }
     }
 
+    private void send() {
+        if (share_shareText.getText().toString().length() == 0) {
+            params.addBodyParameter("ShareContent", " ");
+        } else {
+            params.addBodyParameter("ShareContent", share_shareText.getText().toString());
+        }
+        params.addBodyParameter("UID", ShareUitls.getString(ShareNewActivity.this, "UID", "null"));
+        params.addBodyParameter("ResultJWT", ShareUitls.getString(this, "ResultJWT", "0"));
+        params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
+        Callback.Cancelable cancelable = x.http().post(params,
+                new Callback.CommonCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
 
+
+                        Log.i("QQQQQQQQQonSuccess", "" + result.toString());
+                        try {
+                            JSONObject jsonObject = new JSONObject(result.toString());
+
+
+                            if (jsonObject.getString("ErrCode").equals("601") || jsonObject.getString("ErrCode").equals("600") || jsonObject.getString("ErrCode").equals("602")) {
+                                if (jsonObject.getString("ErrCode").equals("601")) {
+                                    Toast.makeText(ShareNewActivity.this, "您的账号已在其他设备登录", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(ShareNewActivity.this, "您的登录信息已过期", Toast.LENGTH_LONG).show();
+                                }
+                                Intent i = new Intent(ShareNewActivity.this, Login.class);
+                                ShareNewActivity.this.startActivity(i);
+                                ShareUitls.cleanSharedPreference(ShareNewActivity.this);
+                                CircleList.getInstance().circlelist.clear();
+                                CircleList.getInstance().commentlist.clear();
+                                CircleList.getInstance().replylist.clear();
+                                finish();
+                                return;
+                            } else {
+
+                                if (jsonObject.getString("IsSuccess").equals("true")) {
+                                    Toast.makeText(ShareNewActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
+                                    setResult(258);
+                                    finish();
+
+                                } else {
+                                    Toast.makeText(ShareNewActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        waitDialog.dismissDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable ex, boolean isOnCallback) {
+                        //Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                        if (ex instanceof HttpException) { // 网络错误
+                            Toast.makeText(ShareNewActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+
+                        } else { // 其他错误
+                            Toast.makeText(ShareNewActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
+                        }
+                        waitDialog.dismissDialog();
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException cex) {
+                        Log.i("QQQQQQQQQoonCancelled", "");
+                        waitDialog.dismissDialog();
+                    }
+
+                    @Override
+                    public void onFinished() {
+                        Log.i("QQQQQQQQonFinished", "");
+                        waitDialog.dismissDialog();
+                    }
+                });
+    }
+
+    private void CompressImage() {
+
+        final ArrayList<String> imagePath = new ArrayList<>();
+        for (String file : imagePaths) {//压缩
+            if (!file.equals("000000")) {
+                String pictime = System.currentTimeMillis() + "";
+                //  ScreenShot.saveMyBitmap(Bimp.getSmallBitmap(file), pictime, false, ShareNewActivity.this);
+                //  String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/image/" + pictime + ".png";
+                Bimp.saveBitmap(file, pictime, new Bimp.OnSaveSuccessListener() {
+                    @Override
+                    public void onSuccess(String filepath) {
+                        imagePath.add(filepath);
+                    }
+                });
+
+            }
+        }
+        imagePaths.clear();
+        imagePaths = imagePath;
+
+        int i = 0;
+        for (String file : imagePaths) {
+            params.addBodyParameter("file" + (i++), new File(file), "image/png");// }
+        }
+        send();
+
+
+     /*
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+
+                final ArrayList<String> imagePath = new ArrayList<>();
+                for (String file : imagePaths) {//压缩
+                    if (!file.equals("000000")) {
+                        String pictime = System.currentTimeMillis() + "";
+                        //  ScreenShot.saveMyBitmap(Bimp.getSmallBitmap(file), pictime, false, ShareNewActivity.this);
+                        //  String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/image/" + pictime + ".png";
+                        Bimp.saveBitmap(file, pictime, new Bimp.OnSaveSuccessListener() {
+                            @Override
+                            public void onSuccess(String filepath) {
+                                imagePath.add(filepath);
+                            }
+                        });
+
+                    }
+                }
+                imagePaths.clear();
+                imagePaths = imagePath;
+                handler.sendEmptyMessage(0);
+
+            }
+        });*/
+
+    }
     private void cancelShare() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(ShareNewActivity.this);
         dialog.setMessage("是否取消分享？")//设置显示的内容
