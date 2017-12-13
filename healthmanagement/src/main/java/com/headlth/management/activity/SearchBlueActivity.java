@@ -115,15 +115,12 @@ public class SearchBlueActivity extends BaseActivity {
                 activity_serachblue_img.setVisibility(View.INVISIBLE);
                 activity_serachblue_btclick.setVisibility(View.VISIBLE);
                 activity_serachblue_tration.clearAnimation();
-
                 Log.i("myblue", bluetoothDevices.size() + "");
                 if (bluetoothDevices == null) {
                     return;//监听未触发
                 } else {
-
-
                     if (bluetoothDevices.size() == 0) {
-                        activity_serachblue_tishi.setText("请确定心率监测器已正确佩戴并靠近手机");
+                        activity_serachblue_tishi.setText("请确保心率带已正确佩戴并靠近手机");
                         activity_serachblue_isfail.setText("连接失败");
                         activity_serachblue_btclick.setText("重新搜索");
 
@@ -133,17 +130,26 @@ public class SearchBlueActivity extends BaseActivity {
                             try {
                                 if (bluetoothDeviceEntity.device.getAddress() != null && bluetoothDeviceEntity.device.getName() != null) {
                                     deviceEntity entity = new deviceEntity();
-                                    entity.setAddress(bluetoothDeviceEntity.device.getAddress());
-                                    entity.setName(bluetoothDeviceEntity.device.getName());
-                                    entity.setRssi(bluetoothDeviceEntity.rssi);
-                                    double bigDecimal = new BigDecimal(Math.pow(10, (Math.abs(bluetoothDeviceEntity.rssi)) - A_Value) / (10 * n_Value)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                                    entity.setDistance(bigDecimal);
-                                    devices.add(entity);
+                                  //  if (bluetoothDeviceEntity.device.getName().startsWith("Polar")) {//是否屏蔽Polar
+                                        entity.setAddress(bluetoothDeviceEntity.device.getAddress());
+                                        entity.setName(bluetoothDeviceEntity.device.getName());
+                                        entity.setRssi(bluetoothDeviceEntity.rssi);
+                                        double bigDecimal = new BigDecimal(Math.pow(10, (Math.abs(bluetoothDeviceEntity.rssi)) - A_Value) / (10 * n_Value)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                        entity.setDistance(bigDecimal);
+                                        devices.add(entity);
+                                  //  }
                                 }
                             } catch (Exception e) {
                             }
                         }
-                        setListView();
+                        if (devices.size() > 0) {
+                            setListView();
+                        } else {
+                            activity_serachblue_tishi.setText("请确保心率带已正确佩戴并靠近手机");
+                            activity_serachblue_isfail.setText("搜索失败");
+                            activity_serachblue_btclick.setText("重新搜索");
+                        }
+
                     }
                 }
 
@@ -185,21 +191,22 @@ public class SearchBlueActivity extends BaseActivity {
 
         }
         devices.clear();
-        for (int i = 0; i < tempdevicess.size(); i++) {//去空
-            deviceEntity deviceEntity = tempdevicess.get(i);
+        for (deviceEntity deviceEntity : tempdevicess) {//去空
+            //   if(deviceEntity.getName().c) {
             devices.add(deviceEntity);
+            // }
         }
         tempdevicess.clear();
         if (devices.size() != 0) {
-            Collections.sort(devices); // 顺序排列
+           // Collections.sort(devices); // 顺序排列
             adapter = new AppAdapter(devices);
             activity_serachblue_devicelist.setAdapter(adapter);
             activity_serachblue_btclick.setText("重新搜索");
             activity_serachblue_isfail.setText("搜索成功");
             activity_serachblue_tishi.setText("点击心率带即可开始运动");
         } else {
-            activity_serachblue_tishi.setText("请确定心率监测器已正确佩戴并靠近手机");
-            activity_serachblue_isfail.setText("连接失败");
+            activity_serachblue_tishi.setText("请确保心率带已正确佩戴并靠近手机");
+            activity_serachblue_isfail.setText("搜索失败");
             activity_serachblue_btclick.setText("重新搜索");
         }
 
@@ -220,7 +227,7 @@ public class SearchBlueActivity extends BaseActivity {
                 devices.clear();
                 adapter.notifyDataSetChanged();
                 activity_serachblue_isfail.setText("搜索心率监视器");
-                activity_serachblue_tishi.setText("请确定心率监测器已正确佩戴并靠近手机");
+                activity_serachblue_tishi.setText("请保持心率带正确佩戴并靠近手机");
                 activity_serachblue_tration.setVisibility(View.VISIBLE);
                 activity_serachblue_btclick.setVisibility(View.INVISIBLE);
                 activity_serachblue_img.setVisibility(View.VISIBLE);

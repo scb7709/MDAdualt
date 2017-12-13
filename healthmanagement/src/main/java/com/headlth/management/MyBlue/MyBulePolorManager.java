@@ -47,6 +47,7 @@ public class MyBulePolorManager implements Serializable {
     private static int CONNECT_TIME;//两次重新连接间的最小时间间隔
 
     public static boolean OVER;//结束
+    public static boolean FIRDT_CONNECT=true;//第一次连接
     private Timer timer;
     private TimerTask timerTask;
 
@@ -75,9 +76,14 @@ public class MyBulePolorManager implements Serializable {
             String action = intent.getAction();
             Log.i("", "蓝牙广播回调 action=" + action);
             if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_OFF) {//关闭系统蓝牙
+                IS_CONNECT=false;
                 MyBuleSearchManager.openBluetooth(activity);
             } else if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_ON) {//系统蓝牙打开
-                first_connect();//开启首次连接
+                if(FIRDT_CONNECT) {
+                    first_connect();//开启首次连接
+                }else {
+                    nofirst_connect();
+                }
             }
         }
     };
@@ -123,6 +129,7 @@ public class MyBulePolorManager implements Serializable {
      * @return true 已连接
      */
     public boolean first_connect() {
+        FIRDT_CONNECT=false;
         // Log.i("myblue", "first_connect开始连接+" + ADRS);
         if (ADRS == null) {
             return false;

@@ -93,6 +93,7 @@ public class ShareNewActivity extends BaseActivity {
     private Drawable add;
     private Resources resources;
     RequestParams params;
+    private boolean compressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -160,39 +161,58 @@ public class ShareNewActivity extends BaseActivity {
                 break;
 
             case R.id.share_send:
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        share();
-                    }
-                });
+                share();
+
 
                 break;
         }
     }
 
     private void share() {
-        MyToash.Log("waitDialog1=="+imagePaths.size() );
+        MyToash.Log("waitDialog1==" + imagePaths.size());
         if (share_shareText.getText().toString().length() == 0 && imagePaths.size() == 1) {
             Toast.makeText(ShareNewActivity.this, "还未添加任何内容", Toast.LENGTH_LONG).show();
         } else {
             waitDialog.setMessage("正在分享,请稍后...");
             waitDialog.showDailog();
-
-
             MyToash.Log("waitDialog1");
             // if (waitDialog.isShowing()) {
             MyToash.Log("waitDialog22");
             params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostShareContentRequest");
             if (imagePaths.size() != 0) {
                 params.setMultipart(true);
-                CompressImage();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (!compressDialog) {
+                            if (waitDialog.isShowing()) {
+                                compressDialog = true;
+                                CompressImage();
+                                return;
+                            }else {
+                                waitDialog.show();
+                            }
+                        }
+
+
+
+                    }
+                });
+
             } else {
                 send();
             }
             //  }
         }
     }
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            send();
+        }
+    };
 
     private void send() {
         if (share_shareText.getText().toString().length() == 0) {
@@ -297,7 +317,8 @@ public class ShareNewActivity extends BaseActivity {
         for (String file : imagePaths) {
             params.addBodyParameter("file" + (i++), new File(file), "image/png");// }
         }
-        send();
+        handler.sendEmptyMessage(0);
+        //  send();
 
 
      /*
@@ -328,6 +349,7 @@ public class ShareNewActivity extends BaseActivity {
         });*/
 
     }
+
     private void cancelShare() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(ShareNewActivity.this);
         dialog.setMessage("是否取消分享？")//设置显示的内容

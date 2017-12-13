@@ -196,6 +196,10 @@
             android:name=".activity.MyShareActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.NewSearchBlueActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.MyPrescriptionActivity"
             android:screenOrientation="portrait" />
 

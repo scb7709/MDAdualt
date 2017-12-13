@@ -73,6 +73,7 @@ public class MaidongCircleFragment extends BaseFragment {
     private TopRightMenu mTopRightMenu;  //点击加号的弹框
     LinearLayoutManager linearLayoutManager;
     boolean IS_ContentDetailsActivity;
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
