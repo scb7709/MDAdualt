@@ -189,9 +189,6 @@ public class HttpUtils {
                                     }
                                     Intent i = new Intent(context, Login.class);
                                     context.startActivity(i);
-                          /*  if (MainActivity.Activity != null) {
-                                MainActivity.Activity.finish();
-                            }*/
                                     //清除所有文件数据
                                     ShareUitls.cleanSharedPreference(context);
                                     //清空圈子
@@ -199,6 +196,7 @@ public class HttpUtils {
                                     CircleList.getInstance().commentlist.clear();
                                     CircleList.getInstance().replylist.clear();
                                     Glide.get(context).clearMemory();
+                                    responseListener.onErrorResponse(null);
                                     context.finish();
                                 } else {
                                     responseListener.onResponse(result);
@@ -206,6 +204,7 @@ public class HttpUtils {
 
 
                             } catch (JSONException e) {
+                                responseListener.onErrorResponse(null);
                                 e.printStackTrace();
                             }
 
@@ -214,7 +213,7 @@ public class HttpUtils {
 
                         @Override
                         public void onError(Throwable ex, boolean isOnCallback) {
-                            Log.i("AAAAACCCAAAA", ex.toString() + "'" + isOnCallback);
+                           // Log.i("AAAAACCCAAAA", ex.toString() + "'" + isOnCallback);
                             //System.Net.Sockets.SocketException;
                             if (ex != null &&( ex instanceof SocketException)&&count<=1) {//进阶接口可能会出现这个异常
                                 count++;
@@ -226,6 +225,7 @@ public class HttpUtils {
                                 try {
                                     responseListener.onErrorResponse(ex);
                                 } catch (Exception E) {
+                                    responseListener.onErrorResponse(null);
                                 }
                             }
 
@@ -242,7 +242,7 @@ public class HttpUtils {
 
                         @Override
                         public void onFinished() {
-                          //  responseListener.onErrorResponse(null);
+                         //responseListener.onErrorResponse(null);
                             if (waitDialog != null) {
                                 waitDialog.dismissDialog();
                             }

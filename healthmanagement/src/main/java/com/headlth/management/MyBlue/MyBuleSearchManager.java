@@ -11,9 +11,11 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.headlth.management.myview.MyToash;
+import com.headlth.management.myview.PubLicDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,7 @@ public class MyBuleSearchManager {
     private static int SERACH_TIME;//单次搜索时长
     private LeScanCallbackListener leScanCallbackListener;//搜索到设备的监听器
     private List<BluetoothDeviceEntity> bluetoothDeviceList;//单次搜索到的蓝牙设备的集合
+    private  boolean SEARCH_METHOD;//控制搜索方法切换
     // BluetoothLeScanner scanner;
     //  private Timer timer = new Timer();
 
@@ -43,6 +46,7 @@ public class MyBuleSearchManager {
             return;
         } else {
             this.bluetoothAdapter = getAdapter();
+
             if (bluetoothAdapter != null) {
                 MyBuleSearchManager.SERACH_TIME = SERACH_TIME;
                 this.bluetoothDeviceList = SERACH_TIME == 0 ? null : new ArrayList<BluetoothDeviceEntity>();
@@ -119,6 +123,11 @@ public class MyBuleSearchManager {
                         openBluetooth(activity);
                     }
                 } else if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_ON) {//系统蓝牙打开
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     mScanning = false;
                     StartScan();//搜索设备
                     Log.i("", "系统蓝牙打开！！");
@@ -132,14 +141,29 @@ public class MyBuleSearchManager {
         return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
     }
 
-    public static void openBluetooth(Activity activity) {
+    public static void openBluetooth(final Activity activity) {
+    /*    PubLicDialog.showNotDialog(activity, new String[]{"提示:", "蓝牙已断开是否前往打开蓝牙?", "打开蓝牙", "暂不打开"}, new PubLicDialog.PubLicDialogOnClickListener() {
+            @Override
+            public void setPositiveButton() {
+                activity.startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));//直接进入手机中的蓝牙设置界面
+            }
+        });*/
+
+
+
+/*//启动修改蓝牙可见性的Intent
+        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+//设置蓝牙可见性的时间，方法本身规定最多可见300秒
+        intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        activity.startActivity(intent);*/
+
 
 
         //打开蓝牙提示框
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         enableBtIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        enableBtIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,300);
         activity.startActivityForResult(enableBtIntent, 333);
-
 
     }
 
@@ -154,15 +178,30 @@ public class MyBuleSearchManager {
         return filter;
     }
 
-    //包含开始搜索,停止搜索的方法
+    //
     public void StartScan() {
         if (bluetoothDeviceList != null) {
             bluetoothDeviceList.clear();
         }
-        bluetoothAdapter.startDiscovery();
-        mHandler.sendEmptyMessageDelayed(3, 8000);
+        if(SEARCH_METHOD){
+            MyToash.Log("SEARCH_METHODstartDiscovery1");
+            bluetoothAdapter.startDiscovery();
+        }else {
+            MyToash.Log("SEARCH_METHODleScanCallback1");
+            bluetoothAdapter.startLeScan(leScanCallback);
+        }
+        mHandler.sendEmptyMessageDelayed(3, 10000);
     }
+    BluetoothAdapter.LeScanCallback leScanCallback =new BluetoothAdapter.LeScanCallback() {
+        @Override
+        public void onLeScan(BluetoothDevice bluetoothDevice, int RSSI, byte[] bytes) {
+            if (bluetoothDevice != null && bluetoothDevice.getAddress() != null) {
+                BluetoothDeviceEntity bluetoothDeviceEntity = new BluetoothDeviceEntity(bluetoothDevice, RSSI, null);
+                leScanCallbackListener.getBluetoothDevice(bluetoothDeviceEntity);
+            }
 
+        }
+    }  ;
     public interface LeScanCallbackListener {//搜索到蓝牙设备的回调接口
 
         void getBluetoothDeviceList(List<BluetoothDeviceEntity> bluetoothDevices);//当 SERACH_TIME不为0时 搜索完成后返回一个设备集合
@@ -172,13 +211,17 @@ public class MyBuleSearchManager {
     }
     public void endSearch() {
 
-        Log.i("myblue", "endSearch！！");
         isend = true;
         if (bluetoothDeviceList != null) {
             bluetoothDeviceList.clear();
         }
         try {
             bluetoothAdapter.cancelDiscovery();
+            mHandler.removeMessages(3);
+        } catch (Exception e) {
+        }
+        try {
+            bluetoothAdapter.stopLeScan(leScanCallback);
             mHandler.removeMessages(3);
         } catch (Exception e) {
         }
@@ -198,7 +241,16 @@ public class MyBuleSearchManager {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            bluetoothAdapter.cancelDiscovery();
+            try {
+                if (SEARCH_METHOD) {
+                    MyToash.Log("SEARCH_METHODstartDiscovery2");
+                    bluetoothAdapter.cancelDiscovery();
+                } else {
+                    MyToash.Log("SEARCH_METHODleScanCallback2");
+                    bluetoothAdapter.stopLeScan(leScanCallback);
+                }
+            }catch (Exception e){}
+            SEARCH_METHOD=!SEARCH_METHOD;
             leScanCallbackListener.getBluetoothDevice(new BluetoothDeviceEntity(null, 1111, null));
         }
     };

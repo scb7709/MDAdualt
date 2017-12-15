@@ -647,6 +647,7 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
             if (LoseConnectcount == 30) {//30秒内没有收到心率重启连接
                 LoseConnectcount=0;
                 startBlue();
+                //myBuleConnectManager.nofirst_connect();
             }
         }
         LoseConnectcount++;

@@ -526,6 +526,7 @@ public class MaidongFragment extends BaseFragment {
 
                             @Override
                             public void onErrorResponse(Throwable ex) {
+                                MyToash.Toash(activity,"网络异常");
                                 startSport = true;
                                 Log.i("myblue", "onErrorResponse");
                             }
@@ -537,8 +538,6 @@ public class MaidongFragment extends BaseFragment {
 
         }
     }
-
-
     private void setMaidongData(MaidongDataJson maidongDataJson) {
 
 

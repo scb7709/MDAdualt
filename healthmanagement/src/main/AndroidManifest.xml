@@ -245,6 +245,10 @@
         <activity
             android:name=".activity.CircleReplyActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.LoadingActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activity.Login"

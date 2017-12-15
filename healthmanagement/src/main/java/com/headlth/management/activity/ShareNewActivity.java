@@ -12,7 +12,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
@@ -29,16 +28,15 @@ import android.widget.Toast;
 import com.headlth.management.R;
 import com.headlth.management.ShareImageUtils.ImageWork;
 import com.headlth.management.acs.BaseActivity;
+import com.headlth.management.clenderutil.WaitDialog;
 import com.headlth.management.entity.CircleList;
 import com.headlth.management.myview.MGridView;
 import com.headlth.management.myview.MyToash;
 import com.headlth.management.utils.Bimp;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.ImageUtil;
-import com.headlth.management.utils.ScreenShot;
 import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.utils.VersonUtils;
-
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,9 +49,9 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import photopicker.PhotoPickerActivity;
 import photopicker.PhotoPreviewActivity;
@@ -82,18 +80,20 @@ public class ShareNewActivity extends BaseActivity {
     public static Activity activity;
 
 
-    private static com.headlth.management.clenderutil.WaitDialog waitDialog;
+    private static WaitDialog waitDialog;
     private Intent intent;
 
 
     private static final int REQUEST_CAMERA_CODE = 10;
     private static final int REQUEST_PREVIEW_CODE = 20;
     private ArrayList<String> imagePaths;
-    private String pictime = "";
+    private String SportIMage = "";
     private Drawable add;
     private Resources resources;
-    RequestParams params;
-    private boolean compressDialog;
+    private RequestParams params;
+    private boolean StartcompressImage;
+    private boolean ClickShare;
+    private Map<String, String> compressImage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,53 +104,31 @@ public class ShareNewActivity extends BaseActivity {
 
     private void initialize() {
         imagePaths = new ArrayList<>();
+        compressImage = new HashMap<>();
         activity = this;
         intent = getIntent();
-        pictime = getIntent().getStringExtra("pictime");//运动完后传过来的截图
+        SportIMage = getIntent().getStringExtra("pictime");//运动完后传过来的截图
         add = ContextCompat.getDrawable(this, R.mipmap.pic_add);
         resources = getResources();
-        if (!pictime.equals("")) {
-            imagePaths.add(pictime);
-        }
+
         imagePaths.add("000000");
         Init();
     }
 
     private static void initDialog() {
-        waitDialog = new com.headlth.management.clenderutil.WaitDialog(activity);
+        waitDialog = new WaitDialog(activity);
         waitDialog.setCancleable(true);
+        waitDialog.setMessage("正在分享,请稍后...");
     }
 
     public void Init() {
         initDialog();
+        initRequestParams();
         noScrollgridview.setSelector(new ColorDrawable(Color.TRANSPARENT));
         noScrollgridview.setHorizontalSpacing(ImageUtil.dp2px(ShareNewActivity.this, 3));
 
-        Log.i("mybule", pictime + "  fjdjfd");
         gridAdapter = new GridAdapter(imagePaths);
         noScrollgridview.setAdapter(gridAdapter);
-
-  /*      noScrollgridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String imgs = (String) parent.getItemAtPosition(position);
-                Log.i("mybule", imgs + "  "+position);
-                if ("000000".equals(imgs)) {
-                    PhotoPickerIntent intent = new PhotoPickerIntent(ShareNewActivity.this);
-                    intent.setSelectModel(SelectModel.MULTI);
-                    intent.setShowCarema(true); // 是否显示拍照
-                    intent.setMaxTotal(9); // 最多选择照片数量，默认为6
-                    intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
-                    startActivityForResult(intent, REQUEST_CAMERA_CODE);
-                } else {
-                    PhotoPreviewIntent intent = new PhotoPreviewIntent(ShareNewActivity.this);
-                    intent.setCurrentItem(position);
-                    intent.setPhotoPaths(imagePaths);
-                    startActivityForResult(intent, REQUEST_PREVIEW_CODE);
-                }
-            }
-        });*/
-
     }
 
     @Event(value = {R.id.share_cancel, R.id.share_send})
@@ -173,36 +151,52 @@ public class ShareNewActivity extends BaseActivity {
         if (share_shareText.getText().toString().length() == 0 && imagePaths.size() == 1) {
             Toast.makeText(ShareNewActivity.this, "还未添加任何内容", Toast.LENGTH_LONG).show();
         } else {
-            waitDialog.setMessage("正在分享,请稍后...");
             waitDialog.showDailog();
-            MyToash.Log("waitDialog1");
-            // if (waitDialog.isShowing()) {
-            MyToash.Log("waitDialog22");
-            params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostShareContentRequest");
+
+            if (share_shareText.getText().toString().length() == 0) {
+                params.addBodyParameter("ShareContent", " ");
+            } else {
+                params.addBodyParameter("ShareContent", share_shareText.getText().toString());
+            }
+
             if (imagePaths.size() != 0) {
-                params.setMultipart(true);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (!compressDialog) {
-                            if (waitDialog.isShowing()) {
-                                compressDialog = true;
-                                CompressImage();
-                                return;
-                            }else {
-                                waitDialog.show();
-                            }
+                MyToash.Log("进入压缩线程3" + StartcompressImage + "  " + ClickShare + "  " + compressImage.size());
+                if (!StartcompressImage) {
+                    int i = 0;
+                    for (final String path : compressImage.keySet()) {
+                        if (imagePaths.contains(path)) {
+                            MyToash.Log(path);
+                            params.addBodyParameter("file" + (i++), new File(compressImage.get(path)), "image/png");
                         }
-
-
-
                     }
-                });
+                    send();
+                } else {
+                    ClickShare = true;
+                }
 
             } else {
                 send();
             }
-            //  }
+
+        }
+    }
+
+    private void initRequestParams() {
+        params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostShareContentRequest");
+        params.setMultipart(true);
+        params.addBodyParameter("UID", ShareUitls.getString(ShareNewActivity.this, "UID", "null"));
+        params.addBodyParameter("ResultJWT", ShareUitls.getString(this, "ResultJWT", "0"));
+        params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
+        if (!SportIMage.equals("")) {
+            imagePaths.add(SportIMage);
+            String pictime = System.currentTimeMillis() + "";
+            Bimp.saveBitmap(pictime, pictime, new Bimp.OnSaveSuccessListener() {
+                @Override
+                public void onSuccess(String filepath) {
+                    // MyToash.Log("进入压缩线程4" + pictime + "    " + filepath);
+                    compressImage.put(SportIMage, filepath);
+                }
+            });
         }
     }
 
@@ -210,24 +204,55 @@ public class ShareNewActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            MyToash.Log("进入压缩线程2" + StartcompressImage + "  " + ClickShare);
+            int i = 0;
+            for (final String path : compressImage.keySet()) {
+                if (imagePaths.contains(path)) {
+                    MyToash.Log(path);
+                    params.addBodyParameter("file" + (i++), new File(compressImage.get(path)), "image/png");
+                }
+            }
             send();
         }
     };
+    Runnable compressRunnable = new Runnable() {
+        @Override
+        public void run() {
+            synchronized (activity.getClass()) {
+                MyToash.Log("进入压缩线程1" + StartcompressImage + "  " + ClickShare);
+                if (!StartcompressImage) {
+
+                    StartcompressImage = true;
+                    for (final String path : imagePaths) {
+                        if (path != null && !path.equals("000000") && !compressImage.containsKey(path)) {
+                            String pictime = System.currentTimeMillis() + "";
+                            Bimp.saveBitmap(path, pictime, new Bimp.OnSaveSuccessListener() {
+                                @Override
+                                public void onSuccess(String filepath) {
+                                    MyToash.Log("进入压缩线程4" + path + "    " + filepath);
+                                    compressImage.put(path, filepath);
+                                }
+                            });
+                        }
+
+                    }
+                    StartcompressImage = false;
+                    if (ClickShare) {
+                        handler.sendEmptyMessage(0);
+                    }
+                }
+            }
+
+        }
+
+    };
 
     private void send() {
-        if (share_shareText.getText().toString().length() == 0) {
-            params.addBodyParameter("ShareContent", " ");
-        } else {
-            params.addBodyParameter("ShareContent", share_shareText.getText().toString());
-        }
-        params.addBodyParameter("UID", ShareUitls.getString(ShareNewActivity.this, "UID", "null"));
-        params.addBodyParameter("ResultJWT", ShareUitls.getString(this, "ResultJWT", "0"));
-        params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
         Callback.Cancelable cancelable = x.http().post(params,
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
-
+                        ClickShare = false;
 
                         Log.i("QQQQQQQQQonSuccess", "" + result.toString());
                         try {
@@ -247,7 +272,6 @@ public class ShareNewActivity extends BaseActivity {
                                 CircleList.getInstance().commentlist.clear();
                                 CircleList.getInstance().replylist.clear();
                                 finish();
-                                return;
                             } else {
 
                                 if (jsonObject.getString("IsSuccess").equals("true")) {
@@ -264,11 +288,13 @@ public class ShareNewActivity extends BaseActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        //LoadingActivity.activity.finish();
                         waitDialog.dismissDialog();
                     }
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
+                        ClickShare = false;
                         //Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
                         if (ex instanceof HttpException) { // 网络错误
                             Toast.makeText(ShareNewActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
@@ -277,77 +303,19 @@ public class ShareNewActivity extends BaseActivity {
                             Toast.makeText(ShareNewActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
                         }
                         waitDialog.dismissDialog();
+                        //LoadingActivity.activity.finish();
                     }
 
                     @Override
                     public void onCancelled(CancelledException cex) {
-                        Log.i("QQQQQQQQQoonCancelled", "");
-                        waitDialog.dismissDialog();
+
                     }
 
                     @Override
                     public void onFinished() {
-                        Log.i("QQQQQQQQonFinished", "");
-                        waitDialog.dismissDialog();
+                        ClickShare = false;
                     }
                 });
-    }
-
-    private void CompressImage() {
-
-        final ArrayList<String> imagePath = new ArrayList<>();
-        for (String file : imagePaths) {//压缩
-            if (!file.equals("000000")) {
-                String pictime = System.currentTimeMillis() + "";
-                //  ScreenShot.saveMyBitmap(Bimp.getSmallBitmap(file), pictime, false, ShareNewActivity.this);
-                //  String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/image/" + pictime + ".png";
-                Bimp.saveBitmap(file, pictime, new Bimp.OnSaveSuccessListener() {
-                    @Override
-                    public void onSuccess(String filepath) {
-                        imagePath.add(filepath);
-                    }
-                });
-
-            }
-        }
-        imagePaths.clear();
-        imagePaths = imagePath;
-
-        int i = 0;
-        for (String file : imagePaths) {
-            params.addBodyParameter("file" + (i++), new File(file), "image/png");// }
-        }
-        handler.sendEmptyMessage(0);
-        //  send();
-
-
-     /*
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-
-                final ArrayList<String> imagePath = new ArrayList<>();
-                for (String file : imagePaths) {//压缩
-                    if (!file.equals("000000")) {
-                        String pictime = System.currentTimeMillis() + "";
-                        //  ScreenShot.saveMyBitmap(Bimp.getSmallBitmap(file), pictime, false, ShareNewActivity.this);
-                        //  String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/maidong/image/" + pictime + ".png";
-                        Bimp.saveBitmap(file, pictime, new Bimp.OnSaveSuccessListener() {
-                            @Override
-                            public void onSuccess(String filepath) {
-                                imagePath.add(filepath);
-                            }
-                        });
-
-                    }
-                }
-                imagePaths.clear();
-                imagePaths = imagePath;
-                handler.sendEmptyMessage(0);
-
-            }
-        });*/
-
     }
 
     private void cancelShare() {
@@ -362,8 +330,6 @@ public class ShareNewActivity extends BaseActivity {
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加确定按钮
                     @Override
                     public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
-                        Bimp.getInstance().bmp.clear();
-                        Bimp.getInstance().url.clear();
                         dialog.dismiss();
                         finish();
                         if (!getIntent().getStringExtra("pictime").equals("")) {
@@ -373,18 +339,6 @@ public class ShareNewActivity extends BaseActivity {
                     }
 
                 }).show();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)//主要是对这个函数的复写
-    {
-        // TODO Auto-generated method stub
-
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && (event.getAction() == KeyEvent.ACTION_DOWN)) {
-            cancelShare();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
 
@@ -416,15 +370,29 @@ public class ShareNewActivity extends BaseActivity {
         if (paths.contains("000000")) {
             paths.remove("000000");
         }
-     /*   if (!pictime.equals("")&&!paths.contains(pictime)) {
-            imagePaths.add(pictime);
-        }*/
         imagePaths.addAll(paths);
         if (imagePaths.size() < 9) {
             imagePaths.add("000000");
         }
+        if (imagePaths.size() >= 2) {
+            handler.post(compressRunnable);
+        }
+
         gridAdapter = new GridAdapter(imagePaths);
         noScrollgridview.setAdapter(gridAdapter);
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)//主要是对这个函数的复写
+    {
+        // TODO Auto-generated method stub
+
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && (event.getAction() == KeyEvent.ACTION_DOWN)) {
+            cancelShare();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private class GridAdapter extends BaseAdapter {
