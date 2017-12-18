@@ -110,8 +110,11 @@ public class ShareNewActivity extends BaseActivity {
         SportIMage = getIntent().getStringExtra("pictime");//运动完后传过来的截图
         add = ContextCompat.getDrawable(this, R.mipmap.pic_add);
         resources = getResources();
-
+        if (!SportIMage.equals("")) {
+            imagePaths.add(SportIMage);
+        }
         imagePaths.add("000000");
+
         Init();
     }
 
@@ -162,13 +165,21 @@ public class ShareNewActivity extends BaseActivity {
             if (imagePaths.size() != 0) {
                 MyToash.Log("进入压缩线程3" + StartcompressImage + "  " + ClickShare + "  " + compressImage.size());
                 if (!StartcompressImage) {
-                    int i = 0;
+                   /* int i = 0;
                     for (final String path : compressImage.keySet()) {
                         if (imagePaths.contains(path)) {
                             MyToash.Log(path);
                             params.addBodyParameter("file" + (i++), new File(compressImage.get(path)), "image/png");
                         }
+                    }*/
+                    int i = 0;
+                    for (final String path : imagePaths) {
+                        if (compressImage.keySet().contains(path)) {
+                            MyToash.Log(path);
+                            params.addBodyParameter("file" + (i++), new File(compressImage.get(path)), "image/png");
+                        }
                     }
+
                     send();
                 } else {
                     ClickShare = true;
@@ -188,9 +199,9 @@ public class ShareNewActivity extends BaseActivity {
         params.addBodyParameter("ResultJWT", ShareUitls.getString(this, "ResultJWT", "0"));
         params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
         if (!SportIMage.equals("")) {
-            imagePaths.add(SportIMage);
+            MyToash.Log("进入" + SportIMage);
             String pictime = System.currentTimeMillis() + "";
-            Bimp.saveBitmap(pictime, pictime, new Bimp.OnSaveSuccessListener() {
+            Bimp.saveBitmap(SportIMage, pictime, new Bimp.OnSaveSuccessListener() {
                 @Override
                 public void onSuccess(String filepath) {
                     // MyToash.Log("进入压缩线程4" + pictime + "    " + filepath);
@@ -204,14 +215,23 @@ public class ShareNewActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            MyToash.Log("进入压缩线程2" + StartcompressImage + "  " + ClickShare);
-            int i = 0;
+           // MyToash.Log("进入压缩线程2" + StartcompressImage + "  " + ClickShare);
+            /*int i = 0;
             for (final String path : compressImage.keySet()) {
                 if (imagePaths.contains(path)) {
                     MyToash.Log(path);
                     params.addBodyParameter("file" + (i++), new File(compressImage.get(path)), "image/png");
                 }
+            }*/
+
+            int i = 0;
+            for (final String path : imagePaths) {
+                if (compressImage.keySet().contains(path)) {
+                    MyToash.Log(path);
+                    params.addBodyParameter("file" + (i++), new File(compressImage.get(path)), "image/png");
+                }
             }
+
             send();
         }
     };
