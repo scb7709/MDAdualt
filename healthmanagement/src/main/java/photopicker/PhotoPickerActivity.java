@@ -123,6 +123,8 @@ public class PhotoPickerActivity extends AppCompatActivity{
             if(tmp != null && tmp.size() > 0) {
                 resultList.addAll(tmp);
             }
+        }else {
+            btnPreview.setVisibility(View.GONE);
         }
 
         // 是否显示照相机
