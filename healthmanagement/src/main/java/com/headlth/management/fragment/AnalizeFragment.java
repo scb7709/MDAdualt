@@ -50,7 +50,7 @@ public class AnalizeFragment extends BaseFragment {
     private void initialize(View view) {
         vPager = (ViewPager) view.findViewById(R.id.vPager);
         String year = DateUtil.getYear() + "-" + second(DateUtil.getMonth()) + "-" + second(DateUtil.getCurrentMonthDay());
-        String anlysedata = ShareUitls.getString(getActivity(), "anlysedata", "");//
+        String anlysedata =str;// ShareUitls.getString(getActivity(), "anlysedata", "");//
 
 
         if(anlysedata.length()!=0){
@@ -180,6 +180,9 @@ public class AnalizeFragment extends BaseFragment {
             return "" + i;
         }
     }
+
+
+    String  str="{\"Status\":1,\"Data\":{\"Detail\":[{\"Calory\":\"0\",\"Day\":\"周二\",\"EffectTime\":\"120\",\"StatDate\":\"2017-12-19\",\"TotalTime\":\"0\"},{\"Calory\":\"0\",\"Day\":\"周三\",\"EffectTime\":\"130\",\"StatDate\":\"2017-12-20\",\"TotalTime\":\"0\"},{\"Calory\":\"0\",\"Day\":\"周四\",\"EffectTime\":\"500\",\"StatDate\":\"2017-12-21\",\"TotalTime\":\"0\"},{\"Calory\":\"0\",\"Day\":\"周五\",\"EffectTime\":\"60\",\"StatDate\":\"2017-12-22\",\"TotalTime\":\"0\"},{\"Calory\":\"0\",\"Day\":\"周六\",\"EffectTime\":\"360\",\"StatDate\":\"2017-12-23\",\"TotalTime\":\"0\"},{\"Calory\":\"0\",\"Day\":\"周日\",\"EffectTime\":\"700\",\"StatDate\":\"2017-12-24\",\"TotalTime\":\"0\"},{\"Calory\":\"14\",\"Day\":\"周一\",\"EffectTime\":\"1559\",\"StatDate\":\"2017-12-25\",\"TotalTime\":\"1703\"}],\"Summary\":[{\"AvgEffectTime\":\"1559\",\"AvgTotalTime\":\"8160\",\"AvgCal\":\"2\",\"CaloryRate\":\"希望你，再接再厉\",\"MaxCalory\":\"100\",\"MaxTotalTime\":\"2520\",\"Percentage\":\"19.11%\",\"UID\":\"2045\",\"TotalCal\":\"14\",\"TotalDays\":\"0\"}]},\"Message\":\"获取成功!\",\"IsSuccess\":true,\"IsError\":false,\"ErrMsg\":null,\"ErrCode\":null,\"ResultJWT\":null}\n";
 }
 
 

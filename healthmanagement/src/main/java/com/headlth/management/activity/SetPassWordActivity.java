@@ -88,7 +88,7 @@ public class SetPassWordActivity extends BaseActivity {
         Intent intent = getIntent();
         flag = intent.getStringExtra("flag");
         verify_code = intent.getStringExtra("verify_code");
-       verify_code="1234";
+        // verify_code="1234";
         phone = intent.getStringExtra("phone");
         setDate();
     }
@@ -125,7 +125,7 @@ public class SetPassWordActivity extends BaseActivity {
                 time.start();
                 getSMS(phone);
                 activity_setpassword_reminder.setText("正在给 " + phone + " 发送验证码");
-              // activity_setpasswordet_bt_commit.setClickable(false);
+                // activity_setpasswordet_bt_commit.setClickable(false);
                 break;
 
             case R.id.activity_setpasswordet_bt_commit:
@@ -225,6 +225,7 @@ public class SetPassWordActivity extends BaseActivity {
     }
 
     TimeCount time = new TimeCount(60000, 1000);
+
     class TimeCount extends CountDownTimer {
         public TimeCount(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);//参数依次为总时长,和计时的时间间隔
@@ -350,7 +351,7 @@ public class SetPassWordActivity extends BaseActivity {
 
     private void getSMS(final String phone) {
 
-        Login. getSMS(this,phone,flag.equals("Register")?"0":"1", new Login.SMSInterface() {
+        Login.getSMS(this, phone, flag.equals("Register") ? "0" : "1", new Login.SMSInterface() {
             @Override
             public void onResponse(String Verify_code) {
 

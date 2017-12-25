@@ -1,6 +1,7 @@
 package com.headlth.management.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,11 +18,14 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.headlth.management.R;
 import com.headlth.management.entity.anlyseCallBack;
+import com.headlth.management.myview.MyToash;
+import com.headlth.management.utils.ImageUtil;
 import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.utils.StringForTime;
 
@@ -72,7 +76,7 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     TextView t7;
     private TextView TotalDays;
     private TextView MaxTotalTime;
-    private RelativeLayout zhu;
+    private LinearLayout zhu;
     private TextView midleTime;
     private TextView botomLin;
     View view;
@@ -82,14 +86,14 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     List<TextView> ts = null;
     int target;
     private int screenWidth;
-
+private Activity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.layout_sport, null);
+        view = inflater.inflate(R.layout.fragment_layout_sport, null);
         relativeLayout = (RelativeLayout) view.findViewById(R.id.view);
-        zhu = (RelativeLayout) view.findViewById(R.id.zhu);
+        zhu = (LinearLayout) view.findViewById(R.id.zhu);
         botomLin = (TextView) view.findViewById(R.id.t1);
         TotalDays = (TextView) view.findViewById(R.id.TotalDays);
         MaxTotalTime = (TextView) view.findViewById(R.id.MaxTotalTime);
@@ -104,13 +108,13 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
         WindowManager wm = getActivity().getWindowManager();
         screenWidth = wm.getDefaultDisplay().getWidth();
 
-
+        activity=getActivity();
         return view;
     }
 
     int x;
     int y;
-    int bootom;
+    //int bootom;
     int MaxHight;
     int top;
     int daohangHigh;
@@ -130,22 +134,21 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                     daohangHigh = location666[1];
                     int[] location = new int[2];
                     zhu.getLocationOnScreen(location);
-                    x = location[0];
-                    y = location[1];
+                  //  x = location[0];
+                  //  y = location[1];
                     int[] location0 = new int[2];
                     botomLin.getLocationOnScreen(location0);
-                    bootom = zhu.getTop();
-                    top = botomLin.getTop();
-                    MaxHight = (botomLin.getTop() - zhu.getTop());
+                  //  bootom = zhu.getTop();
+                   // top = botomLin.getTop();
+                    MaxHight =zhu.getHeight();// (botomLin.getTop() - zhu.getTop());
+                    List<anlyseCallBack.DataBean.DetailBean> detailBean=anlyse.getData().getDetail();
                     for (int i = 0; i < anlyse.getData().getDetail().size(); i++) {
-                        FrameLayout.LayoutParams linearParamsall = (FrameLayout.LayoutParams) btalls.get(i).getLayoutParams();
+                        RelativeLayout.LayoutParams linearParamsall = (RelativeLayout.LayoutParams) btalls.get(i).getLayoutParams();
                         if(MaxTime!=0){
-                            linearParamsall.height = MaxHight * (target) / (MaxTime); //
+                            int EffectTime=Integer.parseInt(detailBean.get(i).getEffectTime());
+                          //  MyToash.Log(EffectTime+"    EffectTime"+"  "+MaxTime+"  "+MaxHight);
+                            linearParamsall.height = MaxHight * EffectTime/ (MaxTime); //
                             btalls.get(i).setLayoutParams(linearParamsall);
-                            FrameLayout.LayoutParams linearParams = (FrameLayout.LayoutParams) btalls.get(i).getLayoutParams();
-                            // 取控件aaa当前的布局参数
-                            linearParams.height = MaxHight * (Integer.parseInt(anlyse.getData().getDetail().get(i).getEffectTime())) / (MaxTime); //
-                            btalls.get(i).setLayoutParams(linearParams);
                             ts.get(i).setText(anlyse.getData().getDetail().get(i).getDay());
                         }
                     }
@@ -210,13 +213,17 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
             }
 
             String effect = StringForTime.stringForTime3(EffectTime);
-            int effectwidth = x + (zhouyiall.getWidth() - AnalizeClFragment.getTextWidth(effect, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
-            int tatalwidth = x + (zhouyiall.getWidth() - AnalizeClFragment.getTextWidth(tatal, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
-            canvas.drawText(effect, effectwidth, y - 90, paint);
-            canvas.drawLine(x, y - 85, x + zhouyiall.getWidth(), y - 85, paint);
-            canvas.drawText(tatal, tatalwidth, y - 60, paint);
+            int  zhouyiall_Width=zhouyiall.getWidth();
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_triangle_orange);
-            canvas.drawBitmap(bitmap, x + zhouyiall.getWidth() / 4, y - 50, paint);
+
+            int  bitmap_height=bitmap.getHeight();
+            int effectwidth = x + (zhouyiall_Width - AnalizeClFragment.getTextWidth(effect, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
+            int tatalwidth = x + (zhouyiall_Width - AnalizeClFragment.getTextWidth(tatal, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
+            canvas.drawText(effect, effectwidth, y - ImageUtil.dp2px(activity,35), paint);
+            canvas.drawLine(x, y - ImageUtil.dp2px(activity,32), x + zhouyiall_Width, y - ImageUtil.dp2px(activity,32), paint);
+            canvas.drawText(tatal, tatalwidth, y - ImageUtil.dp2px(activity,20), paint);
+
+            canvas.drawBitmap(bitmap, x + (zhouyiall_Width -bitmap.getWidth())/2, y - ImageUtil.dp2px(activity,12), paint);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.headlth.management.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,11 +18,13 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.headlth.management.R;
 import com.headlth.management.entity.anlyseCallBack;
+import com.headlth.management.utils.ImageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,22 +46,23 @@ public class AnalizeClFragment extends BaseFragment {
     TextView MaxTotalTime;
     @InjectView(R.id.midleTime)
     TextView midleTime;
-    @InjectView(R.id.clzhouyi)
+    @InjectView(R.id.zhouyiall)
     Button clzhouyi;
-    @InjectView(R.id.clzhouer)
+    @InjectView(R.id.zhouerall)
     Button clzhouer;
-    @InjectView(R.id.clzhousan)
+    @InjectView(R.id.zhousanall)
     Button clzhousan;
-    @InjectView(R.id.clzhousi)
+    @InjectView(R.id.zhousiall)
     Button clzhousi;
-    @InjectView(R.id.clzhouwu)
+    @InjectView(R.id.zhouwuall)
     Button clzhouwu;
-    @InjectView(R.id.clzhouliu)
+    @InjectView(R.id.zhouliuall)
     Button clzhouliu;
-    @InjectView(R.id.clzhouri)
+    @InjectView(R.id.zhouriall)
     Button clzhouri;
+
     @InjectView(R.id.zhu)
-    RelativeLayout zhu;
+    LinearLayout zhu;
     RelativeLayout relativeLayout;
     @InjectView(R.id.t1)
     TextView t1;
@@ -81,11 +85,11 @@ public class AnalizeClFragment extends BaseFragment {
     @InjectView(R.id.pingji)
     TextView pingji;
     private int screenWidth;
-
+    private Activity activity;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.layout_cl, null);
+        view = inflater.inflate(R.layout.fragment_layout_cl, null);
         ButterKnife.inject(this, view);
 
         botomLin = (TextView) view.findViewById(R.id.t1);
@@ -95,7 +99,7 @@ public class AnalizeClFragment extends BaseFragment {
         WindowManager wm = getActivity().getWindowManager();
         screenWidth = wm.getDefaultDisplay().getWidth();
 
-
+        activity=getActivity();
         return view;
     }
 
@@ -217,11 +221,12 @@ public class AnalizeClFragment extends BaseFragment {
             } else {
                 paint.setTextSize(32);
             }
+            Activity a=getActivity();
             int width = x+(clzhouyi.getWidth()-getTextWidth(data,paint))/2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
-
+//(bitmap.getHeight()+10)
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_triangle_orange);
-            canvas.drawText(data, width, y - 80, paint);
-            canvas.drawBitmap(bitmap, x + clzhouyi.getWidth() / 4, y - 60, paint);
+            canvas.drawText(data, width,y -ImageUtil.dp2px(activity,15) , paint);
+            canvas.drawBitmap(bitmap, x + (clzhouyi.getWidth()-bitmap.getWidth())/2, y -ImageUtil.dp2px(activity,12), paint);
 
         }
 
@@ -240,9 +245,9 @@ public class AnalizeClFragment extends BaseFragment {
     }
     int x;
     int y;
-    int bootom;
+   // int bootom;
     int gap;
-    int top;
+  //  int top;
     public Handler h = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -255,22 +260,23 @@ public class AnalizeClFragment extends BaseFragment {
                     zhu.getLocationOnScreen(location);
                     x = location[0];
                     y = location[1];
-                    Log.e("zuobiao", "zhux:" + x + "zhuy:" + y);
-                    Log.e("zuobiao", "zhuLeft：" + zhu.getLeft() + "zhuRight：" + zhu.getRight() + "zhuTop：" + zhu.getTop() + "zhuBottom：" + zhu.getBottom());
+                    //Log.e("zuobiao", "zhux:" + x + "zhuy:" + y);
+                   // Log.e("zuobiao", "zhuLeft：" + zhu.getLeft() + "zhuRight：" + zhu.getRight() + "zhuTop：" + zhu.getTop() + "zhuBottom：" + zhu.getBottom());
 
                     int[] location0 = new int[2];
                     botomLin.getLocationOnScreen(location0);
-                    int x0 = location0[0];
-                    int y0 = location0[1];
-                    bootom = zhu.getTop();
-                    top = botomLin.getTop();
-                    gap = (botomLin.getTop() - zhu.getTop());
+                   // int x0 = location0[0];
+                  //  int y0 = location0[1];
+                   // bootom = zhu.getTop();
+                   // top = botomLin.getTop();
+                    gap = zhu.getHeight();//(botomLin.getTop() - zhu.getTop());
+                    List<anlyseCallBack.DataBean.DetailBean> detailBean=anlyse.getData().getDetail();
                     for (int i = 0; i < anlyse.getData().getDetail().size(); i++) {
-                        FrameLayout.LayoutParams linearParams = (FrameLayout.LayoutParams) bts.get(i).getLayoutParams();
+                        RelativeLayout.LayoutParams linearParams = (RelativeLayout.LayoutParams) bts.get(i).getLayoutParams();
                         // 取控件aaa当前的布局参数
                         int temp=Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory());
                         if(temp!=0){
-                            linearParams.height = gap * Integer.parseInt(anlyse.getData().getDetail().get(i).getCalory()) / (temp); //
+                            linearParams.height = gap * Integer.parseInt(detailBean.get(i).getCalory()) / (temp); //
                         }
                         bts.get(i).setLayoutParams(linearParams); // 使设置好的布局参数应用到控件aaa
                         ts.get(i).setText(anlyse.getData().getDetail().get(i).getDay());
