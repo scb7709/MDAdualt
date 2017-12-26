@@ -50,7 +50,7 @@ public class AnalizeFragment extends BaseFragment {
     private void initialize(View view) {
         vPager = (ViewPager) view.findViewById(R.id.vPager);
         String year = DateUtil.getYear() + "-" + second(DateUtil.getMonth()) + "-" + second(DateUtil.getCurrentMonthDay());
-        String anlysedata =str;// ShareUitls.getString(getActivity(), "anlysedata", "");//
+        String anlysedata = ShareUitls.getString(getActivity(), "anlysedata", "");//str;//
 
 
         if(anlysedata.length()!=0){

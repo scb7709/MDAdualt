@@ -72,8 +72,8 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+
         android:layout_gravity="center"
-        android:layout_marginTop="5dp"
         android:background="@color/white"
         android:flipInterval="30"
         android:paddingLeft="10dip"
@@ -87,6 +87,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:allowUndo="true"
+        android:layout_marginTop="10dp"
         android:background="#aaaaaa"></TextView>
 
     <LinearLayout

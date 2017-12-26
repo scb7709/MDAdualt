@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,8 @@ import com.headlth.management.fragment.CalendarViewFragment;
 import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.NoPreloadViewPager;
 import com.headlth.management.utils.Constant;
+import com.headlth.management.utils.GetWindowSize;
+import com.headlth.management.utils.ImageUtil;
 import com.headlth.management.utils.ShareUitls;
 
 import org.xutils.view.annotation.ContentView;
@@ -59,9 +62,11 @@ public class CalendarActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        LinearLayout.LayoutParams linearParamsall = (LinearLayout.LayoutParams) noPreloadViewPager.getLayoutParams();
+
         activity = this;
-
-
+        linearParamsall.height= GetWindowSize.getInstance(activity).getGetWindowwidth()-ImageUtil.dp2px(activity,20);
+        noPreloadViewPager.setLayoutParams(linearParamsall);
         initialize();
 
     }

@@ -60,6 +60,38 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     Button zhouliuall;
     @InjectView(R.id.zhouriall)
     Button zhouriall;
+
+
+    @InjectView(R.id.show1)
+    Button show1;
+    @InjectView(R.id.show2)
+    Button show2;
+    @InjectView(R.id.show3)
+    Button show3;
+    @InjectView(R.id.show4)
+    Button show4;
+    @InjectView(R.id.show5)
+    Button show5;
+    @InjectView(R.id.show6)
+    Button show6;
+    @InjectView(R.id.show7)
+    Button show7;
+
+    @InjectView(R.id.fragment_layout_sport_zhou1)
+    RelativeLayout fragment_layout_sport_zhou1;
+    @InjectView(R.id.fragment_layout_sport_zhou2)
+    RelativeLayout fragment_layout_sport_zhou2;
+    @InjectView(R.id.fragment_layout_sport_zhou3)
+    RelativeLayout fragment_layout_sport_zhou3;
+    @InjectView(R.id.fragment_layout_sport_zhou4)
+    RelativeLayout fragment_layout_sport_zhou4;
+    @InjectView(R.id.fragment_layout_sport_zhou5)
+    RelativeLayout fragment_layout_sport_zhou5;
+    @InjectView(R.id.fragment_layout_sport_zhou6)
+    RelativeLayout fragment_layout_sport_zhou6;
+    @InjectView(R.id.fragment_layout_sport_zhou7)
+    RelativeLayout fragment_layout_sport_zhou7;
+
     @InjectView(R.id.t1)
     TextView t1;
     @InjectView(R.id.t2)
@@ -81,12 +113,17 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     private TextView botomLin;
     View view;
     String tatal;
-    List<Button> btalls = null;
 
+    List<Button> shows = null;
+
+    List<Button> btalls = null;
+    List<RelativeLayout> RelativeLayouts = null;
     List<TextView> ts = null;
     int target;
     private int screenWidth;
-private Activity activity;
+    private Activity activity;
+    int totalColar,lineColar ,effectColar;
+    List<anlyseCallBack.DataBean.DetailBean> detailBean;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,15 +145,18 @@ private Activity activity;
         WindowManager wm = getActivity().getWindowManager();
         screenWidth = wm.getDefaultDisplay().getWidth();
 
-        activity=getActivity();
+        activity = getActivity();
+        totalColar = activity.getResources().getColor(R.color.analizegray);
+        lineColar= activity.getResources().getColor(R.color.analizeline);
+        effectColar = activity.getResources().getColor(R.color.analizeeffect);
         return view;
     }
 
-    int x;
-    int y;
+    // int x;
+    // int y;
     //int bootom;
     int MaxHight;
-    int top;
+    // int top;
     int daohangHigh;
     int MaxTime = 0;
     public Handler h = new Handler() {
@@ -134,22 +174,30 @@ private Activity activity;
                     daohangHigh = location666[1];
                     int[] location = new int[2];
                     zhu.getLocationOnScreen(location);
-                  //  x = location[0];
-                  //  y = location[1];
+                    //  x = location[0];
+                    //  y = location[1];
                     int[] location0 = new int[2];
                     botomLin.getLocationOnScreen(location0);
-                  //  bootom = zhu.getTop();
-                   // top = botomLin.getTop();
-                    MaxHight =zhu.getHeight();// (botomLin.getTop() - zhu.getTop());
-                    List<anlyseCallBack.DataBean.DetailBean> detailBean=anlyse.getData().getDetail();
+                    //  bootom = zhu.getTop();
+                    // top = botomLin.getTop();
+                    MaxHight = zhu.getHeight();// (botomLin.getTop() - zhu.getTop());
+
                     for (int i = 0; i < anlyse.getData().getDetail().size(); i++) {
-                        RelativeLayout.LayoutParams linearParamsall = (RelativeLayout.LayoutParams) btalls.get(i).getLayoutParams();
-                        if(MaxTime!=0){
-                            int EffectTime=Integer.parseInt(detailBean.get(i).getEffectTime());
-                          //  MyToash.Log(EffectTime+"    EffectTime"+"  "+MaxTime+"  "+MaxHight);
-                            linearParamsall.height = MaxHight * EffectTime/ (MaxTime); //
-                            btalls.get(i).setLayoutParams(linearParamsall);
-                            ts.get(i).setText(anlyse.getData().getDetail().get(i).getDay());
+                        RelativeLayout.LayoutParams linearParamsbtalls = (RelativeLayout.LayoutParams) btalls.get(i).getLayoutParams();
+                        RelativeLayout.LayoutParams linearParamsshows = (RelativeLayout.LayoutParams) shows.get(i).getLayoutParams();
+                        if (MaxTime != 0) {
+                            int TotalTime = Integer.parseInt(detailBean.get(i).getTotalTime());
+                            linearParamsshows.height = MaxHight * TotalTime / (MaxTime); //
+                            shows.get(i).setLayoutParams(linearParamsshows);
+
+                            int EffectTime = Integer.parseInt(detailBean.get(i).getEffectTime());
+                            MyToash.Log(TotalTime + "   " + EffectTime + "    " + "  " + MaxTime + "  " + MaxHight);
+
+                            linearParamsbtalls.height = MaxHight * EffectTime / (MaxTime); //
+                            btalls.get(i).setLayoutParams(linearParamsbtalls);
+                            ts.get(i).setText(detailBean.get(i).getDay());
+
+
                         }
                     }
                 }
@@ -162,37 +210,45 @@ private Activity activity;
     draw d;
     RelativeLayout relativeLayout;
 
-    private void showdraw(int EffectTime,int x,int y) {
+    private void showdraw(int TotalTime, int EffectTime, int x, int y) {
         if (d != null) {
             relativeLayout.removeView(d);
             d = null;
         }
-        d = new draw(getContext(), EffectTime, x, (y - daohangHigh));
+        d = new draw(getContext(), TotalTime, EffectTime, x, (y - daohangHigh));
         relativeLayout.addView(d);
 
     }
 
 
-    private void setOnClickListener(final int ShowPossition){
-        final Button show = btalls.get(ShowPossition);
-        show.setOnClickListener(new View.OnClickListener() {
+    private void setOnClickListener(final int ShowPossition) {
+        final RelativeLayout RelativeLayout = RelativeLayouts.get(ShowPossition);
+        RelativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int[] location55 = new int[2];
-                show.getLocationOnScreen(location55);
-                showdraw(Integer.parseInt(anlyse.getData().getDetail().get(ShowPossition).getEffectTime()),location55[0],location55[1]);
+                anlyseCallBack.DataBean.DetailBean detailEntity = detailBean.get(ShowPossition);
+                if (Integer.parseInt(detailEntity.getEffectTime()) > Integer.parseInt(detailEntity.getTotalTime())) {
+                    btalls.get(ShowPossition).getLocationOnScreen(location55);
+                } else {
+                    shows.get(ShowPossition).getLocationOnScreen(location55);
+                }
+                showdraw(Integer.parseInt(detailEntity.getTotalTime()), Integer.parseInt(detailEntity.getEffectTime()), location55[0], location55[1]);
             }
         });
     }
+
     public class draw extends View {
         int x = 0;
         int y = 0;
         int EffectTime = 0;
+        int TotalTime = 0;
 
-        public draw(Context context, int data, int x, int y) {
+        public draw(Context context, int TotalTime, int data, int x, int y) {
             super(context);
             setWillNotDraw(false);
-            this.EffectTime =data;
+            this.EffectTime = data;
+            this.TotalTime = TotalTime;
             this.x = x;
             this.y = y;
         }
@@ -204,7 +260,7 @@ private Activity activity;
             Paint paint = new Paint();
             paint.setStyle(Paint.Style.FILL);
             paint.setAntiAlias(true);
-            paint.setColor(Color.parseColor("#ffcc33"));
+
             paint.setStrokeWidth((float) 1.0);
             if (screenWidth < 1080) {
                 paint.setTextSize(22);
@@ -213,17 +269,21 @@ private Activity activity;
             }
 
             String effect = StringForTime.stringForTime3(EffectTime);
-            int  zhouyiall_Width=zhouyiall.getWidth();
+            String total = StringForTime.stringForTime3(TotalTime);
+            int zhouyiall_Width = zhouyiall.getWidth();
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_triangle_orange);
 
-            int  bitmap_height=bitmap.getHeight();
+            //int  bitmap_height=bitmap.getHeight();
             int effectwidth = x + (zhouyiall_Width - AnalizeClFragment.getTextWidth(effect, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
             int tatalwidth = x + (zhouyiall_Width - AnalizeClFragment.getTextWidth(tatal, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
-            canvas.drawText(effect, effectwidth, y - ImageUtil.dp2px(activity,35), paint);
-            canvas.drawLine(x, y - ImageUtil.dp2px(activity,32), x + zhouyiall_Width, y - ImageUtil.dp2px(activity,32), paint);
-            canvas.drawText(tatal, tatalwidth, y - ImageUtil.dp2px(activity,20), paint);
+            paint.setColor(totalColar);
+            canvas.drawText(total, effectwidth, y - ImageUtil.dp2px(activity, 35), paint);
+            paint.setColor(lineColar);
+            canvas.drawLine(x, y - ImageUtil.dp2px(activity, 32), x + zhouyiall_Width, y - ImageUtil.dp2px(activity, 32), paint);
+            paint.setColor(effectColar);
+            canvas.drawText(effect, tatalwidth, y - ImageUtil.dp2px(activity, 20), paint);
 
-            canvas.drawBitmap(bitmap, x + (zhouyiall_Width -bitmap.getWidth())/2, y - ImageUtil.dp2px(activity,12), paint);
+            canvas.drawBitmap(bitmap, x + (zhouyiall_Width - bitmap.getWidth()) / 2, y - ImageUtil.dp2px(activity, 12), paint);
         }
     }
 
@@ -238,10 +298,6 @@ private Activity activity;
     public String changDataType(String str) {
         String s3 = str;
         String[] temp = s3.split("\\.");
-        Log.e("qqqq", str);
-        for (int j = 0; j < temp.length; j++) {
-            Log.e("qqqqq", temp[j]);
-        }
         return temp[0].replace(",", "");
     }
 
@@ -266,6 +322,24 @@ private Activity activity;
         btalls.add(zhouwuall);
         btalls.add(zhouliuall);
         btalls.add(zhouriall);
+        RelativeLayouts = new ArrayList<>();
+        RelativeLayouts.add(fragment_layout_sport_zhou1);
+        RelativeLayouts.add(fragment_layout_sport_zhou2);
+        RelativeLayouts.add(fragment_layout_sport_zhou3);
+        RelativeLayouts.add(fragment_layout_sport_zhou4);
+        RelativeLayouts.add(fragment_layout_sport_zhou5);
+        RelativeLayouts.add(fragment_layout_sport_zhou6);
+        RelativeLayouts.add(fragment_layout_sport_zhou7);
+        shows = new ArrayList<>();
+
+        shows.add(show1);
+        shows.add(show2);
+        shows.add(show3);
+        shows.add(show4);
+        shows.add(show5);
+        shows.add(show6);
+        shows.add(show7);
+
         ts = new ArrayList<>();
         ts.add(t1);
         ts.add(t2);
@@ -276,7 +350,8 @@ private Activity activity;
         ts.add(t7);
         if (anlyse != null) {
             if (anlyse.getStatus() != 0) {
-                for (int ShowPossition=0; ShowPossition < 7; ShowPossition++) {
+                detailBean = anlyse.getData().getDetail();
+                for (int ShowPossition = 0; ShowPossition < 7; ShowPossition++) {
                     setOnClickListener(ShowPossition);
                 }
                 TotalDays.setText("达标天数：" + anlyse.getData().getSummary().get(0).getTotalDays() + "天");
@@ -284,8 +359,8 @@ private Activity activity;
                 MaxTime = Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxTotalTime());
                 AvgTotalTime.setText(StringForTime.stringForTime3(Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgTotalTime())));
                 Percentage.setText(anlyse.getData().getSummary().get(0).getPercentage() + "");
-                MaxTotalTime.setText(Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxTotalTime()) / 60 + "min");
-                midleTime.setText("" + (Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxTotalTime()) / 60) / 2 + "min");
+                MaxTotalTime.setText(MaxTime / 60 + "min");
+                midleTime.setText("" + (MaxTime / 60) / 2 );
                 h.sendEmptyMessageDelayed(1, 1);
             }
         }

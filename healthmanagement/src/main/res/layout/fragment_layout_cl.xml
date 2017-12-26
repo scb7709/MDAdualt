@@ -23,7 +23,8 @@
                 android:layout_weight="1"></View>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -36,15 +37,34 @@
                     android:textColor="#3c3c3c"
                     android:textSize="13dp" />
 
-                <TextView
-                    android:id="@+id/AvgCal"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:text="0"
-                    android:textColor="#000000"
-                    android:textSize="24dp" />
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:id="@+id/AvgCal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="0"
+                        android:textColor="#000000"
+                        android:textSize="24dp" />
+
+                    <TextView
+                        android:id="@+id/fragment_maidong_textView27"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/AvgCal"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toEndOf="@+id/AvgCal"
+                        android:text="千卡"
+                        android:textColor="#000000"
+                        android:textSize="10dp" />
+                </RelativeLayout>
             </LinearLayout>
 
             <View
@@ -54,7 +74,8 @@
                 ></View>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -65,16 +86,34 @@
                     android:text="总大卡"
                     android:textColor="#3c3c3c"
                     android:textSize="13dp" />
-
-                <TextView
-                    android:id="@+id/TotalCal"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:text="0"
-                    android:textColor="#000000"
-                    android:textSize="24dp" />
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:id="@+id/TotalCal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="0"
+                        android:textColor="#000000"
+                        android:textSize="24dp" />
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/TotalCal"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toEndOf="@+id/TotalCal"
+                        android:text="千卡"
+                        android:textColor="#000000"
+                        android:textSize="10dp" />
+                </RelativeLayout>
             </LinearLayout>
 
 
@@ -132,7 +171,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:text="0大卡"
+                android:text="0"
                 android:textColor="#c7c7c7"
                 android:textSize="13dp" />
 
@@ -140,130 +179,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
-
-                <LinearLayout
-                    android:id="@+id/zhu"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:orientation="horizontal">
-
-                    <RelativeLayout
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent">
-
-                        <Button
-                            android:id="@+id/zhouyiall"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:background="#ffad00" />
-                    </RelativeLayout>
-
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
-
-                    <RelativeLayout
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent">
-
-                        <Button
-                            android:id="@+id/zhouerall"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:background="#ffad00" />
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
-
-                    <RelativeLayout
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent">
-
-                        <Button
-                            android:id="@+id/zhousanall"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:background="#ffad00" />
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
-
-                    <RelativeLayout
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent">
-
-                        <Button
-                            android:id="@+id/zhousiall"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:background="#ffad00" />
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
-
-                    <RelativeLayout
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent">
-
-                        <Button
-                            android:id="@+id/zhouwuall"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:background="#ffad00" />
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
-
-                    <RelativeLayout
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent">
-
-                        <Button
-                            android:id="@+id/zhouliuall"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:background="#ffad00" />
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"></View>
-
-                    <RelativeLayout
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent">
-
-                        <Button
-                            android:id="@+id/zhouriall"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:background="#ffad00" />
-                    </RelativeLayout>
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -291,7 +206,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:text="0min"
+                            android:text="0"
                             android:textColor="#c7c7c7"
                             android:textSize="13dp" />
 
@@ -315,7 +230,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:text="0大卡"
+                            android:text="0"
                             android:textColor="#c7c7c7"
                             android:textSize="13dp" />
 
@@ -326,6 +241,128 @@
                     </LinearLayout>
 
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/zhu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+                        <Button
+                            android:id="@+id/zhouyiall"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@mipmap/img_analyze_cal"/>
+                    </RelativeLayout>
+
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+                        <Button
+                            android:id="@+id/zhouerall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@mipmap/img_analyze_cal" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/zhousanall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@mipmap/img_analyze_cal" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/zhousiall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@mipmap/img_analyze_cal" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/zhouwuall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@mipmap/img_analyze_cal" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/zhouliuall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@mipmap/img_analyze_cal"/>
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"></View>
+
+                    <RelativeLayout
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/zhouriall"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="@mipmap/img_analyze_cal" />
+                    </RelativeLayout>
+                </LinearLayout>
+
             </FrameLayout>
 
             <LinearLayout
