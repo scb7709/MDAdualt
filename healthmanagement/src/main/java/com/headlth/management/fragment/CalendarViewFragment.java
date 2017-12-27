@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -107,9 +108,9 @@ public class CalendarViewFragment extends BaseFragment {
         public void clickDate(CustomDate date) {
             final String yearmonth = date.year + "-" + getNum(date.month);
             // if (getNumber(tViewCalendar.tv_date.getText().toString().substring(5, tViewCalendar.tv_date.getText().toString().length() - 1)).equals(yearmonth.substring(5, yearmonth.length()))) {
-            MyToash.Log(yearmonth);
+           // MyToash.Log(date.getMonth()+"  "+date.month+" "+);;
             String yearmonthdate = yearmonth + "-" + getNum(date.day);
-            if (DataString.isToDayDate(yearmonthdate + "") != 1) {//不大于今天的
+            if (DataString.isToDayDate(yearmonthdate + "") != 1&&((calendar.get(GregorianCalendar.MONTH)+1)==date.getMonth())) {//只能点击本月不大于今天的
                 ShareUitls.putString(activity, "CLICKDADE", yearmonthdate);
                 if (ExerciseRecordActivity.activity != null) {
                     ExerciseRecordActivity.activity.finish();
@@ -118,8 +119,10 @@ public class CalendarViewFragment extends BaseFragment {
                 i.putExtra("time", yearmonthdate);
                 startActivity(i);
                 activity.finish();
-            } else {
+            } else if(DataString.isToDayDate(yearmonthdate + "") == 1){
                 Toast.makeText(activity, "暂无数据", Toast.LENGTH_SHORT).show();
+            }else {
+
             }
 
         }
@@ -155,7 +158,7 @@ public class CalendarViewFragment extends BaseFragment {
         params.addBodyParameter("ResultJWT", ResultJWT);
         params.addBodyParameter("UID", UID);
         params.addBodyParameter("SportTime", getdate(calendar));
-        MyToash.Log(ResultJWT + "    " + UID+  " "+getdate(calendar));
+      //  MyToash.Log(ResultJWT + "    " + UID+  " "+getdate(calendar));
         HttpUtils.getInstance(activity).sendRequestRequestParams("", params, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {

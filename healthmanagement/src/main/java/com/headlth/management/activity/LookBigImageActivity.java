@@ -121,17 +121,22 @@ public class LookBigImageActivity extends Activity {
 
         }
         //   Log.i("pathArrrrl", arg0 + "  " + list.size() + "  " );
-        linearLayout.setVerticalGravity(Gravity.CENTER_VERTICAL);
-        for (int i = 0; i < list.size(); i++) {
-            ImageView icon = new ImageView(LookBigImageActivity.this);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            if (i != 0) {
-                lp.setMargins(15, 0, 0, 0);
+        if(list.size()>1){
+            linearLayout.setVerticalGravity(Gravity.CENTER_VERTICAL);
+            for (int i = 0; i < list.size(); i++) {
+                ImageView icon = new ImageView(LookBigImageActivity.this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                if (i != 0) {
+                    lp.setMargins(15, 0, 0, 0);
+                }
+                icon.setLayoutParams(lp);
+                icon.setBackgroundResource(R.drawable.black_icon_shape);
+                linearLayout.addView(icon);
             }
-            icon.setLayoutParams(lp);
-            icon.setBackgroundResource(R.drawable.black_icon_shape);
-            linearLayout.addView(icon);
+        }else {
+            linearLayout.setVisibility(View.GONE);
         }
+
         pagerAdapter = new PagerAdapter() {
             @Override
             public int getCount() {
@@ -238,7 +243,10 @@ public class LookBigImageActivity extends Activity {
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(arg0);
         prePosition = arg0;
-        linearLayout.getChildAt(prePosition).setBackgroundResource(R.drawable.yellow_icon_shape);
+        if(list.size()>1){
+            linearLayout.getChildAt(prePosition).setBackgroundResource(R.drawable.yellow_icon_shape);
+        }
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -246,8 +254,10 @@ public class LookBigImageActivity extends Activity {
 
             @Override
             public void onPageSelected(int position) {
-                linearLayout.getChildAt(position).setBackgroundResource(R.drawable.yellow_icon_shape);
-                linearLayout.getChildAt(prePosition).setBackgroundResource(R.drawable.black_icon_shape);
+                if(list.size()>1) {
+                    linearLayout.getChildAt(position).setBackgroundResource(R.drawable.yellow_icon_shape);
+                    linearLayout.getChildAt(prePosition).setBackgroundResource(R.drawable.black_icon_shape);
+                }
                 prePosition = position;
             }
 

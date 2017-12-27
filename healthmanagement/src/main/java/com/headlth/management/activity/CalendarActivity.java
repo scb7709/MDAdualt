@@ -65,7 +65,7 @@ public class CalendarActivity extends BaseActivity {
         LinearLayout.LayoutParams linearParamsall = (LinearLayout.LayoutParams) noPreloadViewPager.getLayoutParams();
 
         activity = this;
-        linearParamsall.height= GetWindowSize.getInstance(activity).getGetWindowwidth()-ImageUtil.dp2px(activity,20);
+        linearParamsall.height= GetWindowSize.getInstance(activity).getGetWindowwidth()-ImageUtil.dp2px(activity,60);
         noPreloadViewPager.setLayoutParams(linearParamsall);
         initialize();
 

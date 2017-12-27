@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.headlth.management.R;
 import com.headlth.management.entity.anlyseCallBack;
 import com.headlth.management.myview.MyToash;
+import com.headlth.management.utils.GetWindowSize;
 import com.headlth.management.utils.ImageUtil;
 import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.utils.StringForTime;
@@ -121,8 +122,9 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     List<TextView> ts = null;
     int target;
     private int screenWidth;
+    //private int screenHeight;
     private Activity activity;
-    int totalColar,lineColar ,effectColar;
+    int totalColar, lineColar, effectColar;
     List<anlyseCallBack.DataBean.DetailBean> detailBean;
 
     @Override
@@ -137,17 +139,15 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
         midleTime = (TextView) view.findViewById(R.id.midleTime);
         ButterKnife.inject(this, view);
         if (!ShareUitls.getString(getActivity(), "Target", "null").equals("null")) {
-            Log.e("tttt", ShareUitls.getString(getActivity(), "Target", "null"));
+            // Log.e("tttt", ShareUitls.getString(getActivity(), "Target", "null"));
             target = Integer.parseInt(ShareUitls.getString(getActivity(), "Target", "null"));
         }
-
-        tatal = StringForTime.stringForTime3(target);
-        WindowManager wm = getActivity().getWindowManager();
-        screenWidth = wm.getDefaultDisplay().getWidth();
-
         activity = getActivity();
+        tatal = StringForTime.stringForTime3(target);
+        screenWidth = GetWindowSize.getInstance(activity).getGetWindowwidth();
+      //  screenHeight = GetWindowSize.getInstance(activity).getGetWindowheight();
         totalColar = activity.getResources().getColor(R.color.analizegray);
-        lineColar= activity.getResources().getColor(R.color.analizeline);
+        lineColar = activity.getResources().getColor(R.color.analizeline);
         effectColar = activity.getResources().getColor(R.color.analizeeffect);
         return view;
     }
@@ -191,7 +191,7 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                             shows.get(i).setLayoutParams(linearParamsshows);
 
                             int EffectTime = Integer.parseInt(detailBean.get(i).getEffectTime());
-                            MyToash.Log(TotalTime + "   " + EffectTime + "    " + "  " + MaxTime + "  " + MaxHight);
+                           // MyToash.Log(TotalTime + "   " + EffectTime + "    " + "  " + MaxTime + "  " + MaxHight);
 
                             linearParamsbtalls.height = MaxHight * EffectTime / (MaxTime); //
                             btalls.get(i).setLayoutParams(linearParamsbtalls);
@@ -274,16 +274,31 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_triangle_orange);
 
             //int  bitmap_height=bitmap.getHeight();
-            int effectwidth = x + (zhouyiall_Width - AnalizeClFragment.getTextWidth(effect, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
-            int tatalwidth = x + (zhouyiall_Width - AnalizeClFragment.getTextWidth(tatal, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
-            paint.setColor(totalColar);
-            canvas.drawText(total, effectwidth, y - ImageUtil.dp2px(activity, 35), paint);
+            int effectwidth;
+            int tatalwidth;
+
+            effectwidth = x + (zhouyiall_Width - AnalizeClFragment.getTextWidth(effect, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
+
+            tatalwidth = x + (zhouyiall_Width - AnalizeClFragment.getTextWidth(tatal, paint)) / 2;//要居中的话 柱状图的宽度减去文字的宽度的一半 加上X 就等于文字的起始坐标
+
+            /*paint.setColor(totalColar);
+            canvas.drawText(total, tatalwidth, y - ImageUtil.dp2px(activity, 35), paint);
             paint.setColor(lineColar);
             canvas.drawLine(x, y - ImageUtil.dp2px(activity, 32), x + zhouyiall_Width, y - ImageUtil.dp2px(activity, 32), paint);
             paint.setColor(effectColar);
-            canvas.drawText(effect, tatalwidth, y - ImageUtil.dp2px(activity, 20), paint);
+            canvas.drawText(effect, effectwidth, y - ImageUtil.dp2px(activity, 20), paint);
+
+            canvas.drawBitmap(bitmap, x + (zhouyiall_Width - bitmap.getWidth()) / 2, y - ImageUtil.dp2px(activity, 12), paint);*/
+
+            paint.setColor(totalColar);
+            canvas.drawText(total, tatalwidth, y - 90, paint);
+            paint.setColor(lineColar);
+            canvas.drawLine(x, y - 82, x + zhouyiall_Width, y-82, paint);
+            paint.setColor(effectColar);
+            canvas.drawText(effect, effectwidth, y-50, paint);
 
             canvas.drawBitmap(bitmap, x + (zhouyiall_Width - bitmap.getWidth()) / 2, y - ImageUtil.dp2px(activity, 12), paint);
+
         }
     }
 
@@ -314,6 +329,7 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+      //  MyToash.Log(screenWidth + "  " + screenHeight);
         btalls = new ArrayList<>();
         btalls.add(zhouyiall);
         btalls.add(zhouerall);
@@ -360,7 +376,7 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
                 AvgTotalTime.setText(StringForTime.stringForTime3(Integer.parseInt(anlyse.getData().getSummary().get(0).getAvgTotalTime())));
                 Percentage.setText(anlyse.getData().getSummary().get(0).getPercentage() + "");
                 MaxTotalTime.setText(MaxTime / 60 + "min");
-                midleTime.setText("" + (MaxTime / 60) / 2 );
+                midleTime.setText("" + (MaxTime / 60) / 2);
                 h.sendEmptyMessageDelayed(1, 1);
             }
         }
