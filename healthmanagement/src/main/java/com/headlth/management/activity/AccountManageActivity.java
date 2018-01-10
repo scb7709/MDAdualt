@@ -19,6 +19,7 @@ import com.headlth.management.R;
 import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.entity.AccountManagerJson;
 import com.headlth.management.entity.CircleList;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.sina.AccessTokenKeeper;
 import com.headlth.management.sina.UsersAPI;
 import com.headlth.management.utils.Constant;
@@ -203,7 +204,8 @@ public class AccountManageActivity extends BaseActivity {
 
 
         } else {
-            Toast.makeText(this, "未检测到微信客户端", Toast.LENGTH_SHORT).show();
+            MyToash.Toash(activity,"未检测到微信客户端");
+
         }
 
 
@@ -218,7 +220,8 @@ public class AccountManageActivity extends BaseActivity {
             public void onCancel() {
                 // 取消
                 waitDialog.ShowDialog(false);
-                Toast.makeText(getApplicationContext(), openidString + "QQ登录已取消", Toast.LENGTH_SHORT).show();
+                MyToash.Toash(activity,"QQ登录已取消");
+
             }
 
             public void onComplete(Object response) {
@@ -239,7 +242,8 @@ public class AccountManageActivity extends BaseActivity {
 
             public void onError(UiError arg0) {
                 waitDialog.ShowDialog(false);
-                Toast.makeText(getApplicationContext(), "QQ登录异常", Toast.LENGTH_SHORT).show();
+                MyToash.Toash(activity,"QQ登录异常");
+
 
             }
         };
@@ -259,8 +263,7 @@ public class AccountManageActivity extends BaseActivity {
             ssoHandler = new SsoHandler(AccountManageActivity.this, authInfo);
             ssoHandler.authorize(new AuthListener());
         } else {
-            Toast.makeText(AccountManageActivity.this, "未检测到新浪客户端", Toast.LENGTH_LONG).show();
-
+            MyToash.Toash(activity,"未检测到微博客户端");
         }
 
     }
@@ -274,7 +277,8 @@ public class AccountManageActivity extends BaseActivity {
 
             if (accessToken.isSessionValid()) {
                 AccessTokenKeeper.writeAccessToken(AccountManageActivity.this, accessToken); // 保存Token
-                Toast.makeText(AccountManageActivity.this, "授权成功", Toast.LENGTH_SHORT).show();
+                MyToash.Toash(activity,"授权成功");
+
             } else {
                 String code = values.getString("code");
                 String message = "授权失败";
@@ -305,7 +309,8 @@ public class AccountManageActivity extends BaseActivity {
         @Override
         public void onCancel() {
             waitDialog.ShowDialog(false);
-            Toast.makeText(AccountManageActivity.this, "微博授权已取消", Toast.LENGTH_SHORT).show();
+            MyToash.Toash(activity,"微博授权已取消");
+
         }
     }
 
@@ -331,9 +336,8 @@ public class AccountManageActivity extends BaseActivity {
 
         @Override
         public void onWeiboException(WeiboException e) {
-            // TODO Auto-generated method stub
-            Toast.makeText(AccountManageActivity.this, "Auth exception : " + e.getMessage(), Toast.LENGTH_LONG).show();
-            Log.i("mylog", "Auth exception : " + e.getMessage());
+            MyToash.Toash(activity,"微博授权异常");
+
         }
     }
 
@@ -369,7 +373,7 @@ public class AccountManageActivity extends BaseActivity {
                     @Override
                     public void onResponse(String response) {
 
-                        Log.i("GGGGGGGGGGGG", response);
+                      //  Log.i("GGGGGGGGGGGG", response);
                         accountManagerJson = new Gson().fromJson(response, AccountManagerJson.class);
                         if (accountManagerJson.MobileBinding.equals("true")) {
                             activity_accountmanage_phone_is.setVisibility(View.GONE);
@@ -392,7 +396,8 @@ public class AccountManageActivity extends BaseActivity {
 
                     @Override
                     public void onErrorResponse(Throwable ex) {
-                        Toast.makeText(AccountManageActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                        MyToash.Toash(activity);
+
                     }
                 }
 
@@ -426,7 +431,7 @@ public class AccountManageActivity extends BaseActivity {
         HttpUtils.getInstance(AccountManageActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i("adsfdsgdfg", response);
+                       // Log.i("adsfdsgdfg", response);
 
                         if (MainActivity.Activity != null) {
                             MainActivity.Activity.finish();
@@ -473,14 +478,17 @@ public class AccountManageActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    Toast.makeText(AccountManageActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
+                    MyToash.Toash(activity,"绑定成功");
+
                     getRequest();
                     break;
                 case 1:
-                    Toast.makeText(AccountManageActivity.this, "该账户已被其他账户绑定", Toast.LENGTH_SHORT).show();
+                    MyToash.Toash(activity,"该账户已被其他账户绑定");
+
                     break;
                 case 2:
-                    Toast.makeText(AccountManageActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                    MyToash.Toash(activity);
+
                     break;
             }
 

@@ -47,7 +47,6 @@ public class NewChuFang extends BaseActivity {
     private RelativeLayout view_publictitle_back;
 
 
-
     @ViewInject(R.id.FinishWeek)
     TextView FinishWeek;
     @ViewInject(R.id.WeekRank)
@@ -65,9 +64,6 @@ public class NewChuFang extends BaseActivity {
     TextView youxiao;
     @ViewInject(R.id.backd)
     FrameLayout backd;
-
-
-
 
 
     @ViewInject(R.id.target)
@@ -158,7 +154,10 @@ public class NewChuFang extends BaseActivity {
         weekbts = new ArrayList<>();
         Intent intent = this.getIntent();
         newChuFang = (newChuFangCallback) intent.getSerializableExtra("newChuFang");
-        Log.i("sssssssssssss", "" + newChuFang.getPList().getSummary().getTotalWeek().trim());
+        if (newChuFang == null) {
+            return;
+
+        }
         h.sendEmptyMessage(1);
         FinishWeek.setText("已完成" + newChuFang.getPList().getSummary().getFinishWeek() + "周,剩余" + newChuFang.getPList().getSummary().getUnFinishWeek() + "周");
         WeekRank.setText("当前第" + newChuFang.getPList().getSummary().getStage() + "阶:第" + newChuFang.getPList().getCurrent().getWeekRank() + "周");
@@ -274,6 +273,7 @@ public class NewChuFang extends BaseActivity {
             }
         });
     }
+
     public String second(int i) {
         if (i < 10) {
             return "0" + i;
@@ -323,7 +323,7 @@ public class NewChuFang extends BaseActivity {
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostPrescriptionRequest");
         params.addBodyParameter("UID", ShareUitls.getString(NewChuFang.this, "UID", "") + "");
         params.addBodyParameter("ResultJWT", ShareUitls.getString(NewChuFang.this, "ResultJWT", "0"));
-        HttpUtils.getInstance(NewChuFang.this).sendRequestRequestParams(Constant.DIALOG_MESSAGE_LOADING,params ,true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(NewChuFang.this).sendRequestRequestParams(Constant.DIALOG_MESSAGE_LOADING, params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
                         Log.e("ffff", response.toString());
@@ -360,12 +360,13 @@ public class NewChuFang extends BaseActivity {
     chufangCallBack chufang = null;
 
     Gson g = new Gson();
+
     private void go2(final String phone, final String pwd) {
 
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostPrescriptionRequest");
         params.addBodyParameter("UID", ShareUitls.getString(NewChuFang.this, "UID", "") + "");
         params.addBodyParameter("ResultJWT", ShareUitls.getString(NewChuFang.this, "ResultJWT", "0"));
-        HttpUtils.getInstance(NewChuFang.this).sendRequestRequestParams(Constant.DIALOG_MESSAGE_LOADING,params ,true, new HttpUtils.ResponseListener() {
+        HttpUtils.getInstance(NewChuFang.this).sendRequestRequestParams(Constant.DIALOG_MESSAGE_LOADING, params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
                         Log.e("ffff", response.toString());

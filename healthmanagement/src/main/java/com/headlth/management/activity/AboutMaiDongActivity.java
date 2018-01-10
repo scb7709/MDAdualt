@@ -15,6 +15,7 @@ import com.headlth.management.R;
 import com.headlth.management.acs.BaseActivity;
 import com.headlth.management.clenderutil.WaitDialog;
 import com.headlth.management.myview.BottomMenuDialog;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.utils.FileViewer;
 import com.headlth.management.utils.ShareUitls;
 import com.headlth.management.utils.UpadteApp;
@@ -127,7 +128,8 @@ Activity activity;
                 if (isupdate) {
                     UpadteApp.updateAPP(activity, true);
                 } else {
-                    Toast.makeText(activity, "没有新版本可更新", Toast.LENGTH_SHORT).show();
+                    MyToash.Toash(activity,"没有新版本可更新");
+
                 }
                 break;
 

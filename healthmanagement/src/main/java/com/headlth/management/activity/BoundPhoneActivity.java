@@ -1,5 +1,6 @@
 package com.headlth.management.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.headlth.management.R;
 import com.headlth.management.acs.BaseActivity;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.Encryption;
 import com.headlth.management.utils.HttpUtils;
@@ -60,11 +62,12 @@ public class BoundPhoneActivity extends BaseActivity {
     private String flag;//是三方验证登录的还是手机号登录的
     private String FlagActivity;//是那个界面过来的
     Map<String, String> phoneAndverify_code;
-
+Activity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        activity=this;
         initialize();
 
     }
@@ -74,7 +77,7 @@ public class BoundPhoneActivity extends BaseActivity {
         Intent intent = getIntent();
         flag = intent.getStringExtra("flag");
         FlagActivity = intent.getStringExtra("FlagActivity");
-        Log.i("FlagActivity", FlagActivity);
+      //  Log.i("FlagActivity", FlagActivity);
         if (flag.equals("other")) {
             map = (Map<String, String>) (getIntent().getSerializableExtra("map"));
         } else {
@@ -88,9 +91,9 @@ public class BoundPhoneActivity extends BaseActivity {
     private void getEvent(View view) {
         switch (view.getId()) {
             case R.id.view_publictitle_back:
-                Log.i("FlagActivityt", FlagActivity);
+               // Log.i("FlagActivityt", FlagActivity);
                 if (FlagActivity.equals("HomeActivity")) {
-                    Log.i("FlagActivitytr", FlagActivity);
+                //    Log.i("FlagActivitytr", FlagActivity);
                     Intent intent = new Intent(BoundPhoneActivity.this, Login.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -141,7 +144,8 @@ public class BoundPhoneActivity extends BaseActivity {
                 phoneAndverify_code.put(phone,Verify_code);
                 verify_code = Verify_code;
                 ShareUitls.putString(BoundPhoneActivity.this, "SMSTIME", new Date().getTime() + "");
-                Toast.makeText(BoundPhoneActivity.this, "验证码已经发送", Toast.LENGTH_SHORT).show();
+                MyToash.Toash(activity,"验证码已经发送");
+                //Toast.makeText(BoundPhoneActivity.this, "验证码已经发送", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -192,13 +196,16 @@ public class BoundPhoneActivity extends BaseActivity {
     private void VerifyPhoneNumber() {
         String phone = activity_boundphone_phone.getText().toString();
         if (phone.length() == 0) {
-            Toast.makeText(BoundPhoneActivity.this, "手机号不能为空", Toast.LENGTH_SHORT).show();
+            MyToash.Toash(activity,"手机号不能为空");
+            //Toast.makeText(BoundPhoneActivity.this, "手机号不能为空", Toast.LENGTH_SHORT).show();
         } else {
             if (phone.length() != 11) {
-                Toast.makeText(BoundPhoneActivity.this, "手机号必须11位", Toast.LENGTH_SHORT).show();
+                MyToash.Toash(activity,"手机号必须11位");
+              //  Toast.makeText(BoundPhoneActivity.this, "手机号必须11位", Toast.LENGTH_SHORT).show();
             } else {
                 if (!Login.isMobile(phone)) {
-                    Toast.makeText(BoundPhoneActivity.this, "手机号格式错误", Toast.LENGTH_SHORT).show();
+                    MyToash.Toash(activity,"手机号格式错误");
+                //    Toast.makeText(BoundPhoneActivity.this, "手机号格式错误", Toast.LENGTH_SHORT).show();
                 } else {
                     CheckExist(phone);
 
@@ -224,23 +231,28 @@ public class BoundPhoneActivity extends BaseActivity {
                                 BoundPhone();
 
                             } else {
-                                Toast.makeText(BoundPhoneActivity.this, "验证码已经失效,请重新获取", Toast.LENGTH_LONG).show();
+                                MyToash.Toash(activity,"验证码已经失效,请重新获取");
+                               // Toast.makeText(BoundPhoneActivity.this, "验证码已经失效,请重新获取", Toast.LENGTH_LONG).show();
                             }
                         } else {
 
                         }
 
                     } else {
-                        Toast.makeText(BoundPhoneActivity.this, "验证码验证错误", Toast.LENGTH_LONG).show();
+                        MyToash.Toash(activity,"验证码验证错误");
+                        //Toast.makeText(BoundPhoneActivity.this, "验证码验证错误", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(BoundPhoneActivity.this, "请输入验证码", Toast.LENGTH_LONG).show();
+                    MyToash.Toash(activity,"请输入验证码");
+                    //Toast.makeText(BoundPhoneActivity.this, "请输入验证码", Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(BoundPhoneActivity.this, "请获取验证码", Toast.LENGTH_LONG).show();
+                MyToash.Toash(activity,"请获取验证码");
+                //Toast.makeText(BoundPhoneActivity.this, "请获取验证码", Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(BoundPhoneActivity.this, "请输入手机号", Toast.LENGTH_LONG).show();
+            MyToash.Toash(activity,"请输入手机号");
+           // Toast.makeText(BoundPhoneActivity.this, "请输入手机号", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -258,7 +270,7 @@ public class BoundPhoneActivity extends BaseActivity {
                     @Override
                     public void onResponse(String response) {
                         // activity_boundphone_commit.setClickable(true);
-                        Log.e("getSMSjson", response);
+                      //  Log.e("getSMSjson", response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String Status = jsonObject.getString("Status");
@@ -271,9 +283,11 @@ public class BoundPhoneActivity extends BaseActivity {
 
 
                             } else if (Status.equals("1")) {
-                                Toast.makeText(BoundPhoneActivity.this, "该手机号已被注册", Toast.LENGTH_SHORT).show();
+                                MyToash.Toash(activity,"该手机号已被注册");
+                                //Toast.makeText(BoundPhoneActivity.this, "该手机号已被注册", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(BoundPhoneActivity.this, "获取获取码失败", Toast.LENGTH_SHORT).show();
+                                MyToash.Toash(activity,"获取获取码失败");
+                               // Toast.makeText(BoundPhoneActivity.this, "获取获取码失败", Toast.LENGTH_SHORT).show();
                             }
 
 
@@ -285,7 +299,8 @@ public class BoundPhoneActivity extends BaseActivity {
 
                     @Override
                     public void onErrorResponse(Throwable ex) {
-                        Toast.makeText(BoundPhoneActivity.this, "获取获取码失败", Toast.LENGTH_SHORT).show();
+                        MyToash.Toash(activity,"获取获取码失败");
+                       // Toast.makeText(BoundPhoneActivity.this, "获取获取码失败", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
@@ -296,15 +311,18 @@ public class BoundPhoneActivity extends BaseActivity {
     private void BoundPhone() {
         final String phone=activity_boundphone_phone.getText().toString();
         if (!Login.isMobile(phone)) {
-            Toast.makeText(BoundPhoneActivity.this, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
+            MyToash.Toash(activity,"请输入正确的手机号");
+           // Toast.makeText(BoundPhoneActivity.this, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
             return;
         }
         if (phoneAndverify_code.get(phone)==null){
-            Toast.makeText(BoundPhoneActivity.this, "该手机号还未获取验证码", Toast.LENGTH_SHORT).show();
+            MyToash.Toash(activity,"该手机号还未获取验证码");
+           // Toast.makeText(BoundPhoneActivity.this, "该手机号还未获取验证码", Toast.LENGTH_SHORT).show();
             return;
         }
         if(!verify_code.equals(phoneAndverify_code.get(phone))){
-            Toast.makeText(BoundPhoneActivity.this, "手机号和验证码不匹配", Toast.LENGTH_SHORT).show();
+            MyToash.Toash(activity,"手机号和验证码不匹配");
+          //  Toast.makeText(BoundPhoneActivity.this, "手机号和验证码不匹配", Toast.LENGTH_SHORT).show();
             return;
         }
         RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostUserMobileBindingRequest");
@@ -319,7 +337,8 @@ public class BoundPhoneActivity extends BaseActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             String Status = jsonObject.getString("Status");
                             if (Status.equals("2")) {
-                                Toast.makeText(BoundPhoneActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
+                                MyToash.Toash(activity,"绑定成功");
+                               // Toast.makeText(BoundPhoneActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
 
                                 if (flag.equals("other")) {
                                     HttpUtils.getInstance(BoundPhoneActivity.this).otherRegister(map, "BoundPhoneActivity");
@@ -327,9 +346,11 @@ public class BoundPhoneActivity extends BaseActivity {
                                     Login.phoneLogin(BoundPhoneActivity.this, phone, pwd, "BoundPhoneActivity");
                                 }
                             } else if (Status.equals("1")) {
-                                Toast.makeText(BoundPhoneActivity.this, "该手机号已被其他账户绑定", Toast.LENGTH_SHORT).show();
+                                MyToash.Toash(activity,"该手机号已被其他账户绑定");
+                              //  Toast.makeText(BoundPhoneActivity.this, "该手机号已被其他账户绑定", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(BoundPhoneActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                                MyToash.Toash(activity);
+                              //  Toast.makeText(BoundPhoneActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
                             }
 
 
@@ -341,7 +362,8 @@ public class BoundPhoneActivity extends BaseActivity {
 
                     @Override
                     public void onErrorResponse(Throwable ex) {
-                        Toast.makeText(BoundPhoneActivity.this, "获取获取码失败", Toast.LENGTH_SHORT).show();
+                        MyToash.Toash(activity,"获取获取码失败");
+                        //Toast.makeText(BoundPhoneActivity.this, "获取获取码失败", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }

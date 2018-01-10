@@ -24,6 +24,7 @@ import com.headlth.management.activity.MyPrescriptionActivity;
 import com.headlth.management.activity.MyShareActivity;
 import com.headlth.management.entity.User;
 import com.headlth.management.myview.CircleImageView;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
 import com.headlth.management.utils.ShareUitls;
@@ -73,7 +74,7 @@ public class MyFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         UID = ShareUitls.getString(getActivity(), "UID", "");
-        Log.i("strstrstrstr","onCreateView");
+       // Log.i("strstrstrstr","onCreateView");
         return x.view().inject(this, inflater, container);
     }
 
@@ -146,7 +147,7 @@ public class MyFragment extends BaseFragment {
                     public void onResponse(String response) {
 
 
-                        Log.i("aaaaaaaa", UID + "" + response);
+                        //Log.i("aaaaaaaa", UID + "" + response);
                         try {
 
                             JSONObject jsonObject = new JSONObject(response);
@@ -175,7 +176,7 @@ public class MyFragment extends BaseFragment {
 
                     @Override
                     public void onErrorResponse(Throwable ex) {
-                        Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
+                        MyToash.Toash(getActivity());
                     }
                 }
 

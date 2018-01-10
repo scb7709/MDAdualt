@@ -28,8 +28,13 @@ import java.util.UUID;
  * Created by abc on 2017/7/19.
  */
 public class MyBulePolorManager implements Serializable {
+   // 0000180d-0000-1000-8000-00805f9b34fb
     public final static String POLOR_SERVICE_UUID = "0000180d-0000-1000-8000-00805f9b34fb";
     public final static String POLPR_RateCharacteristic_UUID = "00002a37-0000-1000-8000-00805f9b34fb";
+
+    public final static String HAND_SERVICE_UUID ="0000fee7-0000-1000-8000-00805f9b34fb";
+    public final static String HAND_RateCharacteristic_UUID = "0000fea2-0000-1000-8000-00805f9b34fb";
+
 
 
     /**
@@ -77,7 +82,7 @@ public class MyBulePolorManager implements Serializable {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.i("", "蓝牙广播回调 action=" + action);
+            //Log.i("", "蓝牙广播回调 action=" + action);
             if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_OFF) {//关闭系统蓝牙
                 IS_CONNECT = false;
                 MyBuleSearchManager.openBluetooth(activity);
@@ -283,11 +288,11 @@ public class MyBulePolorManager implements Serializable {
                 List<BluetoothGattService> gattServices = gatt.getServices();
                 Log.i("myblue", "发现服务");
                 for (BluetoothGattService gattService : gattServices) {
-                    Log.i("myblue", "服务UUID" + gattService.getUuid().toString());
+                    Log.i("myblue", "服务UUID   " + gattService.getUuid().toString());
                     if (gattService.getUuid().equals(UUID.fromString(POLOR_SERVICE_UUID))) {
                         List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
                         for (BluetoothGattCharacteristic bluetoothGattCharacteristic : gattCharacteristics) {
-                            Log.i("myblue", "特征的" + bluetoothGattCharacteristic.getUuid().toString());
+                            Log.i("myblue", "特征UUID    " + bluetoothGattCharacteristic.getUuid().toString());
                             if (bluetoothGattCharacteristic.getUuid().equals(UUID.fromString(POLPR_RateCharacteristic_UUID))) {
                                 boolean isEnableNotification = mBluetoothGatt.setCharacteristicNotification(bluetoothGattCharacteristic, true);
                                 if (isEnableNotification) {

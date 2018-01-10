@@ -1,5 +1,6 @@
 package com.headlth.management.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.headlth.management.adapter.ReplyAdapter;
 import com.headlth.management.entity.CircleList;
 import com.headlth.management.entity.Comment;
 import com.headlth.management.entity.Reply;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.myview.PullToRefreshLayout;
 import com.headlth.management.myview.PullableListView;
 import com.headlth.management.myview.RoundImageView;
@@ -90,6 +92,7 @@ public class CircleReplyActivity extends BaseActivity {
     private TextView circlereply_Like_Count;
     private Holder holder;
     InputMethodManager inputMethodManager ;
+    Activity activity;
     private class Holder {
         @ViewInject(R.id.listview_contentdetails_icon)
         public RoundImageView listview_contentdetails_icon;
@@ -120,11 +123,12 @@ public class CircleReplyActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        activity=this;
         inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         view_publictitle_title.setText("回复");
         position = Integer.parseInt(getIntent().getStringExtra("position"));
         comment = CircleList.getInstance().commentlist.get(position);
-        Log.i("aaaaaaaaaaXIANGQING", comment.toString());
+      //  Log.i("aaaaaaaaaaXIANGQING", comment.toString());
         setData();
         replyAdapter = new ReplyAdapter(CircleList.getInstance().replylist, CircleReplyActivity.this);
         circlereply_maidongcircle_listview.setAdapter(replyAdapter);
@@ -188,7 +192,7 @@ public class CircleReplyActivity extends BaseActivity {
         circlereply_maidongcircle_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("ddddddddddd点的", "" + position);
+              //  Log.i("ddddddddddd点的", "" + position);
                 if (position != 0) {
                     // showPopFormBottom(false, position - 1);
                 }
@@ -257,7 +261,7 @@ public class CircleReplyActivity extends BaseActivity {
 
                     @Override
                     public void onResponse(String response) {
-                        Log.i("AAAAAAAAhuo评论", response);
+                     //   Log.i("AAAAAAAAhuo评论", response);
                         shareReplyList = new Gson().fromJson(response.toString(), ShareReplyList.class);
                         if (shareReplyList.Status.equals("1") && shareReplyList.ShareReplyList.size() != 0) {
                             // Collections.sort(shareContentList.ShareCommentList,Collections.reverseOrder());
@@ -291,8 +295,9 @@ public class CircleReplyActivity extends BaseActivity {
 
                         }
                         replyAdapter.notifyDataSetChanged();
-                        Log.i("AAAAAAAAA评论", "LoginupToken");
-                        Toast.makeText(CircleReplyActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
+                       // Log.i("AAAAAAAAA评论", "LoginupToken");
+                        MyToash.Toash(activity,"请求失败");
+                       // Toast.makeText(CircleReplyActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
                         return;
 
                     }
@@ -350,10 +355,12 @@ public class CircleReplyActivity extends BaseActivity {
                                 CircleList.getInstance().commentlist.get(position).setReplyCount(replyCount);
                                 circlereply_like_reply.setImageResource(R.mipmap.icon_reply);
                                 getReply();
-                                Toast.makeText(CircleReplyActivity.this, "回复成功", Toast.LENGTH_SHORT).show();
-                                Log.i("AAAAAAAAAXIZNHENG新增  ", response);
+                                MyToash.Toash(activity,"回复成功");
+                               // Toast.makeText(CircleReplyActivity.this, "回复成功", Toast.LENGTH_SHORT).show();
+                               // Log.i("AAAAAAAAAXIZNHENG新增  ", response);
                             } else {
-                                Toast.makeText(CircleReplyActivity.this, "回复失败", Toast.LENGTH_SHORT).show();
+                                MyToash.Toash(activity,"回复失败");
+                              //  Toast.makeText(CircleReplyActivity.this, "回复失败", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -364,9 +371,9 @@ public class CircleReplyActivity extends BaseActivity {
 
                     @Override
                     public void onErrorResponse(Throwable ex) {
-                        Log.i("AAAAAAAAA", "LoginupToken");
-
-                        Toast.makeText(CircleReplyActivity.this, "回复失败", Toast.LENGTH_SHORT).show();
+                      //  Log.i("AAAAAAAAA", "LoginupToken");
+                        MyToash.Toash(activity,"回复失败");
+                        //Toast.makeText(CircleReplyActivity.this, "回复失败", Toast.LENGTH_SHORT).show();
                         return;
 
                     }
@@ -391,7 +398,7 @@ public class CircleReplyActivity extends BaseActivity {
                     @Override
                     public void onResponse(String response) {
                         requestnetworking=false;
-                        Log.i("AAAAAAAAA", "Log" + response);
+                       // Log.i("AAAAAAAAA", "Log" + response);
                         Comment comment = CircleList.getInstance().commentlist.get(position);
                         int likecount = comment.getAttitudeCount();
                         if (Flag.equals("0")) {
@@ -419,7 +426,8 @@ public class CircleReplyActivity extends BaseActivity {
                     @Override
                     public void onErrorResponse(Throwable ex) {
                         requestnetworking=false;
-                        Toast.makeText(CircleReplyActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
+                        MyToash.Toash(activity,"请求失败");
+                        //Toast.makeText(CircleReplyActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
                         return;
 
                     }

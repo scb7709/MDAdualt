@@ -197,6 +197,7 @@
 
 
     <RelativeLayout
+        android:visibility="visible"
         android:id="@+id/activity_accountmanage_exit"
         android:layout_width="match_parent"
         android:layout_height="50dp"

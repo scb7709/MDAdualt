@@ -1,9 +1,11 @@
 package com.headlth.management.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -19,6 +21,7 @@ import com.headlth.management.R;
 import com.headlth.management.adapter.MyFragmentPagerAdapter;
 import com.headlth.management.clenderutil.DateUtil;
 import com.headlth.management.entity.anlyseCallBack;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
 import com.headlth.management.utils.ShareUitls;
@@ -35,6 +38,7 @@ public class AnalizeFragment extends BaseFragment {
     ArrayList<Fragment> fragmentsList;
     AnalizeEffectSportFragment frag1;
     AnalizeClFragment frag2;
+    Activity activity;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -43,12 +47,18 @@ public class AnalizeFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_analize, null);
-        initialize(view);
+        vPager = (ViewPager) view.findViewById(R.id.vPager);
         return view;
     }
 
-    private void initialize(View view) {
-        vPager = (ViewPager) view.findViewById(R.id.vPager);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initialize();
+    }
+
+    private void initialize() {
+        activity=getActivity();
         String year = DateUtil.getYear() + "-" + second(DateUtil.getMonth()) + "-" + second(DateUtil.getCurrentMonthDay());
         String anlysedata = ShareUitls.getString(getActivity(), "anlysedata", "");//str;//
 
@@ -108,7 +118,6 @@ public class AnalizeFragment extends BaseFragment {
 
         @Override
         public void onPageSelected(int arg0) {
-            Log.e("onPageSelected", arg0 + "");
             if (arg0== 0) {
                 activity_main_title_left.setText("");
                 activity_main_title_center.setText("有效运动");
@@ -144,7 +153,7 @@ public class AnalizeFragment extends BaseFragment {
         HttpUtils.getInstance(getActivity()).sendRequestRequestParams("", params,false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
-                        Log.e("hfhfhfh", response.toString());
+                        //Log.e("hfhfhfh", response.toString());
                         try {
                             anlyseCallBack anlyse = g.fromJson(response.toString(), anlyseCallBack.class);
                             if (anlyse.getStatus() == 1) {
@@ -153,20 +162,21 @@ public class AnalizeFragment extends BaseFragment {
                                 InitViewPager(anlyse);
                                 return;
                             } else {
-                                Toast.makeText(getActivity(), "暂无数据", Toast.LENGTH_SHORT).show();
+                                MyToash.Toash(activity, "暂无数据");
                             }
                         } catch (Exception j) {
-                            Toast.makeText(getActivity(), "暂无数据", Toast.LENGTH_SHORT).show();
+                            MyToash.Toash(activity, "暂无数据");
+
                         }
                         return;
                     }
 
                     @Override
                     public void onErrorResponse(Throwable ex) {
-                        Log.i("AAAAAAAAA", "LoginupToken");
+                       // Log.i("AAAAAAAAA", "LoginupToken");
+                        MyToash.Toash(activity, "请求失败");
 
-                        Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
-                        return;
+
 
                     }
                 }

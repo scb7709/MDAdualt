@@ -151,7 +151,7 @@ public class AnalizeClFragment extends BaseFragment {
                 AvgCal.setText(avgTal);
          /*   TotalDays.setText("共运动：" + anlyse.getData().getSummary().get(0).getTotalDays() + "天");*/
                 MaxTotalTime.setText((Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory())) + "千卡");
-                midleTime.setText("" + (Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory())) / 2 );
+                midleTime.setText("" + (Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory())) / 2);
                 pingji.setText(anlyse.getData().getSummary().get(0).getCaloryRate());
 
 
@@ -237,46 +237,36 @@ public class AnalizeClFragment extends BaseFragment {
         return width;
     }
 
-    int x;
-    int y;
-    // int bootom;
+
     int gap;
-    //  int top;
+
     public Handler h = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
-                if (relativeLayout.getWidth() != 0 && relativeLayout.getHeight() != 0 && zhu.getWidth() != 0 && zhu.getHeight() != 0 && botomLin.getWidth() != 0 && botomLin.getHeight() != 0) {
-                    int[] location666 = new int[2];
-                    relativeLayout.getLocationOnScreen(location666);
-                    daohangHigh = location666[1];
-                    int[] location = new int[2];
-                    zhu.getLocationOnScreen(location);
-                    x = location[0];
-                    y = location[1];
-                    //Log.e("zuobiao", "zhux:" + x + "zhuy:" + y);
-                    // Log.e("zuobiao", "zhuLeft：" + zhu.getLeft() + "zhuRight：" + zhu.getRight() + "zhuTop：" + zhu.getTop() + "zhuBottom：" + zhu.getBottom());
-
-                    int[] location0 = new int[2];
-                    botomLin.getLocationOnScreen(location0);
-                    // int x0 = location0[0];
-                    //  int y0 = location0[1];
-                    // bootom = zhu.getTop();
-                    // top = botomLin.getTop();
-                    gap = zhu.getHeight();//(botomLin.getTop() - zhu.getTop());
-                    List<anlyseCallBack.DataBean.DetailBean> detailBean = anlyse.getData().getDetail();
-                    int temp = Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory());
-                    if (temp != 0) {
-                        for (int i = 0; i < anlyse.getData().getDetail().size(); i++) {
-                            RelativeLayout.LayoutParams linearParams = (RelativeLayout.LayoutParams) bts.get(i).getLayoutParams();
-                            // 取控件aaa当前的布局参数
-                            linearParams.height = gap * Integer.parseInt(detailBean.get(i).getCalory()) / (temp); //
-                            bts.get(i).setLayoutParams(linearParams); // 使设置好的布局参数应用到控件aaa
-                            ts.get(i).setText(anlyse.getData().getDetail().get(i).getDay());
+                try {
+                    if (relativeLayout.getWidth() != 0 && relativeLayout.getHeight() != 0 && zhu.getWidth() != 0 && zhu.getHeight() != 0) {
+                        int[] location666 = new int[2];
+                        relativeLayout.getLocationOnScreen(location666);
+                        daohangHigh = location666[1];
+                        int[] location = new int[2];
+                        zhu.getLocationOnScreen(location);
+                        gap = zhu.getHeight();//(botomLin.getTop() - zhu.getTop());
+                        List<anlyseCallBack.DataBean.DetailBean> detailBean = anlyse.getData().getDetail();
+                        int temp = Integer.parseInt(anlyse.getData().getSummary().get(0).getMaxCalory());
+                        if (temp != 0) {
+                            for (int i = 0; i < anlyse.getData().getDetail().size(); i++) {
+                                RelativeLayout.LayoutParams linearParams = (RelativeLayout.LayoutParams) bts.get(i).getLayoutParams();
+                                // 取控件aaa当前的布局参数
+                                linearParams.height = gap * Integer.parseInt(detailBean.get(i).getCalory()) / (temp); //
+                                bts.get(i).setLayoutParams(linearParams); // 使设置好的布局参数应用到控件aaa
+                                ts.get(i).setText(anlyse.getData().getDetail().get(i).getDay());
+                            }
                         }
+                    } else {
+                        h.sendEmptyMessageDelayed(1, 1);
                     }
-                    Log.e("zuobiao", "gap:==" + gap);
-                } else {
+                } catch (Exception e) {
                     h.sendEmptyMessageDelayed(1, 1);
                 }
             }

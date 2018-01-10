@@ -375,7 +375,7 @@ public class MaidongFragment extends BaseFragment {
                         @Override
                         public void onResponse(String response) {
                             newChufang = false;
-                            Log.e("ffff", response.toString());
+                           // Log.e("ffff", response.toString());
                             chufang = g.fromJson(response.toString(), chufangCallBack.class);
                             if (chufang.getStatus() == 1) {
                                 Intent intent = new Intent();
@@ -385,15 +385,14 @@ public class MaidongFragment extends BaseFragment {
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                             } else {
-                                Toast.makeText(getActivity(), "获取失败", Toast.LENGTH_SHORT).show();
+                                MyToash.Toash(activity,"获取失败");
                             }
                         }
 
                         @Override
                         public void onErrorResponse(Throwable ex) {
 
-
-                            Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
+                            MyToash.Toash(activity);
                             return;
 
                         }
@@ -413,14 +412,14 @@ public class MaidongFragment extends BaseFragment {
         maidong = ShareUitls.getString(getActivity(), "maidong", "0");//首页界面是否重新刷新 （是否答完题或者是否运动完有新数据）
         MaidongDataJson maidongDataJson = null;
 
-        Log.i("XXXXAAXXXXXX", maidong + "       " + todaydata);
+      //  Log.i("XXXXAAXXXXXX", maidong + "       " + todaydata);
         try {
             maidongDataJson = g.fromJson(todaydata.toString(), MaidongDataJson.class);
         } catch (Exception e) {
         }
         if (maidongDataJson == null || maidong.equals("1")) {
             newChufang = true;
-            Log.i("XXXXXXXXXX", "我的处方刷新");
+           // Log.i("XXXXXXXXXX", "我的处方刷新");
             RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=GetIndexInfoRequest");
             params.addBodyParameter("UID", UID);
             params.addBodyParameter("ResultJWT", ResultJWT);
@@ -428,14 +427,14 @@ public class MaidongFragment extends BaseFragment {
                         @Override
                         public void onResponse(String response) {
                             ShareUitls.putString(getActivity(), "todaydata", response);//
-                            Log.i("VVVVVVVVVaaa", "" + UID + "   " + response.toString());
+                           // Log.i("VVVVVVVVVaaa", "" + UID + "   " + response.toString());
                             MaidongDataJson maidongDataJson = g.fromJson(response.toString(), MaidongDataJson.class);
-                            Log.i("VVVVVVVVVCCC", "" + maidongDataJson.toString());
+                            //Log.i("VVVVVVVVVCCC", "" + maidongDataJson.toString());
                             if (maidongDataJson != null && maidongDataJson.UserIndexList != null) {
                                 int NumberNotRead = maidongDataJson.UserIndexList.NumberNotRead;
                                 ShareUitls.putString(getActivity(), "main_listCount", NumberNotRead + "");
                                 if (NumberNotRead > 0) {
-                                    Log.i("NumberNotRead", "" + NumberNotRead + "");
+                                  //  Log.i("NumberNotRead", "" + NumberNotRead + "");
                                     TextView main_listCount = (TextView) getActivity().findViewById(R.id.main_listCount);
                                     main_listCount.setVisibility(View.VISIBLE);
                                     main_listCount.setText(NumberNotRead + "");
@@ -450,7 +449,7 @@ public class MaidongFragment extends BaseFragment {
 
                                 setMaidongData(maidongDataJson);
                             } else {
-                                Toast.makeText(getActivity(), "数据异常", Toast.LENGTH_SHORT).show();
+                                MyToash.Toash(activity,"数据异常");
                                 fragment_maidong_exercise_plan_exercise_chievement.setVisibility(View.GONE);
                                 fragment_maidong_exercise_plan_youyang_layout.setVisibility(View.GONE);
                                 fragment_maidong_exercise_plan_today_exercise_plan.setVisibility(View.GONE);
@@ -462,7 +461,7 @@ public class MaidongFragment extends BaseFragment {
 
                         @Override
                         public void onErrorResponse(Throwable ex) {
-
+                            MyToash.Toash(activity);
 
                         }
                     }
@@ -528,7 +527,7 @@ public class MaidongFragment extends BaseFragment {
                             public void onErrorResponse(Throwable ex) {
                                 MyToash.Toash(activity,"网络异常");
                                 startSport = true;
-                                Log.i("myblue", "onErrorResponse");
+                               // Log.i("myblue", "onErrorResponse");
                             }
                         }
 
@@ -579,23 +578,15 @@ public class MaidongFragment extends BaseFragment {
             }
 
             if (UserIndexList.IsSportStart.equals("true")) {
-                fragment_maidong_exercise_plan_today_exercise_plan.setVisibility(View.VISIBLE);
                 fragment_maidong_exercise_plan_youyang_layout.setVisibility(View.VISIBLE);
                 fragment_maidong_youyang_degree.setText("第" + UserIndexList.SportFinishedDays + "次");
-
                 fragment_maidong_yougang_validtime.setText((UserIndexList.ValidTime / 60) + "'" + (UserIndexList.ValidTime % 60));
                 fragment_maidong_yougang_validhreart.setText(UserIndexList.LBound + "--" + UserIndexList.UBound);
-
-
                 fragment_textView_jichuyouyangchufang.setText(UserIndexList.SportPrescriptionTitle);
             } else {
-                fragment_maidong_exercise_plan_today_exercise_plan.setVisibility(View.GONE);
                 fragment_maidong_exercise_plan_youyang_layout.setVisibility(View.GONE);
-
             }
-
             if (UserIndexList.IsShowTodayPowerTrainPlan.equals("true")) {//
-                fragment_maidong_exercise_plan_today_exercise_plan.setVisibility(View.VISIBLE);
                 fragment_maidong_exercise_plan_strength_layout.setVisibility(View.VISIBLE);
                 if (UserIndexList.IsPlay.equals("false")) {
                     // Log.i("DDDDDDDDDDDD",UserIndexList.PowerTrainDuration+"");
@@ -625,10 +616,14 @@ public class MaidongFragment extends BaseFragment {
                     }
                 }
             } else {
-                fragment_maidong_exercise_plan_today_exercise_plan.setVisibility(View.GONE);
                 fragment_maidong_exercise_plan_strength_layout.setVisibility(View.GONE);
             }
-            Log.i("VVVVVVVVVCCC", UserIndexList.IsShowTodayScore);
+            if(UserIndexList.IsShowTodayPowerTrainPlan.equals("true")||UserIndexList.IsSportStart.equals("true")){
+                fragment_maidong_exercise_plan_today_exercise_plan.setVisibility(View.VISIBLE);
+            }else {
+                fragment_maidong_exercise_plan_today_exercise_plan.setVisibility(View.GONE);
+            }
+           // Log.i("VVVVVVVVVCCC", UserIndexList.IsShowTodayScore);
             ValidTime = UserIndexList.ValidTime;//全局化有效运动时间 用于 开始有氧运动的时候 提醒
 
             if (UserIndexList.IsShowTodayPowerTrainPlan.equals("false") && UserIndexList.IsSportStart.equals("false")) {

@@ -37,6 +37,7 @@ import com.headlth.management.entity.User;
 import com.headlth.management.myview.BottomMenuDialog;
 import com.headlth.management.myview.CircleImageView;
 import com.headlth.management.myview.HeightChooseDialog;
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.utils.Bimp;
 import com.headlth.management.utils.Constant;
 import com.headlth.management.utils.HttpUtils;
@@ -160,7 +161,7 @@ public class CompleteInformationActivity extends BaseActivity {
                 sex = userInformation.getGender();
                 activity_completeinformation_weight.setText(userInformation.getWeight());
                 activity_completeinformation_height.setText(userInformation.getHeight());
-                Log.i("LLLLLLLA", "" + userInformation.getBirthday());
+            //    Log.i("LLLLLLLA", "" + userInformation.getBirthday());
 
                 //String Birthday = userInformation.getBirthday().replace("/", "-").substring(0, userInformation.getBirthday().length() - 8);
                 String Birthday = userInformation.getBirthday();
@@ -201,7 +202,7 @@ public class CompleteInformationActivity extends BaseActivity {
                 activity_completeinformation_sex_man.setTextColor(Color.parseColor("#aaaaaa"));
             }
 
-            Log.i("ccccccccccc", headimgurl);
+           // Log.i("ccccccccccc", headimgurl);
             Glide.with(CompleteInformationActivity.this)
                     .load(headimgurl)
                     .asBitmap()
@@ -293,7 +294,8 @@ public class CompleteInformationActivity extends BaseActivity {
                 if (username.length() >= 3 && username.length() <= 20) {
 
                     if (!username.matches("[\u4e00-\u9fa5A-Za-z0-9_-]+")) {
-                        Toast.makeText(CompleteInformationActivity.this, "昵称只能由汉子、数字、字母、下划线、-号组成", Toast.LENGTH_LONG).show();
+                        MyToash.Toash(activity,"昵称只能由汉子、数字、字母、下划线、-号组成");
+                      //  Toast.makeText(CompleteInformationActivity.this, "昵称只能由汉子、数字、字母、下划线、-号组成", Toast.LENGTH_LONG).show();
                     } else {
                         if (ismy) {
                             next();
@@ -308,7 +310,8 @@ public class CompleteInformationActivity extends BaseActivity {
 
                     }
                 } else {
-                    Toast.makeText(CompleteInformationActivity.this, "昵称只能输入3-20位字符", Toast.LENGTH_LONG).show();
+                    MyToash.Toash(activity,"昵称只能输入3-20位字符");
+                  //  Toast.makeText(CompleteInformationActivity.this, "昵称只能输入3-20位字符", Toast.LENGTH_LONG).show();
                 }
                 break;
 
@@ -370,14 +373,16 @@ public class CompleteInformationActivity extends BaseActivity {
                 if (usernam.length() >= 3 && usernam.length() <= 20) {
 
                     if (!usernam.matches("[\u4e00-\u9fa5A-Za-z0-9_-]+")) {
-                        Toast.makeText(CompleteInformationActivity.this, "昵称只能由汉子、数字、字母、下划线、-号组成", Toast.LENGTH_LONG).show();
+                        MyToash.Toash(activity,"昵称只能由汉子、数字、字母、下划线、-号组成");
+                        //Toast.makeText(CompleteInformationActivity.this, "昵称只能由汉子、数字、字母、下划线、-号组成", Toast.LENGTH_LONG).show();
                     } else {
                         if (ismy) {
                             next();
                         }
                     }
                 } else {
-                    Toast.makeText(CompleteInformationActivity.this, "昵称只能输入3-20位字符", Toast.LENGTH_LONG).show();
+                    MyToash.Toash(activity,"昵称只能输入3-20位字符");
+                   // Toast.makeText(CompleteInformationActivity.this, "昵称只能输入3-20位字符", Toast.LENGTH_LONG).show();
                 }
                 break;
 
@@ -402,7 +407,7 @@ public class CompleteInformationActivity extends BaseActivity {
         if (ismy) {
             userInformationHttp(userInformation);
         } else {
-            Log.i("userInformationAAAA", userInformation.toString());
+          //  Log.i("userInformationAAAA", userInformation.toString());
             Intent intent = new Intent(this, LivingHabitActivity.class);
             intent.putExtra("userInformation", userInformation);
             // Log.i("userInformationAAA",path);
@@ -455,20 +460,26 @@ public class CompleteInformationActivity extends BaseActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {//
-            ArrayList<String> list = data.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT);
-           if(list!=null&&list.size()>0){
-               String pictime = System.currentTimeMillis() + "";
-               Bimp.saveBitmap(list.get(0), pictime, new Bimp.OnSaveSuccessListener() {
-                   @Override
-                   public void onSuccess(String filepath) {
-                       Bitmap bitmap= Bimp.getSmallBitmap(filepath);
-                       activity_completeinformation_icon.setImageBitmap(bitmap);
-                       path=filepath;
-                   }
-               });
-           }else {
-               Toast.makeText(CompleteInformationActivity.this, "没有选中图片", Toast.LENGTH_LONG).show();
-           }
+            if(data!=null){
+                ArrayList<String> list = data.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT);
+                if(list!=null&&list.size()>0){
+                    String pictime = System.currentTimeMillis() + "";
+                    Bimp.saveBitmap(list.get(0), pictime, new Bimp.OnSaveSuccessListener() {
+                        @Override
+                        public void onSuccess(String filepath) {
+                            Bitmap bitmap= Bimp.getSmallBitmap(filepath);
+                            activity_completeinformation_icon.setImageBitmap(bitmap);
+                            path=filepath;
+                        }
+                    });
+                }else {
+                    MyToash.Toash(activity,"没有选中图片");
+                    //Toast.makeText(CompleteInformationActivity.this, "没有选中图片", Toast.LENGTH_LONG).show();
+                }
+            }else {
+                MyToash.Toash(activity,"没有选中图片");
+            }
+
 
          /*   if (resultCode == Activity.RESULT_OK && data != null) {
                 Bundle bundle = data.getExtras();
@@ -589,7 +600,7 @@ public class CompleteInformationActivity extends BaseActivity {
         HttpUtils.getInstance(CompleteInformationActivity.this).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
-                        Log.e("getSMSjson", response);
+                       // Log.e("getSMSjson", response);
                         String Status = "";
                         try {
                             JSONObject jsonObject = new JSONObject(response);
@@ -629,7 +640,7 @@ public class CompleteInformationActivity extends BaseActivity {
     private static com.headlth.management.clenderutil.WaitDialog waitDialog;
 
     private void userInformationHttp(final User.UserInformation userInformation) {
-        Log.i("userInformationAAAA", userInformation.toString());
+       // Log.i("userInformationAAAA", userInformation.toString());
         waitDialog = new com.headlth.management.clenderutil.WaitDialog(CompleteInformationActivity.this);
         waitDialog.setMessage("正在上传,请稍后...");
         waitDialog.setCancleable(true);
@@ -643,7 +654,7 @@ public class CompleteInformationActivity extends BaseActivity {
         params.addBodyParameter("Height", userInformation.getHeight());
         params.addBodyParameter("Gender", userInformation.getGender());
         params.addBodyParameter("VersionNum", VersonUtils.getVersionName(this));
-        Log.i("userInformationSSS", "" + path.length());
+        //Log.i("userInformationSSS", "" + path.length());
         if (path.length() != 0) {//从我的界面过来 而且头像没更改//        二次压缩
             String pictime = System.currentTimeMillis() + "";
             Bimp.saveBitmap(path, pictime, new Bimp.OnSaveSuccessListener() {
@@ -658,7 +669,7 @@ public class CompleteInformationActivity extends BaseActivity {
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
-                        Log.i("userInformationAA", "" + result.toString());
+                      //  Log.i("userInformationAA", "" + result.toString());
                         try {
                             JSONObject jsonObject = new JSONObject(result.toString());
                             if (jsonObject.getString("ErrCode").equals("601") || jsonObject.getString("ErrCode").equals("600")) {

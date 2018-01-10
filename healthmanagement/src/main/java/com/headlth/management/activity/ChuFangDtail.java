@@ -104,7 +104,7 @@ public class ChuFangDtail extends BaseActivity {
 
         Intent intent = this.getIntent();
         chufang = (chufangCallBack) intent.getSerializableExtra("chufang");
-        Log.e("ffff", chufang + "跳到viewpager");
+       // Log.e("ffff", chufang + "跳到viewpager");
 
 
         //改动
@@ -157,7 +157,7 @@ public class ChuFangDtail extends BaseActivity {
         // 跟换的画会有问题
         vPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(),
                 fragmentsList));
-        Log.e("null?", vPager + "是空吗？");
+      //  Log.e("null?", vPager + "是空吗？");
         /*
          * mPager.setAdapter(new MyFragmentPagerAdapter(getFragmentManager(),
 		 * fragmentsList));

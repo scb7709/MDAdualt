@@ -305,7 +305,8 @@ public class AlbbStrengthSportActivity extends BaseActivity {
             bottomMenuDialog.show();
 
         } else {
-            Toast.makeText(activity, "当前无网络连接", Toast.LENGTH_SHORT).show();
+            MyToash.Toash(activity);
+            //Toast.makeText(activity, "当前无网络连接", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -437,7 +438,8 @@ public class AlbbStrengthSportActivity extends BaseActivity {
                             }
                             downloadstop = !downloadstop;
                         } else {
-                            Toast.makeText(activity, "请检查网络", Toast.LENGTH_SHORT).show();
+                            MyToash.Toash(activity);
+                            //Toast.makeText(activity, "请检查网络", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -482,7 +484,7 @@ public class AlbbStrengthSportActivity extends BaseActivity {
             params.addBodyParameter("VID", ShareUitls.getString(activity, "vlist", "") + "");
             params.addBodyParameter("UID", UID);
             params.addBodyParameter("ResultJWT", ResultJWT);
-            Log.i("rrrrrrAASCCAA", ShareUitls.getString(activity, "vlist", "") + "   " + ShareUitls.getString(activity, "UID", "") + "" + ShareUitls.getString(activity, "ResultJWT", "0"));
+           // Log.i("rrrrrrAASCCAA", ShareUitls.getString(activity, "vlist", "") + "   " + ShareUitls.getString(activity, "UID", "") + "" + ShareUitls.getString(activity, "ResultJWT", "0"));
             HttpUtils.getInstance(activity).sendRequestRequestParams("", params, true, new HttpUtils.ResponseListener() {
 
                         public void onResponse(String response) {
@@ -495,8 +497,8 @@ public class AlbbStrengthSportActivity extends BaseActivity {
 
                         @Override
                         public void onErrorResponse(Throwable ex) {
-
-                            Toast.makeText(getApplicationContext(), "请求失败", Toast.LENGTH_SHORT).show();
+                            MyToash.Toash(activity);
+                           // Toast.makeText(getApplicationContext(), "请求失败", Toast.LENGTH_SHORT).show();
                             return;
 
                         }
@@ -543,7 +545,8 @@ public class AlbbStrengthSportActivity extends BaseActivity {
                         @Override
                         public void onErrorResponse(Throwable ex) {
                             waitDialog.dismissDialog();
-                            Toast.makeText(getApplicationContext(), "请求失败,请检查网络", Toast.LENGTH_SHORT).show();
+                            MyToash.Toash(activity);
+                            //Toast.makeText(getApplicationContext(), "请求失败,请检查网络", Toast.LENGTH_SHORT).show();
                             return;
 
                         }
@@ -637,7 +640,7 @@ public class AlbbStrengthSportActivity extends BaseActivity {
                 if (possition > 0) {
                     --possition;//指针减一
                 }
-                Log.e("aaaaaaaaaccc", "删除");
+             //   Log.e("aaaaaaaaaccc", "删除");
                 file.delete();
             }
 
@@ -675,12 +678,12 @@ public class AlbbStrengthSportActivity extends BaseActivity {
                 String path = new File(SDPATH + "/").getPath();
                 File file = new File(path);
                 if (!file.exists()) {
-                    Log.e("aaaaaaaaaccc", "路径不存在");
+                 //   Log.e("aaaaaaaaaccc", "路径不存在");
                     file.mkdirs();
                 }
                 videopath = new File(file.getPath(), subVideo.getID() + ".maid");
                 // subVideo.setLocalAddress(file.getPath() + "/" + subVideo.getID() + ".mp4");
-                Log.i("ACVBBFFF", "开始");
+              //  Log.i("ACVBBFFF", "开始");
                 // xutilsDown(subVideo, url, videopath);
                 asyncGetObjectSample(subVideo);
             }
@@ -725,12 +728,12 @@ public class AlbbStrengthSportActivity extends BaseActivity {
 
     //核心下载视频的方法
     public void asyncGetObjectSample(final Video.SubVideo subVideo) {
-        Log.i("counttcountt", ++countt + "");
+     //   Log.i("counttcountt", ++countt + "");
 
       /*  new Thread(new Runnable() {
             @Override
             public void run() {*/
-        Log.i("asyncGetObjectSample", videopath.getPath());
+     //   Log.i("asyncGetObjectSample", videopath.getPath());
 
         GetObjectRequest get = new GetObjectRequest(ossInfo.getBucketName(), ossInfo.getFiledir() + subVideo.getFileName());
         get.getxOssProcess();
@@ -744,19 +747,20 @@ public class AlbbStrengthSportActivity extends BaseActivity {
             @Override
             public void onFailure(GetObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
 
-                Log.i("asyncGetObjectSample", "onFailure");
+               // Log.i("asyncGetObjectSample", "onFailure");
                 downloading = false;
                 ShareUitls.putString(activity, "errprvideo", loadingvideo);//记录是下载那个视频失败的
                 // 请求异常
                 if (clientExcepion != null) {
-                    Log.i("asyncGetObjectSample", "onFailure11");
+                   // Log.i("asyncGetObjectSample", "onFailure11");
                     // 本地异常如网络异常等
                     clientExcepion.printStackTrace();
                     int internet = InternetUtils.getNetworkState(activity);
                     switch (internet) {
                         case 0://没有网
                             nonetworkFailure = true;
-                            Toast.makeText(activity, "下载失败,请检查网络连接", Toast.LENGTH_SHORT).show();
+                            MyToash.Toash(activity);
+                           // Toast.makeText(activity, "下载失败,请检查网络连接", Toast.LENGTH_SHORT).show();
                             break;
                        /* case 1://wifi
                             if (!downloadstop && !downloading && redownload <= 3) {//不处于手动暂停状态 不处于 正在下载状态 重复次数不到三次
@@ -778,13 +782,14 @@ public class AlbbStrengthSportActivity extends BaseActivity {
 
                     }
                 } else if (serviceException != null) {
-                    Log.i("asyncGetObjectSample", "onFailure22");
-                    Toast.makeText(activity, "服务器异常", Toast.LENGTH_SHORT).show();
+                  //  Log.i("asyncGetObjectSample", "onFailure22");
+                    MyToash.Toash(activity);
+                    //Toast.makeText(activity, "服务器异常", Toast.LENGTH_SHORT).show();
                     // 服务异常
-                    Log.e("ErrorCode", serviceException.getErrorCode());
-                    Log.e("RequestId", serviceException.getRequestId());
-                    Log.e("HostId", serviceException.getHostId());
-                    Log.e("RawMessage", serviceException.getRawMessage());
+                    //Log.e("ErrorCode", serviceException.getErrorCode());
+                    //Log.e("RequestId", serviceException.getRequestId());
+                   // Log.e("HostId", serviceException.getHostId());
+                   // Log.e("RawMessage", serviceException.getRawMessage());
                     if (serviceException.getErrorCode().equals("InvalidAccessKeyId")) {//过期了 重新拉取
                         handlerProcress.sendEmptyMessage(1);
 
@@ -798,7 +803,7 @@ public class AlbbStrengthSportActivity extends BaseActivity {
     }
 
     private void DownLoadSuccess(GetObjectResult result, File videopath) {
-        Log.i("GetObjectReqrequest", result.toString());
+       // Log.i("GetObjectReqrequest", result.toString());
         // 请求成功
         InputStream inputStream = result.getObjectContent();
         OutputStream os;
@@ -831,7 +836,7 @@ public class AlbbStrengthSportActivity extends BaseActivity {
                 // Log.i("asyncGetObjectSample", "read length: " + len);
                 os.write(buffer, 0, len);
             }
-            Log.d("asyncGetObjectSample", "download success.");
+            //Log.d("asyncGetObjectSample", "download success.");
             redownload = 0;//下载失败重新下载次数标记 设置为 0
             //  Current += subVideo.getSize();
             ShareUitls.putString(activity, "errprvideo", "");//记录是下载那个视频失败的 设置为空
@@ -843,7 +848,7 @@ public class AlbbStrengthSportActivity extends BaseActivity {
             handlerProcress.sendEmptyMessage(0);
 
         } catch (IOException e) {
-            Log.d("asyncGetObjectSample", "download IOException.");
+            //Log.d("asyncGetObjectSample", "download IOException.");
             ShareUitls.putString(activity, "errprvideo", loadingvideo);//记录是下载那个视频失败的
             if (!downloadstop) {//没有点击暂停
                 handlerProcress.sendEmptyMessage(0);
@@ -851,7 +856,7 @@ public class AlbbStrengthSportActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        Log.i("ACVBBFFF", "开始4");
+        //Log.i("ACVBBFFF", "开始4");
         //  if(canaleLoad) {//没有被取消下载 也就是暂停
     }
 
@@ -887,7 +892,8 @@ public class AlbbStrengthSportActivity extends BaseActivity {
                         }
                         if (nonet) {
                             nonet = false;
-                            Toast.makeText(activity, "未检测到网络连接", Toast.LENGTH_SHORT).show();
+                            MyToash.Toash(activity);
+                           // Toast.makeText(activity, "未检测到网络连接", Toast.LENGTH_SHORT).show();
                         }
 
                     } else if (isnowifi) {//移动网络 没有询问过

@@ -38,6 +38,7 @@ import com.headlth.management.entity.User;
 import com.headlth.management.entity.UserLogin;
 import com.headlth.management.entity.VersionClass;
 
+import com.headlth.management.myview.MyToash;
 import com.headlth.management.utils.Constant;
 
 import com.headlth.management.utils.InternetUtils;
@@ -103,7 +104,7 @@ public class HomeActivity extends Activity {
                     login(HomeActivity.this, "HomeActivity");
                     break;
                 case 1:
-                    Toast.makeText(HomeActivity.this, "您尚未登录，请先登录...", Toast.LENGTH_LONG).show();
+                    MyToash.Toash(activity,"您尚未登录，请先登录...");
                     startActivity(i);
                     finish();
                     break;
@@ -121,7 +122,7 @@ public class HomeActivity extends Activity {
                     }
                     break;
                 case 5:
-                    Toast.makeText(getApplicationContext(), "当前无网络连接", Toast.LENGTH_SHORT).show();
+                    MyToash.Toash(activity,"当前无网络连接");
                     startActivity(i);
                     finish();
                     break;
@@ -202,7 +203,7 @@ public class HomeActivity extends Activity {
 
 
     private void setTimeTaskLoadingPages() {
-        Log.i("fffGAUNG", LoadingPagesUrl.toString());
+       // Log.i("fffGAUNG", LoadingPagesUrl.toString());
         if (LoadingPagesUrl.size() == 1) {
             final MyCountDownTimer myCountDownTimer = new MyCountDownTimer(4000, 1000);
             myCountDownTimer.start();
@@ -386,17 +387,17 @@ public class HomeActivity extends Activity {
         if (!token.equals("null")) {
 
 
-            Log.i("ttttttttttttttt", token);
+           // Log.i("ttttttttttttttt", token);
             RequestParams params = new RequestParams(Constant.BASE_URL + "/MdMobileService.ashx?do=PostDeviceTokenRequest");
             params.addBodyParameter("ResultJWT", ShareUitls.getString(activity, "ResultJWT", "0"));
             params.addBodyParameter("UID", ShareUitls.getString(activity, "UID", "0"));
             params.addBodyParameter("DeviceToken", token);
             params.addBodyParameter("DeviceTokenType", "1");
-            Log.e("PostDeviceTokenRequest", ShareUitls.getString(activity, "UID", "0") + " " + token);
+            //Log.e("PostDeviceTokenRequest", ShareUitls.getString(activity, "UID", "0") + " " + token);
             HttpUtils.getInstance(activity).sendRequestRequestParams("", params, false, new HttpUtils.ResponseListener() {
                         @Override
                         public void onResponse(String response) {
-                            Log.e("PostDeviceTokenRequest", response.toString());
+                          //  Log.e("PostDeviceTokenRequest", response.toString());
                             //    upTokenCallBack upToken = new Gson().fromJson(response.toString(), upTokenCallBack.class);
 
                             return;
@@ -404,7 +405,7 @@ public class HomeActivity extends Activity {
 
                         @Override
                         public void onErrorResponse(Throwable ex) {
-                            Log.e("PostDeviceTokenRequest", "onErrorResponse");
+                           // Log.e("PostDeviceTokenRequest", "onErrorResponse");
 /*
 
                         Log.i("AAAAAAAAA", "HOMEgo2");
@@ -435,17 +436,17 @@ public class HomeActivity extends Activity {
                     @Override
                     public void onResponse(String response) {
                         JSONObject jsonObject;
-                        Log.e("ffff广告aaaaa", response.toString());
+                       // Log.e("ffff广告aaaaa", response.toString());
                         try {
                             jsonObject = new JSONObject(response);
                             if (jsonObject.getString("Status").equals("1")) {
                                 JSONArray jsonArray = jsonObject.getJSONArray("AdImgList");
                                 for (int i = 0; i < jsonArray.length(); i++) {
-                                    Log.e("ffff广告-----", Constant.BASE_URL + "/" + jsonArray.getJSONObject(i).getString("ImgUrl"));
+                                  //  Log.e("ffff广告-----", Constant.BASE_URL + "/" + jsonArray.getJSONObject(i).getString("ImgUrl"));
                                     LoadingPagesUrl.add(Constant.BASE_URL + "/" + jsonArray.getJSONObject(i).getString("ImgUrl"));
                                 }
                                 if (LoadingPagesUrl.size() != 0) {//广告展示
-                                    Log.e("ffff广告-----AAA", LoadingPagesUrl.size() + "");
+                                  //  Log.e("ffff广告-----AAA", LoadingPagesUrl.size() + "");
                                     new Timer().schedule(new TimerTask() {
                                         @Override
                                         public void run() {
@@ -464,7 +465,7 @@ public class HomeActivity extends Activity {
                         } catch (JSONException e) {
                             setTimeTask();//
                             e.printStackTrace();
-                            Log.e("ffff广告-----", "异常");
+                          //  Log.e("ffff广告-----", "异常");
                         }
                         //   upToken = g.fromJson(response.toString(), upTokenCallBack.class);
 
@@ -525,7 +526,7 @@ public class HomeActivity extends Activity {
 
         @Override
         public void onTick(long millisUntilFinished) {
-            Log.i("VVVVVVVVVVVVVV", millisUntilFinished + "");
+           // Log.i("VVVVVVVVVVVVVV", millisUntilFinished + "");
             Message msg = new Message();
             msg.what = 3;
             msg.arg1 = (int) (millisUntilFinished / 1000);
@@ -548,7 +549,7 @@ public class HomeActivity extends Activity {
                     @Override
                     public void onResponse(String response) {
                         VersionClass     versionClass = g.fromJson(response, VersionClass.class);
-                        Log.i("版本aaaaa", response.toString());
+                     //   Log.i("版本aaaaa", response.toString());
                         if (versionClass.Status == 1) {
                             ShareUitls.putVersion(HomeActivity.this, versionClass.Version);
                         /*    if (versionClass.Version.VersionCode > VersonUtils.getVerisonCode(HomeActivity.this)) {
@@ -617,7 +618,7 @@ public class HomeActivity extends Activity {
         HttpUtils.getInstance(activity).sendRequestRequestParams("", params, false, new HttpUtils.ResponseListener() {
                     @Override
                     public void onResponse(String response) {
-                        Log.e("webTest", response.toString());
+                      //  Log.e("webTest", response.toString());
                         //    upTokenCallBack upToken = new Gson().fromJson(response.toString(), upTokenCallBack.class);
 
                         return;

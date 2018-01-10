@@ -208,7 +208,10 @@ public class UpadteApp {
         if (Version == null) {
             Version = ShareUitls.getVersion(activity);
         }
-        Log.i("版本aaaaa", Version.toString());
+        if (Version == null) {
+            return false;
+        }
+     //   Log.i("版本aaaaa", Version.toString());
         boolean isupdate = Version != null && VersonUtils.getVerisonCode(activity) != -1 && Version.VersionCode > VersonUtils.getVerisonCode(activity);
         if (isupdate) {
             if (nowupdate) {

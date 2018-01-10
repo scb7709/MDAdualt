@@ -111,7 +111,7 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     private TextView MaxTotalTime;
     private LinearLayout zhu;
     private TextView midleTime;
-    private TextView botomLin;
+    //  private TextView botomLin;
     View view;
     String tatal;
 
@@ -133,19 +133,20 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
         view = inflater.inflate(R.layout.fragment_layout_sport, null);
         relativeLayout = (RelativeLayout) view.findViewById(R.id.view);
         zhu = (LinearLayout) view.findViewById(R.id.zhu);
-        botomLin = (TextView) view.findViewById(R.id.t1);
+        // botomLin = (TextView) view.findViewById(R.id.t1);
         TotalDays = (TextView) view.findViewById(R.id.TotalDays);
         MaxTotalTime = (TextView) view.findViewById(R.id.MaxTotalTime);
         midleTime = (TextView) view.findViewById(R.id.midleTime);
         ButterKnife.inject(this, view);
-        if (!ShareUitls.getString(getActivity(), "Target", "null").equals("null")) {
-            // Log.e("tttt", ShareUitls.getString(getActivity(), "Target", "null"));
+        try {
             target = Integer.parseInt(ShareUitls.getString(getActivity(), "Target", "null"));
+        } catch (Exception e) {
+
         }
         activity = getActivity();
         tatal = StringForTime.stringForTime3(target);
         screenWidth = GetWindowSize.getInstance(activity).getGetWindowwidth();
-      //  screenHeight = GetWindowSize.getInstance(activity).getGetWindowheight();
+        //  screenHeight = GetWindowSize.getInstance(activity).getGetWindowheight();
         totalColar = activity.getResources().getColor(R.color.analizegray);
         lineColar = activity.getResources().getColor(R.color.analizeline);
         effectColar = activity.getResources().getColor(R.color.analizeeffect);
@@ -163,43 +164,42 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
-                if (backd.getWidth() != 0 && backd.getHeight() != 0 && relativeLayout.getWidth() != 0 && relativeLayout.getHeight() != 0 && zhu.getWidth() != 0 && zhu.getHeight() != 0 && botomLin.getWidth() != 0 && botomLin.getHeight() != 0) {
-                    FrameLayout.LayoutParams youxiaolinearParams = (FrameLayout.LayoutParams) youxiao.getLayoutParams();
-                    // 取控件aaa当前的布局参数
-                    youxiaolinearParams.width = getPercent(anlyse) * backd.getWidth() / 100;//
-                    youxiao.setLayoutParams(youxiaolinearParams);
+                try {
+                    if (backd.getWidth() != 0 && backd.getHeight() != 0 && relativeLayout.getWidth() != 0 && relativeLayout.getHeight() != 0 && zhu.getWidth() != 0 && zhu.getHeight() != 0) {
+                        FrameLayout.LayoutParams youxiaolinearParams = (FrameLayout.LayoutParams) youxiao.getLayoutParams();
+                        // 取控件aaa当前的布局参数
+                        youxiaolinearParams.width = getPercent(anlyse) * backd.getWidth() / 100;//
+                        youxiao.setLayoutParams(youxiaolinearParams);
+                        int[] location666 = new int[2];
+                        relativeLayout.getLocationOnScreen(location666);
+                        daohangHigh = location666[1];
+                        int[] location = new int[2];
+                        zhu.getLocationOnScreen(location);
+                        MaxHight = zhu.getHeight();// (botomLin.getTop() - zhu.getTop());
 
-                    int[] location666 = new int[2];
-                    relativeLayout.getLocationOnScreen(location666);
-                    daohangHigh = location666[1];
-                    int[] location = new int[2];
-                    zhu.getLocationOnScreen(location);
-                    //  x = location[0];
-                    //  y = location[1];
-                    int[] location0 = new int[2];
-                    botomLin.getLocationOnScreen(location0);
-                    //  bootom = zhu.getTop();
-                    // top = botomLin.getTop();
-                    MaxHight = zhu.getHeight();// (botomLin.getTop() - zhu.getTop());
+                        for (int i = 0; i < anlyse.getData().getDetail().size(); i++) {
+                            RelativeLayout.LayoutParams linearParamsbtalls = (RelativeLayout.LayoutParams) btalls.get(i).getLayoutParams();
+                            RelativeLayout.LayoutParams linearParamsshows = (RelativeLayout.LayoutParams) shows.get(i).getLayoutParams();
+                            if (MaxTime != 0) {
+                                int TotalTime = Integer.parseInt(detailBean.get(i).getTotalTime());
+                                linearParamsshows.height = MaxHight * TotalTime / (MaxTime); //
+                                shows.get(i).setLayoutParams(linearParamsshows);
 
-                    for (int i = 0; i < anlyse.getData().getDetail().size(); i++) {
-                        RelativeLayout.LayoutParams linearParamsbtalls = (RelativeLayout.LayoutParams) btalls.get(i).getLayoutParams();
-                        RelativeLayout.LayoutParams linearParamsshows = (RelativeLayout.LayoutParams) shows.get(i).getLayoutParams();
-                        if (MaxTime != 0) {
-                            int TotalTime = Integer.parseInt(detailBean.get(i).getTotalTime());
-                            linearParamsshows.height = MaxHight * TotalTime / (MaxTime); //
-                            shows.get(i).setLayoutParams(linearParamsshows);
+                                int EffectTime = Integer.parseInt(detailBean.get(i).getEffectTime());
+                                // MyToash.Log(TotalTime + "   " + EffectTime + "    " + "  " + MaxTime + "  " + MaxHight);
 
-                            int EffectTime = Integer.parseInt(detailBean.get(i).getEffectTime());
-                           // MyToash.Log(TotalTime + "   " + EffectTime + "    " + "  " + MaxTime + "  " + MaxHight);
-
-                            linearParamsbtalls.height = MaxHight * EffectTime / (MaxTime); //
-                            btalls.get(i).setLayoutParams(linearParamsbtalls);
-                            ts.get(i).setText(detailBean.get(i).getDay());
+                                linearParamsbtalls.height = MaxHight * EffectTime / (MaxTime); //
+                                btalls.get(i).setLayoutParams(linearParamsbtalls);
+                                ts.get(i).setText(detailBean.get(i).getDay());
 
 
+                            }
                         }
+                    }else {
+                        h.sendEmptyMessageDelayed(1, 1);
                     }
+                } catch (Exception e) {
+                    h.sendEmptyMessageDelayed(1, 1);
                 }
             }
 
@@ -293,9 +293,9 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
             paint.setColor(totalColar);
             canvas.drawText(total, tatalwidth, y - 90, paint);
             paint.setColor(lineColar);
-            canvas.drawLine(x, y - 82, x + zhouyiall_Width, y-82, paint);
+            canvas.drawLine(x, y - 82, x + zhouyiall_Width, y - 82, paint);
             paint.setColor(effectColar);
-            canvas.drawText(effect, effectwidth, y-50, paint);
+            canvas.drawText(effect, effectwidth, y - 50, paint);
 
             canvas.drawBitmap(bitmap, x + (zhouyiall_Width - bitmap.getWidth()) / 2, y - ImageUtil.dp2px(activity, 12), paint);
 
@@ -329,7 +329,7 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-      //  MyToash.Log(screenWidth + "  " + screenHeight);
+        //  MyToash.Log(screenWidth + "  " + screenHeight);
         btalls = new ArrayList<>();
         btalls.add(zhouyiall);
         btalls.add(zhouerall);

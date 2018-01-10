@@ -102,12 +102,12 @@
         </activity>
 
 
-        <activity android:name=".blue.DeviceServicesActivity" />
+      <!--  <activity android:name=".blue.DeviceServicesActivity" />
         <activity android:name=".blue.demo.DemoHeartRateSensorActivity" />
-        <!-- 鎺ュ彈蹇冪巼鐨勬湇鍔?-->
+        &lt;!&ndash; 鎺ュ彈蹇冪巼鐨勬湇鍔?&ndash;&gt;
         <service
             android:name=".blue.BleService"
-            android:enabled="true" />
+            android:enabled="true" />-->
 
         <activity android:name=".activity.NewChuFang" />
         <activity

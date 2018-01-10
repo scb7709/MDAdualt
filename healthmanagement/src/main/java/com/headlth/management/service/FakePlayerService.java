@@ -66,7 +66,7 @@ public class FakePlayerService extends Service {
 
         intent = new Intent();
         intent.setAction("ServiceToActivityReceiver");
-        Log.i("ffffffffffffffffff", "永不退出onCreate");
+      //  Log.i("ffffffffffffffffff", "永不退出onCreate");
         // registActivityToServiceReceiver();
         timeCount();
         // startPoPThread();

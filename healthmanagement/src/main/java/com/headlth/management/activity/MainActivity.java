@@ -131,7 +131,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 activity_main_title_left.setText("");
                 activity_main_title_right.setText("");
                 main_messages.setVisibility(View.GONE);
-                changeFragment(new MaidongCircleFragment(), "MaidongCircleFragment");
+               changeFragment(new MaidongCircleFragment(), "MaidongCircleFragment");
                 break;
             case R.id.activity_main_my:
                 main_share.setVisibility(View.GONE);
