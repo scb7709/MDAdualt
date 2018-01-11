@@ -152,12 +152,7 @@ public class AnalizeEffectSportFragment extends BaseFragment implements View.OnC
         effectColar = activity.getResources().getColor(R.color.analizeeffect);
         return view;
     }
-
-    // int x;
-    // int y;
-    //int bootom;
     int MaxHight;
-    // int top;
     int daohangHigh;
     int MaxTime = 0;
     public Handler h = new Handler() {

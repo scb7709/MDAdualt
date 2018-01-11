@@ -1042,7 +1042,7 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
 
         public draw(Context context) {
             super(context);
-            setWillNotDraw(false);
+            setWillNotDraw(false);//可不写  默认就是 false
         }
 
         @Override
@@ -1056,7 +1056,8 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
                     int  value=datas.get(i);
                     path.lineTo(i * (width / 30), (gap / 4 + gap) - (((value<51?51:value) * (gap / 4 + gap)) / 250));
                 }
-                path.lineTo((datas.size() - 1) * (width / 30), gap);
+                // path.setLastPoint((datas.size() - 1) * (width / 30), gap);
+               path.lineTo((datas.size() - 1) * (width / 30), gap);
                 canvas.drawPath(path, paint);
             }
             invalidate();
@@ -1481,7 +1482,7 @@ public class AerobicSportActivity extends BaseActivity implements View.OnClickLi
         // Log.e("dadth", "onResume;;;");
         //添加动态折线
         if (d == null) {
-            d = new draw(getApplicationContext());
+            d = new draw(activity);
             drawline.addView(d);
         }
 
