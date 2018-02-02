@@ -22,6 +22,7 @@ import com.headlth.management.R;
 import com.headlth.management.activity.AdvancedPrescriptionActivity;
 import com.headlth.management.activity.AlbbStrengthSportActivity;
 import com.headlth.management.activity.ChuFangDtail;
+import com.headlth.management.activity.DeviceScanActivity;
 import com.headlth.management.activity.ExercisePlanActivity;
 import com.headlth.management.activity.ExerciseRecordActivity;
 import com.headlth.management.activity.NewChuFang;
@@ -507,7 +508,7 @@ public class MaidongFragment extends BaseFragment {
                                 if (advancedPrescription.IsSuccess.equals("true")) {
                                     switch (advancedPrescription.Status) {
                                         case "100":
-                                            // getAdadultFragmentStartSportDalog(activity);
+                                            // getAdadultFragmentStartSportDalog(activity);  DeviceScanActivity  NewSearchBlueActivity
                                             activity.startActivity(new Intent(activity, NewSearchBlueActivity.class).putExtra("flag", ""));
                                             break;
                                         default:

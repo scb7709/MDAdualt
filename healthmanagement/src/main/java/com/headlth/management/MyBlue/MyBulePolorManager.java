@@ -28,14 +28,21 @@ import java.util.UUID;
  * Created by abc on 2017/7/19.
  */
 public class MyBulePolorManager implements Serializable {
+
+
+
+
+    public final static String HAND_SERVICE_UUID ="000055ff-0000-1000-8000-00805f9b34fb";
+    public final static String HAND_RateCharacteristic_UUID = "000033f2-0000-1000-8000-00805f9b34fb";
+
    // 0000180d-0000-1000-8000-00805f9b34fb
-    public final static String POLOR_SERVICE_UUID = "0000180d-0000-1000-8000-00805f9b34fb";
-    public final static String POLPR_RateCharacteristic_UUID = "00002a37-0000-1000-8000-00805f9b34fb";
-
-    public final static String HAND_SERVICE_UUID ="0000fee7-0000-1000-8000-00805f9b34fb";
-    public final static String HAND_RateCharacteristic_UUID = "0000fea2-0000-1000-8000-00805f9b34fb";
+    public final static String POLOR_SERVICE_UUID = HAND_SERVICE_UUID;//"0000180d-0000-1000-8000-00805f9b34fb";
+    public final static String POLPR_RateCharacteristic_UUID = HAND_RateCharacteristic_UUID;//"00002a37-0000-1000-8000-00805f9b34fb";
 
 
+
+   // j = UUID.fromString("0000d0ff-3c17-d293-8e48-14fe2e4da212");
+    //k = UUID.fromString("0000ffd3-0000-1000-8000-00805f9b34fb");
 
     /**
      * 发现服务、数据读写操作接口
@@ -287,8 +294,17 @@ public class MyBulePolorManager implements Serializable {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 List<BluetoothGattService> gattServices = gatt.getServices();
                 Log.i("myblue", "发现服务");
+
                 for (BluetoothGattService gattService : gattServices) {
-                    Log.i("myblue", "服务UUID   " + gattService.getUuid().toString());
+                 /*   Log.i("myblue", "服务UUID   " + gattService.getUuid().toString());
+                    List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
+                    for (BluetoothGattCharacteristic bluetoothGattCharacteristic : gattCharacteristics) {
+                        Log.i("myblue", "特征UUID    " + bluetoothGattCharacteristic.getUuid().toString());
+
+
+                    }
+*/
+
                     if (gattService.getUuid().equals(UUID.fromString(POLOR_SERVICE_UUID))) {
                         List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
                         for (BluetoothGattCharacteristic bluetoothGattCharacteristic : gattCharacteristics) {

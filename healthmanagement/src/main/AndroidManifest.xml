@@ -137,10 +137,21 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
+        <activity
+            android:name=".activity.AerobicSportUTEActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.DeviceScanActivity"
+            android:screenOrientation="portrait"></activity>
+
 
         <activity
             android:name=".activity.StrengthSportSummarizeActivity"
             android:screenOrientation="portrait"></activity>
+
+
+
 
         <activity
             android:name=".activity.WBEntryActivity"

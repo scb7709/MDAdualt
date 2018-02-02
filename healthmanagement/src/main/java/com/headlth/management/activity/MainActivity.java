@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     private String MAC;
     boolean IsfLoginToMain;
-
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,37 +109,49 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.activity_main_maindong:
-                activity_main_title_center.setText("迈动");
-                activity_main_title_left.setText("");
-                activity_main_title_right.setText("");
-                main_share.setVisibility(View.GONE);
-                main_messages.setVisibility(View.VISIBLE);
-                changeFragment(new MaidongFragment(), "MaidongFragment");
+                if (position != 0) {
+                    position = 0;
+                    activity_main_title_center.setText("迈动");
+                    activity_main_title_left.setText("");
+                    activity_main_title_right.setText("");
+                    main_share.setVisibility(View.GONE);
+                    main_messages.setVisibility(View.VISIBLE);
+                    changeFragment(new MaidongFragment(), "MaidongFragment");
+                }
                 break;
             case R.id.activity_main_analyze:
-                main_share.setVisibility(View.GONE);
+                if (position != 1) {
+                    position = 1;
+                    main_share.setVisibility(View.GONE);
 
-                activity_main_title_left.setText("");
-                activity_main_title_center.setText("有效运动");
-                activity_main_title_right.setText("卡路里");
-                main_messages.setVisibility(View.GONE);
-                changeFragment(new AnalizeFragment(), "AnalizeFragment");
+                    activity_main_title_left.setText("");
+                    activity_main_title_center.setText("有效运动");
+                    activity_main_title_right.setText("卡路里");
+                    main_messages.setVisibility(View.GONE);
+                    changeFragment(new AnalizeFragment(), "AnalizeFragment");
+                }
                 break;
             case R.id.activity_main_maidongcircle:
-                main_share.setVisibility(View.VISIBLE);
-                activity_main_title_center.setText("迈动圈");
-                activity_main_title_left.setText("");
-                activity_main_title_right.setText("");
-                main_messages.setVisibility(View.GONE);
-               changeFragment(new MaidongCircleFragment(), "MaidongCircleFragment");
+                if (position != 2) {
+                    position = 2;
+                    main_share.setVisibility(View.VISIBLE);
+                    activity_main_title_center.setText("迈动圈");
+                    activity_main_title_left.setText("");
+                    activity_main_title_right.setText("");
+                    main_messages.setVisibility(View.GONE);
+                    changeFragment(new MaidongCircleFragment(), "MaidongCircleFragment");
+                }
                 break;
             case R.id.activity_main_my:
-                main_share.setVisibility(View.GONE);
-                activity_main_title_center.setText("我");
-                activity_main_title_left.setText("");
-                activity_main_title_right.setText("");
-                main_messages.setVisibility(View.GONE);
-                changeFragment(new MyFragment(), "MyFragment");
+                if (position != 3) {
+                    position = 3;
+                    main_share.setVisibility(View.GONE);
+                    activity_main_title_center.setText("我");
+                    activity_main_title_left.setText("");
+                    activity_main_title_right.setText("");
+                    main_messages.setVisibility(View.GONE);
+                    changeFragment(new MyFragment(), "MyFragment");
+                }
                 break;
         }
     }
@@ -197,8 +209,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(UpadteApp.bottomMenuUpdateAPPDialog!=null){
-            UpadteApp.bottomMenuUpdateAPPDialog=null;
+        if (UpadteApp.bottomMenuUpdateAPPDialog != null) {
+            UpadteApp.bottomMenuUpdateAPPDialog = null;
         }
         ShareUitls.putString(this, "MainActivity", "");//用来记录当前界面是否存在
         unregisterReceiver(main_listCountReceiver);//解除广播 收到通知后台推送的新小新 然后首页铃铛+  1   的 广播

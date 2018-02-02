@@ -91,8 +91,8 @@ public class NewSearchBlueActivity extends BaseActivity {
             myBuleSerachManager.endSearch();
             myBuleSerachManager = null;
             Intent intent = new Intent();
-            intent.putExtra("MAC", adrs);
-            intent.setClass(activity, AerobicSportActivity.class);//por开始运动
+            intent.putExtra("MAC", adrs);//AerobicSportUTEActivity AerobicSportActivity
+            intent.setClass(activity, AerobicSportUTEActivity.class);//por开始运动
             startActivity(intent);
             finish();
         }
